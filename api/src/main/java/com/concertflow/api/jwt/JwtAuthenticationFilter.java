@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.server.PathContainer;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.pattern.PathPattern;
+import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -26,8 +29,17 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private static final List<String> PERMIT_ALL_ENDPOINTS = List.of(
+        "/api/auth/**",
+        "/api/api-docs/**",
+        "/swagger-ui/**"
+    );
+
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final List<PathPattern> permitAllPatterns = PERMIT_ALL_ENDPOINTS.stream()
+        .map(PathPatternParser.defaultInstance::parse)
+        .toList();
 
     @Override
     protected void doFilterInternal(
@@ -36,6 +48,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
+            PathContainer path = PathContainer.parsePath(request.getRequestURI());
+            if (permitAllPatterns.stream().anyMatch(pattern -> pattern.matches(path))) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String token = getTokenFromRequest(request);
 
             if (token != null && jwtService.validateToken(token)) {
