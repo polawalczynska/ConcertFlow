@@ -6,6 +6,8 @@ interface PasswordInputProps {
   name: string;
   label: string;
   placeholder: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   showPassword?: boolean;
   onTogglePassword?: () => void;
 }
@@ -15,6 +17,8 @@ export default function PasswordInput({
   name,
   label,
   placeholder,
+  value,
+  onChange,
   showPassword: controlledShowPassword,
   onTogglePassword,
 }: PasswordInputProps) {
@@ -33,6 +37,8 @@ export default function PasswordInput({
           id={id}
           name={name}
           type={showPassword ? "text" : "password"}
+          value={value}
+          onChange={onChange}
           placeholder={placeholder}
           className="w-full rounded-lg border border-border-light bg-bg-main px-4 py-2.5 pl-10 pr-10 text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 focus:border-border-light"
           required

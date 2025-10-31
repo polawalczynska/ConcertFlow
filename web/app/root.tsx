@@ -6,6 +6,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import stylesheet from "./tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -30,6 +32,18 @@ export async function loader(_: LoaderFunctionArgs) {
 }
 
 export default function App() {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -39,8 +53,10 @@ export default function App() {
         <Links />
       </head>
       <body className="min-h-screen bg-bg-main font-sans text-text-primary antialiased">
-        <Outlet />
-        <ScrollRestoration />
+        <QueryClientProvider client={queryClient}>
+          <Outlet />
+          <ScrollRestoration />
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

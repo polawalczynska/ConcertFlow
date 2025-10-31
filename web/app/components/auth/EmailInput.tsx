@@ -1,6 +1,11 @@
 import { Mail } from "lucide-react";
 
-export default function EmailInput() {
+interface EmailInputProps {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function EmailInput({ value, onChange }: EmailInputProps) {
   return (
     <div className="space-y-2">
       <label htmlFor="email" className="block text-sm font-medium text-text-primary">
@@ -12,6 +17,8 @@ export default function EmailInput() {
           id="email"
           name="email"
           type="email"
+          value={value}
+          onChange={onChange}
           placeholder="kate.johnson@concertflow.com"
           className="w-full rounded-lg border border-border-light bg-bg-main px-4 py-2.5 pl-10 text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 focus:border-border-light"
           required
