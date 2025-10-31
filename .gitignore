@@ -25,6 +25,10 @@ api/.env
 api/src/main/resources/.env.properties
 .env.properties
 
+# Node modules
+node_modules/
+web/node_modules/
+
 # Java/Gradle (scoped to api module)
 api/.gradle/
 api/build/
