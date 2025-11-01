@@ -1,23 +1,19 @@
-# LoginRequest
+# RefreshTokenRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**email** | **string** |  | [default to undefined]
-**password** | **string** |  | [default to undefined]
-**rememberMe** | **boolean** |  | [optional] [default to undefined]
+**refreshToken** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { LoginRequest } from './api';
+import { RefreshTokenRequest } from './api';
 
-const instance: LoginRequest = {
-    email,
-    password,
-    rememberMe,
+const instance: RefreshTokenRequest = {
+    refreshToken,
 };
 ```
 

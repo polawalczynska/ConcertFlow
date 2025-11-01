@@ -5,7 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**token** | **string** |  | [optional] [default to undefined]
+**accessToken** | **string** |  | [optional] [default to undefined]
+**refreshToken** | **string** |  | [optional] [default to undefined]
+**rememberMeToken** | **string** |  | [optional] [default to undefined]
 **type** | **string** |  | [optional] [default to undefined]
 **email** | **string** |  | [optional] [default to undefined]
 **role** | **string** |  | [optional] [default to undefined]
@@ -17,7 +19,9 @@ Name | Type | Description | Notes
 import { AuthResponse } from './api';
 
 const instance: AuthResponse = {
-    token,
+    accessToken,
+    refreshToken,
+    rememberMeToken,
     type,
     email,
     role,

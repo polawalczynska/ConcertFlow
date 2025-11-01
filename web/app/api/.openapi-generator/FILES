@@ -8,6 +8,7 @@ docs/AuthControllerApi.md
 docs/AuthResponse.md
 docs/LoginRequest.md
 docs/ProblemDetail.md
+docs/RefreshTokenRequest.md
 docs/RegisterRequest.md
 git_push.sh
 index.ts
