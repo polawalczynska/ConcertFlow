@@ -4,6 +4,7 @@ import AuthCard from "~/components/auth/AuthCard";
 import AuthFormHeader from "~/components/auth/AuthFormHeader";
 import EmailInput from "~/components/auth/EmailInput";
 import PasswordInput from "~/components/auth/PasswordInput";
+import CheckboxInput from "~/components/auth/CheckboxInput";
 import SubmitButton from "~/components/auth/SubmitButton";
 import AuthLink from "~/components/auth/AuthLink";
 import { useLogin } from "~/hooks/useAuth";
@@ -12,11 +13,12 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const loginMutation = useLogin();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loginMutation.mutate({ email, password });
+    loginMutation.mutate({ email, password, rememberMe });
   };
 
   return (
@@ -44,6 +46,13 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 showPassword={showPassword}
                 onTogglePassword={() => setShowPassword(!showPassword)}
+              />
+              <CheckboxInput
+                id="rememberMe"
+                name="rememberMe"
+                label="Remember me"
+                checked={rememberMe}
+                onChange={setRememberMe}
               />
               <SubmitButton
                 isLoading={loginMutation.isPending}

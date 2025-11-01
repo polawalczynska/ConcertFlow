@@ -1,0 +1,42 @@
+const ACCESS_TOKEN_KEY = "authToken";
+const REFRESH_TOKEN_KEY = "refreshToken";
+const REMEMBER_ME_TOKEN_KEY = "rememberMeToken";
+
+export function setAccessToken(token: string): void {
+  localStorage.setItem(ACCESS_TOKEN_KEY, token);
+}
+
+export function getAccessToken(): string | null {
+  return localStorage.getItem(ACCESS_TOKEN_KEY);
+}
+
+export function setRefreshToken(token: string): void {
+  localStorage.setItem(REFRESH_TOKEN_KEY, token);
+}
+
+export function getRefreshToken(): string | null {
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+}
+
+export function setRememberMeToken(token: string): void {
+  localStorage.setItem(REMEMBER_ME_TOKEN_KEY, token);
+}
+
+export function getRememberMeToken(): string | null {
+  return localStorage.getItem(REMEMBER_ME_TOKEN_KEY);
+}
+
+export function clearTokens(): void {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+  localStorage.removeItem(REMEMBER_ME_TOKEN_KEY);
+}
+
+export function isAuthenticated(): boolean {
+  return !!(
+    getAccessToken() ||
+    getRefreshToken() ||
+    getRememberMeToken()
+  );
+}
+
