@@ -2,6 +2,7 @@ package com.concertflow.api.exceptions.handler;
 
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
+import com.concertflow.api.exceptions.types.TokenRefreshException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +29,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleInvalidCredentials(Exception ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         pd.setTitle("INVALID_CREDENTIALS");
+        return pd;
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ProblemDetail handleTokenRefreshException(TokenRefreshException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        pd.setTitle("INVALID_REFRESH_TOKEN");
         return pd;
     }
 
