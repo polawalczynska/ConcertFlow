@@ -7,8 +7,19 @@ public record LoginRequest(
     String email,
 
     @NotBlank
-    String password
+    String password,
+
+    Boolean rememberMe
 ) {
+    public LoginRequest(String email, String password, Boolean rememberMe) {
+        this.email = email;
+        this.password = password;
+        this.rememberMe = rememberMe != null ? rememberMe : false;
+    }
+
+    public Boolean rememberMe() {
+        return Boolean.TRUE.equals(rememberMe);
+    }
 }
 
 

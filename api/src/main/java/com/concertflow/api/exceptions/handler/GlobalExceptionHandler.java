@@ -3,9 +3,11 @@ package com.concertflow.api.exceptions.handler;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
+import com.concertflow.api.exceptions.types.UserDisabledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,6 +39,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleTokenRefreshException(TokenRefreshException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         pd.setTitle("INVALID_REFRESH_TOKEN");
+        return pd;
+    }
+
+    @ExceptionHandler({UserDisabledException.class, DisabledException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ProblemDetail handleUserDisabledException(Exception ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        pd.setTitle("USER_DISABLED");
         return pd;
     }
 

@@ -1,5 +1,7 @@
 package com.concertflow.api.jwt;
 
+import com.concertflow.api.jwt.interfaces.TokenParser;
+import com.concertflow.api.jwt.interfaces.TokenValidator;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.entity.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -35,7 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         "/swagger-ui/**"
     );
 
-    private final JwtService jwtService;
+    private final TokenValidator tokenValidator;
+    private final TokenParser tokenParser;
     private final UserRepository userRepository;
     private final List<PathPattern> permitAllPatterns = PERMIT_ALL_ENDPOINTS.stream()
         .map(PathPatternParser.defaultInstance::parse)
@@ -56,8 +59,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String token = getTokenFromRequest(request);
 
-            if (token != null && jwtService.validateToken(token)) {
-                String email = jwtService.getEmailFromToken(token);
+            if (token != null && tokenValidator.validateToken(token)) {
+                String email = tokenParser.getEmailFromToken(token);
 
                 User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.message()));
