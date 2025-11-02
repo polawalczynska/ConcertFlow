@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import BrandHeader from "~/components/auth/BrandHeader";
 import AuthCard from "~/components/auth/AuthCard";
 import AuthFormHeader from "~/components/auth/AuthFormHeader";
@@ -10,6 +10,7 @@ import SubmitButton from "~/components/auth/SubmitButton";
 import AuthLink from "~/components/auth/AuthLink";
 import { useRegister } from "~/hooks/useAuth";
 import { registerSchema, registerFormDataToRequest, type RegisterFormData } from "~/lib/validations/auth";
+import { extractApiError } from "~/lib/error-utils";
 
 export default function SignUpPage() {
   const [firstName, setFirstName] = useState("");
@@ -21,11 +22,33 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
+  const [generalError, setGeneralError] = useState<string | null>(null);
   const registerMutation = useRegister();
+
+  useEffect(() => {
+    if (registerMutation.error) {
+      const apiError = extractApiError(registerMutation.error);
+      if (apiError) {
+        if (apiError.field) {
+          setErrors((prev) => ({
+            ...prev,
+            [apiError.field as keyof RegisterFormData]: apiError.message,
+          }));
+          setGeneralError(null);
+        } else {
+          setGeneralError(apiError.message);
+          setErrors({});
+        }
+      } else {
+        setGeneralError("An unexpected error occurred. Please try again.");
+      }
+    }
+  }, [registerMutation.error]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({});
+    setGeneralError(null);
     const result = registerSchema.safeParse({
       firstName,
       lastName,
@@ -46,7 +69,6 @@ export default function SignUpPage() {
       return;
     }
 
-    // Submit if validation passes
     const requestData = registerFormDataToRequest(result.data);
     registerMutation.mutate(requestData);
   };
@@ -54,6 +76,9 @@ export default function SignUpPage() {
   const clearFieldError = (field: keyof RegisterFormData) => {
     if (errors[field]) {
       setErrors({ ...errors, [field]: undefined });
+    }
+    if (generalError) {
+      setGeneralError(null);
     }
   };
 
@@ -68,6 +93,11 @@ export default function SignUpPage() {
             description="Enter your details to get started"
           />
           <div className="p-6 pt-0">
+            {generalError && (
+              <div className="mb-4 rounded-lg border border-red-500 bg-red-50 p-3 text-sm text-red-700">
+                {generalError}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <NameInput

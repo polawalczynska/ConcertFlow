@@ -9,7 +9,6 @@ import {
   clearTokens,
 } from "~/lib/token-storage";
 
-
 export function useLogin() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
