@@ -1,0 +1,64 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEs and editors
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.vscode/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+api/.env
+api/src/main/resources/.env.properties
+.env.properties
+
+# Node modules
+node_modules/
+web/node_modules/
+
+# Java/Gradle (scoped to api module)
+api/.gradle/
+api/build/
+api/bin/
+api/out/
+api/target/
+
+# Gradle local config
+api/gradle-app.setting
+
+# Spring Boot runtime files
+api/*.pid
+api/*.pid.lock
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+~$*
+
+# Coverage and test outputs
+api/coverage/
+api/test-results/
+api/.jacoco/
+
+# OS/Archive
+Thumbs.db
+ehthumbs.db
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
