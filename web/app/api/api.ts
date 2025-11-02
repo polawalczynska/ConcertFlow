@@ -23,53 +23,60 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AuthResponse
- */
-export interface AuthResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
-    'accessToken'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
-    'refreshToken'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
-    'rememberMeToken'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
-    'type'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
+export interface ApprovalResponse {
+    'id'?: number;
+    'type'?: ApprovalResponseTypeEnum;
+    'status'?: ApprovalResponseStatusEnum;
+    'comments'?: string;
+    'decisionDate'?: string;
+    'createdAt'?: string;
+    'concertId'?: number;
+    'concertName'?: string;
+    'approverId'?: number;
+    'approverName'?: string;
+}
+
+export const ApprovalResponseTypeEnum = {
+    Budget: 'BUDGET',
+    Technical: 'TECHNICAL'
+} as const;
+
+export type ApprovalResponseTypeEnum = typeof ApprovalResponseTypeEnum[keyof typeof ApprovalResponseTypeEnum];
+export const ApprovalResponseStatusEnum = {
+    Waiting: 'WAITING',
+    Approved: 'APPROVED',
+    Rejected: 'REJECTED'
+} as const;
+
+export type ApprovalResponseStatusEnum = typeof ApprovalResponseStatusEnum[keyof typeof ApprovalResponseStatusEnum];
+
+export interface ArtistRequest {
+    'name': string;
+    'email': string;
+    'phone'?: string;
+    'technicalRequirements'?: string;
+    'genre'?: string;
+    'website'?: string;
+    'contactPerson'?: string;
+}
+export interface ArtistResponse {
+    'id'?: number;
+    'name'?: string;
     'email'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuthResponse
-     */
+    'phone'?: string;
+    'technicalRequirements'?: string;
+    'genre'?: string;
+    'website'?: string;
+    'contactPerson'?: string;
+    'upcomingConcertsCount'?: number;
+}
+export interface AuthResponse {
+    'accessToken'?: string;
+    'refreshToken'?: string;
+    'rememberMeToken'?: string;
+    'type'?: string;
+    'email'?: string;
     'role'?: AuthResponseRoleEnum;
-    /**
-     * 
-     * @type {number}
-     * @memberof AuthResponse
-     */
     'id'?: number;
 }
 
@@ -81,128 +88,51 @@ export const AuthResponseRoleEnum = {
 
 export type AuthResponseRoleEnum = typeof AuthResponseRoleEnum[keyof typeof AuthResponseRoleEnum];
 
-/**
- * 
- * @export
- * @interface LoginRequest
- */
+export interface ConcertResponse {
+    'id'?: number;
+    'name'?: string;
+    'date'?: string;
+    'venue'?: string;
+    'status'?: ConcertResponseStatusEnum;
+    'budget'?: number;
+    'description'?: string;
+    'coordinatorId'?: number;
+    'coordinatorName'?: string;
+    'artistId'?: number;
+    'artistName'?: string;
+    'approvals'?: Array<ApprovalResponse>;
+}
+
+export const ConcertResponseStatusEnum = {
+    Planning: 'PLANNING',
+    Approved: 'APPROVED',
+    Completed: 'COMPLETED'
+} as const;
+
+export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
+
 export interface LoginRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginRequest
-     */
     'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof LoginRequest
-     */
     'password': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof LoginRequest
-     */
     'rememberMe'?: boolean;
 }
-/**
- * 
- * @export
- * @interface ProblemDetail
- */
 export interface ProblemDetail {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProblemDetail
-     */
     'type'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProblemDetail
-     */
     'title'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProblemDetail
-     */
     'status'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProblemDetail
-     */
     'detail'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProblemDetail
-     */
     'instance'?: string;
-    /**
-     * 
-     * @type {{ [key: string]: object; }}
-     * @memberof ProblemDetail
-     */
     'properties'?: { [key: string]: object; };
 }
-/**
- * 
- * @export
- * @interface RefreshTokenRequest
- */
 export interface RefreshTokenRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof RefreshTokenRequest
-     */
     'refreshToken': string;
 }
-/**
- * 
- * @export
- * @interface RegisterRequest
- */
 export interface RegisterRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'password': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'confirmPassword': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'firstName': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'lastName': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof RegisterRequest
-     */
     'role': RegisterRequestRoleEnum;
 }
 
@@ -216,8 +146,519 @@ export type RegisterRequestRoleEnum = typeof RegisterRequestRoleEnum[keyof typeo
 
 
 /**
+ * ArtistControllerApi - axios parameter creator
+ */
+export const ArtistControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createArtist: async (artistRequest: ArtistRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'artistRequest' is not null or undefined
+            assertParamExists('createArtist', 'artistRequest', artistRequest)
+            const localVarPath = `/api/artists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artistRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArtist: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteArtist', 'id', id)
+            const localVarPath = `/api/artists/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [search] 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllArtists: async (search?: string, page?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/artists`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArtistById: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getArtistById', 'id', id)
+            const localVarPath = `/api/artists/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArtistConcerts: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getArtistConcerts', 'id', id)
+            const localVarPath = `/api/artists/{id}/concerts`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchArtists: async (query: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'query' is not null or undefined
+            assertParamExists('searchArtists', 'query', query)
+            const localVarPath = `/api/artists/search`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArtist: async (id: number, artistRequest: ArtistRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateArtist', 'id', id)
+            // verify required parameter 'artistRequest' is not null or undefined
+            assertParamExists('updateArtist', 'artistRequest', artistRequest)
+            const localVarPath = `/api/artists/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(artistRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ArtistControllerApi - functional programming interface
+ */
+export const ArtistControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ArtistControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createArtist(artistRequest: ArtistRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createArtist(artistRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.createArtist']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteArtist(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteArtist(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.deleteArtist']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} [search] 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllArtists(search?: string, page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtistResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllArtists(search, page, pageSize, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.getAllArtists']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArtistById(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ArtistResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtistById(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.getArtistById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getArtistConcerts(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ConcertResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getArtistConcerts(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.getArtistConcerts']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async searchArtists(query: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ArtistResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.searchArtists(query, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.searchArtists']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateArtist(id: number, artistRequest: ArtistRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateArtist(id, artistRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ArtistControllerApi.updateArtist']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ArtistControllerApi - factory interface
+ */
+export const ArtistControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ArtistControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createArtist(artistRequest: ArtistRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createArtist(artistRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteArtist(id: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteArtist(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [search] 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllArtists(search?: string, page?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<ArtistResponse>> {
+            return localVarFp.getAllArtists(search, page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArtistById(id: number, options?: RawAxiosRequestConfig): AxiosPromise<ArtistResponse> {
+            return localVarFp.getArtistById(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getArtistConcerts(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<ConcertResponse>> {
+            return localVarFp.getArtistConcerts(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} query 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        searchArtists(query: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<ArtistResponse>> {
+            return localVarFp.searchArtists(query, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {ArtistRequest} artistRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateArtist(id: number, artistRequest: ArtistRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateArtist(id, artistRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ArtistControllerApi - object-oriented interface
+ */
+export class ArtistControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {ArtistRequest} artistRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public createArtist(artistRequest: ArtistRequest, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).createArtist(artistRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public deleteArtist(id: number, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).deleteArtist(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [search] 
+     * @param {number} [page] 
+     * @param {number} [pageSize] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getAllArtists(search?: string, page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).getAllArtists(search, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getArtistById(id: number, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).getArtistById(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getArtistConcerts(id: number, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).getArtistConcerts(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} query 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public searchArtists(query: string, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).searchArtists(query, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {ArtistRequest} artistRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public updateArtist(id: number, artistRequest: ArtistRequest, options?: RawAxiosRequestConfig) {
+        return ArtistControllerApiFp(this.configuration).updateArtist(id, artistRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * AuthControllerApi - axios parameter creator
- * @export
  */
 export const AuthControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -360,7 +801,6 @@ export const AuthControllerApiAxiosParamCreator = function (configuration?: Conf
 
 /**
  * AuthControllerApi - functional programming interface
- * @export
  */
 export const AuthControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthControllerApiAxiosParamCreator(configuration)
@@ -417,7 +857,6 @@ export const AuthControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * AuthControllerApi - factory interface
- * @export
  */
 export const AuthControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthControllerApiFp(configuration)
@@ -462,9 +901,6 @@ export const AuthControllerApiFactory = function (configuration?: Configuration,
 
 /**
  * AuthControllerApi - object-oriented interface
- * @export
- * @class AuthControllerApi
- * @extends {BaseAPI}
  */
 export class AuthControllerApi extends BaseAPI {
     /**
@@ -472,7 +908,6 @@ export class AuthControllerApi extends BaseAPI {
      * @param {LoginRequest} loginRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthControllerApi
      */
     public login(loginRequest: LoginRequest, options?: RawAxiosRequestConfig) {
         return AuthControllerApiFp(this.configuration).login(loginRequest, options).then((request) => request(this.axios, this.basePath));
@@ -482,7 +917,6 @@ export class AuthControllerApi extends BaseAPI {
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthControllerApi
      */
     public logout(options?: RawAxiosRequestConfig) {
         return AuthControllerApiFp(this.configuration).logout(options).then((request) => request(this.axios, this.basePath));
@@ -493,7 +927,6 @@ export class AuthControllerApi extends BaseAPI {
      * @param {RefreshTokenRequest} refreshTokenRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthControllerApi
      */
     public refreshToken(refreshTokenRequest: RefreshTokenRequest, options?: RawAxiosRequestConfig) {
         return AuthControllerApiFp(this.configuration).refreshToken(refreshTokenRequest, options).then((request) => request(this.axios, this.basePath));
@@ -504,7 +937,6 @@ export class AuthControllerApi extends BaseAPI {
      * @param {RegisterRequest} registerRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthControllerApi
      */
     public register(registerRequest: RegisterRequest, options?: RawAxiosRequestConfig) {
         return AuthControllerApiFp(this.configuration).register(registerRequest, options).then((request) => request(this.axios, this.basePath));

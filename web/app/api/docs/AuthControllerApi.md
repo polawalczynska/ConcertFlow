@@ -56,9 +56,10 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**400** | Bad Request |  -  |
 |**401** | Unauthorized |  -  |
+|**400** | Bad Request |  -  |
 |**403** | Forbidden |  -  |
+|**404** | Not Found |  -  |
 |**200** | OK |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -102,9 +103,10 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**400** | Bad Request |  -  |
 |**401** | Unauthorized |  -  |
+|**400** | Bad Request |  -  |
 |**403** | Forbidden |  -  |
+|**404** | Not Found |  -  |
 |**200** | OK |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -156,9 +158,10 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**400** | Bad Request |  -  |
 |**401** | Unauthorized |  -  |
+|**400** | Bad Request |  -  |
 |**403** | Forbidden |  -  |
+|**404** | Not Found |  -  |
 |**200** | OK |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -210,9 +213,10 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**400** | Bad Request |  -  |
 |**401** | Unauthorized |  -  |
+|**400** | Bad Request |  -  |
 |**403** | Forbidden |  -  |
+|**404** | Not Found |  -  |
 |**201** | Created |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
