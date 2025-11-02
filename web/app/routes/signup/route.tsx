@@ -9,40 +9,52 @@ import PasswordInput from "~/components/auth/PasswordInput";
 import SubmitButton from "~/components/auth/SubmitButton";
 import AuthLink from "~/components/auth/AuthLink";
 import { useRegister } from "~/hooks/useAuth";
-import type { RegisterRequestRoleEnum } from "~/api";
+import { registerSchema, registerFormDataToRequest, type RegisterFormData } from "~/lib/validations/auth";
 
 export default function SignUpPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<RegisterRequestRoleEnum | "">("");
+  const [role, setRole] = useState<"" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER">("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
   const registerMutation = useRegister();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      // TODO: Show error message
-      return;
-    }
-
-    if (!role) {
-      // TODO: Show error message
-      return;
-    }
-
-    registerMutation.mutate({
+    setErrors({});
+    const result = registerSchema.safeParse({
       firstName,
       lastName,
       email,
-      role: role as RegisterRequestRoleEnum,
+      role,
       password,
       confirmPassword,
     });
+
+    if (!result.success) {
+      const fieldErrors: Partial<Record<keyof RegisterFormData, string>> = {};
+      result.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          fieldErrors[issue.path[0] as keyof RegisterFormData] = issue.message;
+        }
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    // Submit if validation passes
+    const requestData = registerFormDataToRequest(result.data);
+    registerMutation.mutate(requestData);
+  };
+
+  const clearFieldError = (field: keyof RegisterFormData) => {
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
   };
 
   return (
@@ -64,7 +76,11 @@ export default function SignUpPage() {
                   label="First Name"
                   placeholder="Kate"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    clearFieldError("firstName");
+                  }}
+                  error={errors.firstName}
                 />
                 <NameInput
                   id="lastName"
@@ -72,18 +88,30 @@ export default function SignUpPage() {
                   label="Last Name"
                   placeholder="Johnson"
                   value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    clearFieldError("lastName");
+                  }}
+                  error={errors.lastName}
                 />
               </div>
 
               <EmailInput
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearFieldError("email");
+                }}
+                error={errors.email}
               />
 
               <RoleSelect
                 value={role}
-                onChange={(e) => setRole(e.target.value as RegisterRequestRoleEnum | "")}
+                onChange={(e) => {
+                  setRole(e.target.value as typeof role);
+                  clearFieldError("role");
+                }}
+                error={errors.role}
               />
 
               <PasswordInput
@@ -92,9 +120,13 @@ export default function SignUpPage() {
                 label="Password"
                 placeholder="Create a strong password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  clearFieldError("password");
+                }}
                 showPassword={showPassword}
                 onTogglePassword={() => setShowPassword(!showPassword)}
+                error={errors.password}
               />
 
               <PasswordInput
@@ -103,9 +135,13 @@ export default function SignUpPage() {
                 label="Confirm Password"
                 placeholder="Confirm your password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  clearFieldError("confirmPassword");
+                }}
                 showPassword={showConfirmPassword}
                 onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+                error={errors.confirmPassword}
               />
 
               <SubmitButton
@@ -125,4 +161,3 @@ export default function SignUpPage() {
     </div>
   );
 }
-

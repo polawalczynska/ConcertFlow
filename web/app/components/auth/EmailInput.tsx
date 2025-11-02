@@ -3,9 +3,10 @@ import { Mail } from "lucide-react";
 interface EmailInputProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
 }
 
-export default function EmailInput({ value, onChange }: EmailInputProps) {
+export default function EmailInput({ value, onChange, error }: EmailInputProps) {
   return (
     <div className="space-y-2">
       <label htmlFor="email" className="block text-sm font-medium text-text-primary">
@@ -20,10 +21,14 @@ export default function EmailInput({ value, onChange }: EmailInputProps) {
           value={value}
           onChange={onChange}
           placeholder="kate.johnson@concertflow.com"
-          className="w-full rounded-lg border border-border-light bg-bg-main px-4 py-2.5 pl-10 text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 focus:border-border-light"
-          required
+          className={`w-full rounded-lg border bg-bg-main px-4 py-2.5 pl-10 text-text-primary placeholder-text-muted focus:outline-none focus:ring-0 ${
+            error
+              ? "border-red-500 focus:border-red-500"
+              : "border-border-light focus:border-border-light"
+          }`}
         />
       </div>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

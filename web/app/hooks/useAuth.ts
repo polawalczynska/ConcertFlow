@@ -33,7 +33,7 @@ export function useLogin() {
       queryClient.invalidateQueries({ queryKey: ["auth"] });
       navigate("/");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Login error:", error);
     },
   });
@@ -49,7 +49,7 @@ export function useRegister() {
     onSuccess: () => {
       navigate("/login");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Registration error:", error);
     },
   });
@@ -72,7 +72,7 @@ export function useLogout() {
       queryClient.clear();
       navigate("/login");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       clearTokens();
       queryClient.clear();
       navigate("/login");
@@ -100,7 +100,7 @@ export function useRefreshToken() {
 
       queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("Token refresh error:", error);
       clearTokens();
       queryClient.clear();

@@ -1,6 +1,5 @@
 import type { AppLoadContext, EntryContext } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
-import { isbot } from "isbot";
 import { renderToString } from "react-dom/server";
 
 export default async function handleRequest(
@@ -8,9 +7,8 @@ export default async function handleRequest(
   statusCode: number,
   headers: Headers,
   remixContext: EntryContext,
-  loadContext: AppLoadContext
+  _loadContext: AppLoadContext
 ) {
-  const userAgent = request.headers.get("user-agent");
   const html = renderToString(
     <RemixServer context={remixContext} url={request.url} />
   );
