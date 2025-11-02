@@ -1,5 +1,6 @@
 package com.concertflow.api.user.service;
 
+import com.concertflow.api.exceptions.types.UserDisabledException;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.entity.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static com.concertflow.api.exceptions.ErrorMessage.USER_DISABLED;
+import static com.concertflow.api.exceptions.ErrorMessage.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -17,17 +21,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-      User user = userRepository.findByEmail(email)
-          .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.message()));
 
-      if(!user.getActive()) {
-          throw new UsernameNotFoundException("User is inactive");
-      }
+        if (!user.getActive()) {
+            throw new UserDisabledException(USER_DISABLED.message());
+        }
 
-      return org.springframework.security.core.userdetails.User.builder()
-          .username(user.getEmail())
-          .password(user.getPassword())
-          .authorities("ROLE_" + user.getRole().name())
-          .build();
+        return org.springframework.security.core.userdetails.User.builder()
+            .username(user.getEmail())
+            .password(user.getPassword())
+            .authorities("ROLE_" + user.getRole().name())
+            .build();
     }
 }
