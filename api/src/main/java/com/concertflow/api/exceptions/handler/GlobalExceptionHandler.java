@@ -1,5 +1,8 @@
 package com.concertflow.api.exceptions.handler;
 
+import com.concertflow.api.exceptions.types.ArtistNotFoundException;
+import com.concertflow.api.exceptions.types.ConcertNotFoundException;
+import com.concertflow.api.exceptions.types.ConcertValidationException;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
@@ -47,6 +50,30 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleUserDisabledException(Exception ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         pd.setTitle("USER_DISABLED");
+        return pd;
+    }
+
+    @ExceptionHandler(ArtistNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleArtistNotFoundException(ArtistNotFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        pd.setTitle("ARTIST_NOT_FOUND");
+        return pd;
+    }
+
+    @ExceptionHandler(ConcertNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleConcertNotFoundException(ConcertNotFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        pd.setTitle("CONCERT_NOT_FOUND");
+        return pd;
+    }
+
+    @ExceptionHandler(ConcertValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleConcertValidationException(ConcertValidationException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("CONCERT_VALIDATION_ERROR");
         return pd;
     }
 
