@@ -1,5 +1,6 @@
 package com.concertflow.api.exceptions.handler;
 
+import com.concertflow.api.exceptions.types.ArtistAlreadyExistsException;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertValidationException;
@@ -58,6 +59,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleArtistNotFoundException(ArtistNotFoundException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         pd.setTitle("ARTIST_NOT_FOUND");
+        return pd;
+    }
+
+    @ExceptionHandler(ArtistAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleArtistAlreadyExistsException(ArtistAlreadyExistsException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("ARTIST_ALREADY_EXISTS");
         return pd;
     }
 
