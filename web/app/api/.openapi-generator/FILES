@@ -15,5 +15,7 @@ docs/LoginRequest.md
 docs/ProblemDetail.md
 docs/RefreshTokenRequest.md
 docs/RegisterRequest.md
+docs/UserControllerApi.md
+docs/UserResponse.md
 git_push.sh
 index.ts
