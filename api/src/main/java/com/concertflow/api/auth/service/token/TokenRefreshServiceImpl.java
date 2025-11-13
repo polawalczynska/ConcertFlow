@@ -29,8 +29,9 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
     @Override
     public AuthResponse refreshToken(String refreshToken) {
         TokenType tokenType = tokenParser.getTokenTypeFromToken(refreshToken);
-        if (tokenType != TokenType.REFRESH) {
-            throw new TokenRefreshException("Not a refresh token");
+
+        if (tokenType != TokenType.REFRESH && tokenType != TokenType.REMEMBER_ME) {
+            throw new TokenRefreshException("Not a valid refresh token");
         }
 
         if (!tokenValidator.validateToken(refreshToken)) {
@@ -45,7 +46,13 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
 
         String newAccessToken = tokenGeneratorFactory.generateToken(user, TokenType.ACCESS);
         String newRefreshToken = tokenGeneratorFactory.generateToken(user, TokenType.REFRESH);
-        return new AuthResponse(newAccessToken, newRefreshToken, user.getEmail(), user.getRole(), user.getId());
+        
+        String newRememberMeToken = null;
+        if (tokenType == TokenType.REMEMBER_ME) {
+            newRememberMeToken = tokenGeneratorFactory.generateToken(user, TokenType.REMEMBER_ME);
+        }
+        
+        return new AuthResponse(newAccessToken, newRefreshToken, newRememberMeToken, user.getEmail(), user.getRole(), user.getId());
     }
 }
 
