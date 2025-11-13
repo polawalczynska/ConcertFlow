@@ -7,6 +7,7 @@ import com.concertflow.api.exceptions.types.ConcertValidationException;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -51,6 +52,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleUserDisabledException(Exception ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         pd.setTitle("USER_DISABLED");
+        return pd;
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ProblemDetail handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        pd.setTitle("UNAUTHORIZED_ACCESS");
         return pd;
     }
 

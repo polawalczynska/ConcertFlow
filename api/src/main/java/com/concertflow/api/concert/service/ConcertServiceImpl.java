@@ -1,72 +1,118 @@
 package com.concertflow.api.concert.service;
 
-import com.concertflow.api.approval.entity.Approval;
-import com.concertflow.api.approval.entity.ApprovalRepository;
-import com.concertflow.api.approval.entity.ApprovalType;
 import com.concertflow.api.artist.entity.Artist;
 import com.concertflow.api.artist.entity.ArtistRepository;
+import com.concertflow.api.concert.authorization.ConcertAuthorizationService;
+import com.concertflow.api.concert.builder.ConcertBuilder;
 import com.concertflow.api.concert.dto.ConcertRequest;
+import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
+import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.service.interfaces.ConcertService;
-import com.concertflow.api.concert.validator.ConcertBudgetValidator;
-import com.concertflow.api.concert.validator.ConcertDateValidator;
+import com.concertflow.api.concert.validator.ConcertValidator;
+import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
+import com.concertflow.api.exceptions.types.ConcertNotFoundException;
+import com.concertflow.api.mappers.ConcertMapper;
 import com.concertflow.api.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.concertflow.api.exceptions.ErrorMessage.ARTIST_NOT_FOUND;
+import static com.concertflow.api.exceptions.ErrorMessage.CONCERT_NOT_FOUND;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ConcertServiceImpl implements ConcertService {
-    private final ApprovalRepository approvalRepository;
     private final ConcertRepository concertRepository;
     private final ArtistRepository artistRepository;
-    private final ConcertBudgetValidator budgetValidator;
-    private final ConcertDateValidator dateValidator;
+    private final ConcertMapper concertMapper;
+    private final ConcertValidator concertValidator;
+    private final ConcertAuthorizationService authorizationService;
+    private final ApprovalWorkflowService approvalWorkflowService;
+    private final ConcertBuilder concertBuilder;
+
+    @Override
+    public List<ConcertResponse> getAllConcerts(
+        ConcertStatus status,
+        Long artistId,
+        Long coordinatorId,
+        String search,
+        int page,
+        int pageSize
+    ) {
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("date").ascending());
+        
+        String searchTerm = (search != null && !search.trim().isEmpty()) ? search.trim() : null;
+        String statusString = (status != null) ? status.name() : null;
+        
+        Page<Concert> concerts = concertRepository.findWithFilters(
+            statusString,
+            artistId,
+            coordinatorId,
+            searchTerm,
+            pageable
+        );
+
+        return concerts.getContent().stream()
+            .map(concertMapper::toResponse)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public ConcertResponse getConcertById(Long id) {
+        Concert concert = findConcertById(id);
+        return concertMapper.toResponse(concert);
+    }
 
     @Override
     public void createConcert(ConcertRequest request, User coordinator) {
-        validateConcertRequest(request);
+        concertValidator.validate(request);
 
-        Artist artist = artistRepository.findById(request.artistId())
-            .orElseThrow(() -> new ArtistNotFoundException(ARTIST_NOT_FOUND.message()));
+        Artist artist = findArtistById(request.artistId());
+        Concert concert = concertBuilder.build(request, artist, coordinator);
 
-        Concert concert = Concert.builder()
-            .name(request.name())
-            .date(request.date())
-            .venue(request.venue())
-            .budget(request.budget())
-            .description(request.description())
-            .artist(artist)
-            .coordinator(coordinator)
-            .build();
-
-        createApprovalWorkflow(concert);
+        concert = concertRepository.save(concert);
+        approvalWorkflowService.createApprovalWorkflow(concert);
         concertRepository.save(concert);
     }
 
-    private void validateConcertRequest(ConcertRequest request) {
-        budgetValidator.validateBudget(request.budget());
-        dateValidator.validateConcertDate(request.date());
+    @Override
+    public void updateConcert(Long id, ConcertRequest request, User coordinator) {
+        concertValidator.validate(request);
+
+        Concert concert = findConcertById(id);
+        authorizationService.validateCoordinatorAccess(concert, coordinator);
+
+        Artist artist = findArtistById(request.artistId());
+        concertBuilder.updateFields(concert, request, artist);
+        concertRepository.save(concert);
     }
 
-    private void createApprovalWorkflow(Concert concert) {
-        Approval budgetApproval = buildApproval(concert, ApprovalType.BUDGET);
-        Approval technicalApproval = buildApproval(concert, ApprovalType.TECHNICAL);
-
-        approvalRepository.save(budgetApproval);
-        approvalRepository.save(technicalApproval);
+    @Override
+    public void deleteConcert(Long id, User coordinator) {
+        Concert concert = findConcertById(id);
+        authorizationService.validateCoordinatorAccess(concert, coordinator);
+        concertRepository.delete(concert);
     }
 
-    private Approval buildApproval(Concert concert, ApprovalType type) {
-        return Approval.builder()
-            .type(type)
-            .concert(concert)
-            .build();
+    private Concert findConcertById(Long id) {
+        return concertRepository.findById(id)
+            .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
+    }
+
+    private Artist findArtistById(Long id) {
+        return artistRepository.findById(id)
+            .orElseThrow(() -> new ArtistNotFoundException(ARTIST_NOT_FOUND.message()));
     }
 }
