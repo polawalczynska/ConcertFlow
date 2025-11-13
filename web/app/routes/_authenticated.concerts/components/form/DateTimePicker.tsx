@@ -18,9 +18,13 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
     if (value) {
       try {
         const date = new Date(value);
+        if (isNaN(date.getTime())) {
+          return;
+        }
+        
         setSelectedDate(date);
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const hours = String(date.getUTCHours()).padStart(2, "0");
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
         setSelectedTime(`${hours}:${minutes}`);
       } catch {
       }
@@ -31,9 +35,11 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
     setSelectedDate(date);
     if (selectedTime) {
       const [hours, minutes] = selectedTime.split(":");
-      const newDate = new Date(date);
-      newDate.setHours(Number.parseInt(hours), Number.parseInt(minutes));
-      onChange(newDate.toISOString());
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const isoString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      onChange(isoString);
     }
   };
 
@@ -41,9 +47,11 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
     setSelectedTime(time24);
     if (selectedDate) {
       const [hours, minutes] = time24.split(":");
-      const newDate = new Date(selectedDate);
-      newDate.setHours(Number.parseInt(hours), Number.parseInt(minutes));
-      onChange(newDate.toISOString());
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const isoString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      onChange(isoString);
     }
   };
 

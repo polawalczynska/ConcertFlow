@@ -124,11 +124,11 @@ export default function ConcertsPage() {
       if (!dateString) return "";
       try {
         const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const hours = String(date.getUTCHours()).padStart(2, "0");
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
         return `${year}-${month}-${day}T${hours}:${minutes}`;
       } catch {
         return "";
@@ -163,7 +163,24 @@ export default function ConcertsPage() {
       return;
     }
 
-    const dateValue = new Date(formData.date).toISOString();
+    let dateValue: string = formData.date;
+    if (dateValue.includes("Z")) {
+      dateValue = dateValue.replace("Z", "").split(".")[0];
+    }
+    if (!dateValue.includes(":")) {
+      const date = new Date(formData.date);
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+      const day = String(date.getUTCDate()).padStart(2, "0");
+      const hours = String(date.getUTCHours()).padStart(2, "0");
+      const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+      dateValue = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+    } else if (!dateValue.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+      if (dateValue.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+        dateValue = `${dateValue}:00`;
+      }
+    }
+    
     const requestData: ConcertRequest = {
       ...formData,
       date: dateValue,
