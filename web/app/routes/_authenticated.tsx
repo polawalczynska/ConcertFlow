@@ -1,9 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import { Navbar } from "~/components/Navbar";
 import { useTokenRefresh } from "~/hooks/useTokenRefresh";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader(_request: LoaderFunctionArgs) {
   return {
     userRole: "coordinator" as const,
     userName: "Anna Kowalska",
