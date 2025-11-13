@@ -1,6 +1,6 @@
-import { AuthControllerApi, Configuration } from "~/api";
+import { AuthControllerApi, ArtistControllerApi, UserControllerApi, Configuration } from "~/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, clearTokens } from "./token-storage";
+import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "./token-storage";
 
 interface WindowWithEnv extends Window {
   ENV?: {
@@ -80,12 +80,17 @@ axiosInstance.interceptors.response.use(
             { headers: { "Content-Type": "application/json" } }
           );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
+          const { accessToken, refreshToken: newRefreshToken, rememberMeToken: newRememberMeToken } = response.data;
 
           if (accessToken) {
             setAccessToken(accessToken);
+
             if (newRefreshToken) {
               setRefreshToken(newRefreshToken);
+            }
+
+            if (newRememberMeToken) {
+              setRememberMeToken(newRememberMeToken);
             }
 
             processQueue(null, accessToken);
@@ -102,9 +107,18 @@ axiosInstance.interceptors.response.use(
         isRefreshing = false;
         clearTokens();
         if (typeof window !== "undefined") {
-          window.location.href = "/login";
+          window.location.replace("/login");
         }
         return Promise.reject(refreshError);
+      }
+    }
+    if (error.response?.status === 401) {
+      const refreshToken = getRefreshToken() || getRememberMeToken();
+      if (!refreshToken) {
+        clearTokens();
+        if (typeof window !== "undefined") {
+          window.location.replace("/login");
+        }
       }
     }
 
@@ -121,3 +135,5 @@ const configuration = new Configuration({
 });
 
 export const authApi = new AuthControllerApi(configuration, basePath, axiosInstance);
+export const artistApi = new ArtistControllerApi(configuration, basePath, axiosInstance);
+export const userApi = new UserControllerApi(configuration, basePath, axiosInstance);

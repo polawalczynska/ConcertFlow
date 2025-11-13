@@ -33,10 +33,14 @@ export function clearTokens(): void {
 }
 
 export function isAuthenticated(): boolean {
-  return !!(
-    getAccessToken() ||
-    getRefreshToken() ||
-    getRememberMeToken()
-  );
+  const accessToken = getAccessToken();
+  const refreshToken = getRefreshToken();
+  const rememberMeToken = getRememberMeToken();
+
+  if (refreshToken || rememberMeToken) {
+    return true;
+  }
+
+  return !!accessToken;
 }
 
