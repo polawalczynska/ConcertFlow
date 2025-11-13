@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { isAuthenticated, getAccessToken, getRefreshToken, getRememberMeToken } from "~/lib/token-storage";
+import { getAccessToken, getRefreshToken, getRememberMeToken } from "~/lib/token-storage";
 import { isTokenExpired } from "~/lib/token-utils";
 import { useTokenRefresh } from "~/hooks/useTokenRefresh";
 

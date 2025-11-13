@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "@remix-run/react";
-import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, clearTokens } from "~/lib/token-storage";
+import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "~/lib/token-storage";
 import { isTokenExpiringSoon, getTokenExpirationTime } from "~/lib/token-utils";
 import axios from "axios";
 
@@ -17,6 +17,29 @@ const basePath = typeof window !== "undefined"
 export function useTokenRefresh() {
   const navigate = useNavigate();
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTokenRef = useRef<(() => Promise<void>) | null>(null);
+
+  const scheduleTokenRefresh = useCallback((token: string) => {
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
+    }
+
+    const expirationTime = getTokenExpirationTime(token);
+    if (!expirationTime) {
+      refreshTimeoutRef.current = setTimeout(() => {
+        refreshTokenRef.current?.();
+      }, 55 * 60 * 1000);
+      return;
+    }
+
+    const currentTime = Date.now();
+    const timeUntilExpiration = expirationTime - currentTime;
+    const refreshTime = Math.max(timeUntilExpiration - 5 * 60 * 1000, 10 * 1000);
+
+    refreshTimeoutRef.current = setTimeout(() => {
+      refreshTokenRef.current?.();
+    }, refreshTime);
+  }, []);
 
   const refreshToken = useCallback(async () => {
     try {
@@ -34,12 +57,15 @@ export function useTokenRefresh() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      const { accessToken, refreshToken: newRefreshToken } = response.data;
+      const { accessToken, refreshToken: newRefreshToken, rememberMeToken: newRememberMeToken } = response.data;
 
       if (accessToken) {
         setAccessToken(accessToken);
         if (newRefreshToken) {
           setRefreshToken(newRefreshToken);
+        }
+        if (newRememberMeToken) {
+          setRememberMeToken(newRememberMeToken);
         }
         
         scheduleTokenRefresh(accessToken);
@@ -51,31 +77,15 @@ export function useTokenRefresh() {
       clearTokens();
       navigate("/login", { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, scheduleTokenRefresh]);
 
-  const scheduleTokenRefresh = useCallback((token: string) => {
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
-
-    const expirationTime = getTokenExpirationTime(token);
-    if (!expirationTime) {
-      refreshTimeoutRef.current = setTimeout(() => refreshToken(), 14 * 60 * 1000);
-      return;
-    }
-
-    const currentTime = Date.now();
-    const timeUntilExpiration = expirationTime - currentTime;
-    const refreshTime = Math.max(timeUntilExpiration - 60 * 1000, 5000);
-
-    refreshTimeoutRef.current = setTimeout(() => refreshToken(), refreshTime);
-  }, [refreshToken]);
+  refreshTokenRef.current = refreshToken;
 
   useEffect(() => {
     const accessToken = getAccessToken();
     
     if (accessToken) {
-      if (isTokenExpiringSoon(accessToken, 60)) {
+      if (isTokenExpiringSoon(accessToken, 300)) {
         refreshToken();
       } else {
         scheduleTokenRefresh(accessToken);

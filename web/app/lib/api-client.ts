@@ -1,6 +1,6 @@
 import { AuthControllerApi, ArtistControllerApi, UserControllerApi, Configuration } from "~/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, clearTokens } from "./token-storage";
+import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "./token-storage";
 
 interface WindowWithEnv extends Window {
   ENV?: {
@@ -80,12 +80,17 @@ axiosInstance.interceptors.response.use(
             { headers: { "Content-Type": "application/json" } }
           );
 
-          const { accessToken, refreshToken: newRefreshToken } = response.data;
+          const { accessToken, refreshToken: newRefreshToken, rememberMeToken: newRememberMeToken } = response.data;
 
           if (accessToken) {
             setAccessToken(accessToken);
+
             if (newRefreshToken) {
               setRefreshToken(newRefreshToken);
+            }
+
+            if (newRememberMeToken) {
+              setRememberMeToken(newRememberMeToken);
             }
 
             processQueue(null, accessToken);
@@ -102,14 +107,11 @@ axiosInstance.interceptors.response.use(
         isRefreshing = false;
         clearTokens();
         if (typeof window !== "undefined") {
-          // Use replace to prevent back button issues
           window.location.replace("/login");
         }
         return Promise.reject(refreshError);
       }
     }
-
-    // If 401 and no refresh token available, redirect to login
     if (error.response?.status === 401) {
       const refreshToken = getRefreshToken() || getRememberMeToken();
       if (!refreshToken) {
