@@ -8,9 +8,10 @@ interface ConcertCardProps {
   onEdit: (concert: ConcertResponse) => void;
   onDelete: (concert: ConcertResponse) => void;
   onView: (concert: ConcertResponse) => void;
+  onCancel: (concert: ConcertResponse) => void;
 }
 
-export function ConcertCard({ concert, onEdit, onDelete, onView }: ConcertCardProps) {
+export function ConcertCard({ concert, onEdit, onDelete, onView, onCancel }: ConcertCardProps) {
   return (
     <div className="p-4 hover:bg-bg-secondary">
       <div className="flex items-start justify-between mb-3">
@@ -44,6 +45,7 @@ export function ConcertCard({ concert, onEdit, onDelete, onView }: ConcertCardPr
           onView={onView}
           onEdit={onEdit}
           onDelete={onDelete}
+          onCancel={onCancel}
         />
       </div>
     </div>

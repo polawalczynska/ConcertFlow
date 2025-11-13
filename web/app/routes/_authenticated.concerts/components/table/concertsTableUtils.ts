@@ -6,6 +6,8 @@ export function getStatusColor(status?: string): string {
       return "bg-green-100 text-green-800 border-green-200";
     case "COMPLETED":
       return "bg-blue-100 text-blue-800 border-blue-200";
+    case "CANCELLED":
+      return "bg-red-100 text-red-800 border-red-200";
     default:
       return "bg-bg-secondary text-text-secondary border-border-light";
   }
@@ -20,6 +22,8 @@ export function formatStatus(status?: string): string {
       return "Approved";
     case "COMPLETED":
       return "Completed";
+    case "CANCELLED":
+      return "Cancelled";
     default:
       return status;
   }

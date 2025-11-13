@@ -26,6 +26,7 @@ export function ConcertsFilters({
     PLANNING: "Planning",
     APPROVED: "Approved",
     COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
   };
 
   const selectedArtist = artists.find((artist) => artist.id?.toString() === artistIdFilter);
@@ -53,6 +54,7 @@ export function ConcertsFilters({
             <SelectItem value="PLANNING">Planning</SelectItem>
             <SelectItem value="APPROVED">Approved</SelectItem>
             <SelectItem value="COMPLETED">Completed</SelectItem>
+            <SelectItem value="CANCELLED">Cancelled</SelectItem>
           </SelectContent>
         </Select>
         <Select value={artistIdFilter} onValueChange={onArtistIdFilterChange}>

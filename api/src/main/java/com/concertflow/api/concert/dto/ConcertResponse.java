@@ -15,6 +15,7 @@ public record ConcertResponse(
     ConcertStatus status,
     BigDecimal budget,
     String description,
+    String cancellationReason,
     Long coordinatorId,
     String coordinatorName,
     Long artistId,

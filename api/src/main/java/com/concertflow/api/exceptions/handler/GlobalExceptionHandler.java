@@ -109,6 +109,14 @@ public class GlobalExceptionHandler {
         pd.setProperty("errors", errors);
         return pd;
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleIllegalStateException(IllegalStateException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("ILLEGAL_STATE");
+        return pd;
+    }
 }
 
 

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { concertApi } from "~/lib/api-client";
-import type { ConcertRequest, GetAllConcertsStatusEnum } from "~/api";
+import type { CancelConcertRequest, ConcertRequest, GetAllConcertsStatusEnum } from "~/api";
 
 export function useConcerts(
   status?: GetAllConcertsStatusEnum,
@@ -72,6 +72,27 @@ export function useDeleteConcert() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
+    },
+  });
+}
+
+export function useCancelConcert() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      cancellationReason,
+    }: {
+      id: number;
+      cancellationReason: string;
+    }): Promise<void> => {
+      const request: CancelConcertRequest = { cancellationReason };
+      await concertApi.cancelConcert(id, request);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["concerts"] });
+      queryClient.invalidateQueries({ queryKey: ["concert", variables.id] });
     },
   });
 }

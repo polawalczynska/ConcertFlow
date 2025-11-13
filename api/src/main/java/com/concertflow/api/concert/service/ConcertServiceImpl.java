@@ -4,6 +4,7 @@ import com.concertflow.api.artist.entity.Artist;
 import com.concertflow.api.artist.entity.ArtistRepository;
 import com.concertflow.api.concert.authorization.ConcertAuthorizationService;
 import com.concertflow.api.concert.builder.ConcertBuilder;
+import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.Concert;
@@ -104,6 +105,20 @@ public class ConcertServiceImpl implements ConcertService {
         Concert concert = findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         concertRepository.delete(concert);
+    }
+
+    @Override
+    public void cancelConcert(Long id, CancelConcertRequest request, User coordinator) {
+        Concert concert = findConcertById(id);
+        authorizationService.validateCoordinatorAccess(concert, coordinator);
+        
+        if (concert.getStatus() == ConcertStatus.COMPLETED) {
+            throw new IllegalStateException("Cannot cancel a completed concert");
+        }
+        
+        concert.setStatus(ConcertStatus.CANCELLED);
+        concert.setCancellationReason(request.cancellationReason());
+        concertRepository.save(concert);
     }
 
     private Concert findConcertById(Long id) {

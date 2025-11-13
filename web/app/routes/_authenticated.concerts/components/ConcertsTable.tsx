@@ -8,9 +8,10 @@ interface ConcertsTableProps {
   onEdit: (concert: ConcertResponse) => void;
   onDelete: (concert: ConcertResponse) => void;
   onView: (concert: ConcertResponse) => void;
+  onCancel: (concert: ConcertResponse) => void;
 }
 
-export function ConcertsTable({ concerts, onEdit, onDelete, onView }: ConcertsTableProps) {
+export function ConcertsTable({ concerts, onEdit, onDelete, onView, onCancel }: ConcertsTableProps) {
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border-light bg-bg-main">
       <div className="hidden md:block w-full overflow-x-auto">
@@ -24,6 +25,7 @@ export function ConcertsTable({ concerts, onEdit, onDelete, onView }: ConcertsTa
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onView={onView}
+                onCancel={onCancel}
               />
             ))}
           </tbody>
@@ -38,6 +40,7 @@ export function ConcertsTable({ concerts, onEdit, onDelete, onView }: ConcertsTa
             onEdit={onEdit}
             onDelete={onDelete}
             onView={onView}
+            onCancel={onCancel}
           />
         ))}
       </div>

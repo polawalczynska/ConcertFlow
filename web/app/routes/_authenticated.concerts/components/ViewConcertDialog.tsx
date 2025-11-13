@@ -64,6 +64,17 @@ export function ViewConcertDialog({ isOpen, onOpenChange, concert }: ViewConcert
                 <p className="mt-1 text-base text-text-primary whitespace-pre-wrap">{concert.description}</p>
               </div>
             )}
+
+            {concert.status === "CANCELLED" && concert.cancellationReason && (
+              <div className="sm:col-span-2">
+                <Label className="text-sm font-medium text-text-secondary">Cancellation Reason</Label>
+                <div className="mt-1 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-base text-red-800 whitespace-pre-wrap break-words">
+                    {concert.cancellationReason}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>

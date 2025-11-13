@@ -88,6 +88,9 @@ export const AuthResponseRoleEnum = {
 
 export type AuthResponseRoleEnum = typeof AuthResponseRoleEnum[keyof typeof AuthResponseRoleEnum];
 
+export interface CancelConcertRequest {
+    'cancellationReason': string;
+}
 export interface ConcertRequest {
     'name': string;
     'date': string;
@@ -104,6 +107,7 @@ export interface ConcertResponse {
     'status'?: ConcertResponseStatusEnum;
     'budget'?: number;
     'description'?: string;
+    'cancellationReason'?: string;
     'coordinatorId'?: number;
     'coordinatorName'?: string;
     'artistId'?: number;
@@ -114,7 +118,8 @@ export interface ConcertResponse {
 export const ConcertResponseStatusEnum = {
     Planning: 'PLANNING',
     Approved: 'APPROVED',
-    Completed: 'COMPLETED'
+    Completed: 'COMPLETED',
+    Cancelled: 'CANCELLED'
 } as const;
 
 export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
@@ -978,6 +983,45 @@ export const ConcertControllerApiAxiosParamCreator = function (configuration?: C
     return {
         /**
          * 
+         * @param {number} id 
+         * @param {CancelConcertRequest} cancelConcertRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelConcert: async (id: number, cancelConcertRequest: CancelConcertRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('cancelConcert', 'id', id)
+            // verify required parameter 'cancelConcertRequest' is not null or undefined
+            assertParamExists('cancelConcert', 'cancelConcertRequest', cancelConcertRequest)
+            const localVarPath = `/api/concerts/{id}/cancel`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(cancelConcertRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {ConcertRequest} concertRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1186,6 +1230,19 @@ export const ConcertControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {number} id 
+         * @param {CancelConcertRequest} cancelConcertRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async cancelConcert(id: number, cancelConcertRequest: CancelConcertRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelConcert(id, cancelConcertRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ConcertControllerApi.cancelConcert']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {ConcertRequest} concertRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1261,6 +1318,16 @@ export const ConcertControllerApiFactory = function (configuration?: Configurati
     return {
         /**
          * 
+         * @param {number} id 
+         * @param {CancelConcertRequest} cancelConcertRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelConcert(id: number, cancelConcertRequest: CancelConcertRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.cancelConcert(id, cancelConcertRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {ConcertRequest} concertRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1317,6 +1384,17 @@ export const ConcertControllerApiFactory = function (configuration?: Configurati
  * ConcertControllerApi - object-oriented interface
  */
 export class ConcertControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} id 
+     * @param {CancelConcertRequest} cancelConcertRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public cancelConcert(id: number, cancelConcertRequest: CancelConcertRequest, options?: RawAxiosRequestConfig) {
+        return ConcertControllerApiFp(this.configuration).cancelConcert(id, cancelConcertRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {ConcertRequest} concertRequest 
@@ -1377,7 +1455,8 @@ export class ConcertControllerApi extends BaseAPI {
 export const GetAllConcertsStatusEnum = {
     Planning: 'PLANNING',
     Approved: 'APPROVED',
-    Completed: 'COMPLETED'
+    Completed: 'COMPLETED',
+    Cancelled: 'CANCELLED'
 } as const;
 export type GetAllConcertsStatusEnum = typeof GetAllConcertsStatusEnum[keyof typeof GetAllConcertsStatusEnum];
 

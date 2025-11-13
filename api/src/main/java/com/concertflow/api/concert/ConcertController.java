@@ -1,5 +1,6 @@
 package com.concertflow.api.concert;
 
+import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.ConcertStatus;
@@ -65,5 +66,16 @@ public class ConcertController {
     ) {
         User coordinator = (User) authentication.getPrincipal();
         concertService.deleteConcert(id, coordinator);
+    }
+
+    @PostMapping("/{id}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelConcert(
+        @PathVariable Long id,
+        @Valid @RequestBody CancelConcertRequest request,
+        Authentication authentication
+    ) {
+        User coordinator = (User) authentication.getPrincipal();
+        concertService.cancelConcert(id, request, coordinator);
     }
 }

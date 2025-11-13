@@ -8,9 +8,10 @@ interface ConcertsTableRowProps {
   onEdit: (concert: ConcertResponse) => void;
   onDelete: (concert: ConcertResponse) => void;
   onView: (concert: ConcertResponse) => void;
+  onCancel: (concert: ConcertResponse) => void;
 }
 
-export function ConcertsTableRow({ concert, onEdit, onDelete, onView }: ConcertsTableRowProps) {
+export function ConcertsTableRow({ concert, onEdit, onDelete, onView, onCancel }: ConcertsTableRowProps) {
   return (
     <tr className="hover:bg-bg-secondary">
       <td className="px-4 py-4">
@@ -39,6 +40,7 @@ export function ConcertsTableRow({ concert, onEdit, onDelete, onView }: Concerts
           onView={onView}
           onEdit={onEdit}
           onDelete={onDelete}
+          onCancel={onCancel}
         />
       </td>
     </tr>

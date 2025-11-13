@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useConcerts, useCreateConcert, useUpdateConcert, useDeleteConcert } from "~/hooks/useConcerts";
+import { useConcerts, useCreateConcert, useUpdateConcert, useDeleteConcert, useCancelConcert } from "~/hooks/useConcerts";
 import { useArtists } from "~/hooks/useArtists";
 import type { ConcertResponse, ConcertRequest, GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/components/AuthGuard";
@@ -9,6 +9,7 @@ import { ConcertsTable } from "~/routes/_authenticated.concerts/components/Conce
 import { ConcertsEmptyState } from "~/routes/_authenticated.concerts/components/ConcertsEmptyState";
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
 import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/DeleteConcertDialog";
+import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/CancelConcertDialog";
 import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/ViewConcertDialog";
 import { concertSchema } from "~/lib/validations/concert";
 import { extractApiError } from "~/lib/error-utils";
@@ -19,6 +20,7 @@ export default function ConcertsPage() {
   const [artistIdFilter, setArtistIdFilter] = useState<string>("all");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedConcert, setSelectedConcert] = useState<ConcertResponse | null>(null);
   const [formData, setFormData] = useState<ConcertRequest>({
@@ -48,6 +50,7 @@ export default function ConcertsPage() {
   const createConcert = useCreateConcert();
   const updateConcert = useUpdateConcert();
   const deleteConcert = useDeleteConcert();
+  const cancelConcert = useCancelConcert();
 
   useEffect(() => {
     if (createConcert.error) {
@@ -184,6 +187,22 @@ export default function ConcertsPage() {
     }
   };
 
+  const handleCancel = (concert: ConcertResponse) => {
+    setSelectedConcert(concert);
+    setIsCancelDialogOpen(true);
+  };
+
+  const confirmCancel = (cancellationReason: string) => {
+    if (selectedConcert?.id) {
+      cancelConcert.mutate({
+        id: selectedConcert.id,
+        cancellationReason,
+      });
+      setIsCancelDialogOpen(false);
+      setSelectedConcert(null);
+    }
+  };
+
   return (
     <AuthGuard>
       <div className="p-8 min-h-screen">
@@ -218,6 +237,7 @@ export default function ConcertsPage() {
               setSelectedConcert(concert);
               setIsViewDialogOpen(true);
             }}
+            onCancel={handleCancel}
           />
         )}
         <ConcertFormDialog
@@ -244,6 +264,18 @@ export default function ConcertsPage() {
           concert={selectedConcert}
           isDeleting={deleteConcert.isPending}
           onConfirm={handleDelete}
+        />
+        <CancelConcertDialog
+          isOpen={isCancelDialogOpen}
+          onOpenChange={(open) => {
+            setIsCancelDialogOpen(open);
+            if (!open) {
+              setSelectedConcert(null);
+            }
+          }}
+          concert={selectedConcert}
+          isCancelling={cancelConcert.isPending}
+          onConfirm={confirmCancel}
         />
         <ViewConcertDialog
           isOpen={isViewDialogOpen}

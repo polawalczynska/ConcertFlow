@@ -1,5 +1,6 @@
 package com.concertflow.api.concert.service.interfaces;
 
+import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.ConcertStatus;
@@ -24,5 +25,7 @@ public interface ConcertService {
     void updateConcert(Long id, ConcertRequest request, User coordinator);
 
     void deleteConcert(Long id, User coordinator);
+
+    void cancelConcert(Long id, CancelConcertRequest request, User coordinator);
 }
 
