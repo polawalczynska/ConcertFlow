@@ -1,6 +1,6 @@
 package com.concertflow.api.concert.scheduler;
 
-import com.concertflow.api.concert.service.interfaces.ConcertService;
+import com.concertflow.api.concert.service.ConcertService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

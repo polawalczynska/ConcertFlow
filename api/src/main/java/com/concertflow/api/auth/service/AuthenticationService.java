@@ -1,8 +1,7 @@
-package com.concertflow.api.auth.service.authentication;
+package com.concertflow.api.auth.service;
 
 import com.concertflow.api.auth.dto.AuthResponse;
 import com.concertflow.api.auth.dto.LoginRequest;
-import com.concertflow.api.auth.service.interfaces.AuthenticationService;
 import com.concertflow.api.auth.validator.UserValidator;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
@@ -26,12 +25,11 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final TokenGeneratorFactory tokenGeneratorFactory;
 
-    @Override
     public AuthResponse login(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -61,7 +59,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-    @Override
     public void logout(Authentication authentication) {
         if (authentication != null) {
             SecurityContextHolder.clearContext();

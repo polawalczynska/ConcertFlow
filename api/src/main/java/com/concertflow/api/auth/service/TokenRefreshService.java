@@ -1,7 +1,6 @@
-package com.concertflow.api.auth.service.token;
+package com.concertflow.api.auth.service;
 
 import com.concertflow.api.auth.dto.AuthResponse;
-import com.concertflow.api.auth.service.interfaces.TokenRefreshService;
 import com.concertflow.api.auth.validator.UserValidator;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
 import com.concertflow.api.jwt.factory.TokenGeneratorFactory;
@@ -20,13 +19,12 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TokenRefreshServiceImpl implements TokenRefreshService {
+public class TokenRefreshService {
     private final UserRepository userRepository;
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
     private final TokenGeneratorFactory tokenGeneratorFactory;
 
-    @Override
     public AuthResponse refreshToken(String refreshToken) {
         TokenType tokenType = tokenParser.getTokenTypeFromToken(refreshToken);
 

@@ -1,7 +1,6 @@
-package com.concertflow.api.auth.service.registration;
+package com.concertflow.api.auth.service;
 
 import com.concertflow.api.auth.dto.RegisterRequest;
-import com.concertflow.api.auth.service.interfaces.RegistrationService;
 import com.concertflow.api.exceptions.ErrorMessage;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.user.entity.User;
@@ -14,11 +13,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RegistrationServiceImpl implements RegistrationService {
+public class RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
     public void register(RegisterRequest registerRequest) {
         if (userRepository.existsByEmail(registerRequest.email())) {
             throw new EmailAlreadyExistsException(ErrorMessage.EMAIL_EXISTS.message());

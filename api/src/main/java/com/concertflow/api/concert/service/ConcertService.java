@@ -10,7 +10,6 @@ import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
-import com.concertflow.api.concert.service.interfaces.ConcertService;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
@@ -35,7 +34,7 @@ import static com.concertflow.api.exceptions.ErrorMessage.CONCERT_NOT_FOUND;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ConcertServiceImpl implements ConcertService {
+public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ArtistRepository artistRepository;
     private final ConcertMapper concertMapper;
@@ -44,7 +43,6 @@ public class ConcertServiceImpl implements ConcertService {
     private final ApprovalWorkflowService approvalWorkflowService;
     private final ConcertBuilder concertBuilder;
 
-    @Override
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
         Long artistId,
@@ -71,13 +69,11 @@ public class ConcertServiceImpl implements ConcertService {
             .collect(Collectors.toList());
     }
 
-    @Override
     public ConcertResponse getConcertById(Long id) {
         Concert concert = findConcertById(id);
         return concertMapper.toResponse(concert);
     }
 
-    @Override
     public void createConcert(ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
@@ -89,7 +85,6 @@ public class ConcertServiceImpl implements ConcertService {
         concertRepository.save(concert);
     }
 
-    @Override
     public void updateConcert(Long id, ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
@@ -101,14 +96,12 @@ public class ConcertServiceImpl implements ConcertService {
         concertRepository.save(concert);
     }
 
-    @Override
     public void deleteConcert(Long id, User coordinator) {
         Concert concert = findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         concertRepository.delete(concert);
     }
 
-    @Override
     public void cancelConcert(Long id, CancelConcertRequest request, User coordinator) {
         Concert concert = findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
@@ -127,7 +120,6 @@ public class ConcertServiceImpl implements ConcertService {
             .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
     }
 
-    @Override
     public void completePastConcerts() {
         LocalDateTime now = LocalDateTime.now();
         List<Concert> concertsToComplete = concertRepository.findConcertsToComplete(now);
@@ -140,7 +132,6 @@ public class ConcertServiceImpl implements ConcertService {
         }
     }
 
-    @Override
     public void cancelUnapprovedPastConcerts() {
         LocalDateTime now = LocalDateTime.now();
         List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);

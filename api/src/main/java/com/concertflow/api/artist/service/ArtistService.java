@@ -4,7 +4,6 @@ import com.concertflow.api.artist.dto.ArtistRequest;
 import com.concertflow.api.artist.dto.ArtistResponse;
 import com.concertflow.api.artist.entity.Artist;
 import com.concertflow.api.artist.entity.ArtistRepository;
-import com.concertflow.api.artist.service.interfaces.ArtistService;
 import com.concertflow.api.artist.validator.ArtistValidator;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.Concert;
@@ -29,14 +28,13 @@ import static com.concertflow.api.exceptions.ErrorMessage.ARTIST_NOT_FOUND;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ArtistServiceImpl implements ArtistService {
+public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ConcertRepository concertRepository;
     private final ArtistMapper artistMapper;
     private final ConcertMapper concertMapper;
     private final ArtistValidator artistValidator;
 
-    @Override
     public List<ArtistResponse> getAllArtists(String search, int page, int pageSize) {
         List<Artist> artists = search != null && !search.trim().isEmpty()
             ? findArtistsByName(search.trim())
@@ -47,20 +45,17 @@ public class ArtistServiceImpl implements ArtistService {
             .collect(Collectors.toList());
     }
 
-    @Override
     public ArtistResponse getArtistById(Long id) {
         Artist artist = findArtistById(id);
         return convertToResponse(artist);
     }
 
-    @Override
     public void createArtist(@Valid ArtistRequest request) {
         artistValidator.validateNameUnique(request.name());
         Artist artist = buildArtist(request);
         artistRepository.save(artist);
     }
 
-    @Override
     public void updateArtist(Long id, @Valid ArtistRequest request) {
         Artist artist = findArtistById(id);
         artistValidator.validateNameUniqueForUpdate(artist, request.name());
@@ -68,13 +63,11 @@ public class ArtistServiceImpl implements ArtistService {
         artistRepository.save(artist);
     }
 
-    @Override
     public void deleteArtist(Long id) {
         Artist artist = findArtistById(id);
         artistRepository.delete(artist);
     }
 
-    @Override
     public List<ConcertResponse> getArtistConcerts(Long id) {
         Artist artist = findArtistById(id);
         List<Concert> concerts = concertRepository.findByArtistId(artist.getId());
@@ -83,7 +76,6 @@ public class ArtistServiceImpl implements ArtistService {
             .collect(Collectors.toList());
     }
 
-    @Override
     public List<ArtistResponse> searchArtists(String query) {
         List<Artist> artists = findArtistsByName(query);
         return artists.stream()

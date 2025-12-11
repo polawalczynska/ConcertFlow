@@ -4,7 +4,7 @@ import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.ConcertStatus;
-import com.concertflow.api.concert.service.interfaces.ConcertService;
+import com.concertflow.api.concert.service.ConcertService;
 import com.concertflow.api.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package com.concertflow.api.artist;
 
 import com.concertflow.api.artist.dto.ArtistRequest;
 import com.concertflow.api.artist.dto.ArtistResponse;
-import com.concertflow.api.artist.service.interfaces.ArtistService;
+import com.concertflow.api.artist.service.ArtistService;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
