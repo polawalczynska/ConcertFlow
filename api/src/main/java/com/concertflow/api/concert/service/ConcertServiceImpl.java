@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,6 +125,33 @@ public class ConcertServiceImpl implements ConcertService {
     private Concert findConcertById(Long id) {
         return concertRepository.findById(id)
             .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
+    }
+
+    @Override
+    public void completePastConcerts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Concert> concertsToComplete = concertRepository.findConcertsToComplete(now);
+        
+        if (!concertsToComplete.isEmpty()) {
+            for (Concert concert : concertsToComplete) {
+                concert.setStatus(ConcertStatus.COMPLETED);
+            }
+            concertRepository.saveAll(concertsToComplete);
+        }
+    }
+
+    @Override
+    public void cancelUnapprovedPastConcerts() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);
+        
+        if (!concertsToCancel.isEmpty()) {
+            for (Concert concert : concertsToCancel) {
+                concert.setStatus(ConcertStatus.CANCELLED);
+                concert.setCancellationReason("Automatycznie anulowany - koncert nie został zatwierdzony przed terminem");
+            }
+            concertRepository.saveAll(concertsToCancel);
+        }
     }
 
     private Artist findArtistById(Long id) {

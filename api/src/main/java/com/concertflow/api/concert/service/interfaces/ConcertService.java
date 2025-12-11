@@ -27,5 +27,9 @@ public interface ConcertService {
     void deleteConcert(Long id, User coordinator);
 
     void cancelConcert(Long id, CancelConcertRequest request, User coordinator);
+
+    void completePastConcerts();
+
+    void cancelUnapprovedPastConcerts();
 }
 
