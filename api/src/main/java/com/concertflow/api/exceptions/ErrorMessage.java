@@ -10,7 +10,8 @@ public enum ErrorMessage {
     ARTIST_ALREADY_EXISTS("Artist with this name already exists"),
     CONCERT_NOT_FOUND("Concert not found"),
     INVALID_BUDGET("Budget must be greater than zero"),
-    INVALID_CONCERT_DATE("Concert date must be planned at least 2 weeks ahead");
+    INVALID_CONCERT_DATE("Concert date must be planned at least 2 weeks ahead"),
+    UNAUTHORIZED_ACCESS("You are not authorized to perform this action");
 
     private final String message;
 

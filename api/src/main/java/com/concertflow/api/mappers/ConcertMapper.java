@@ -18,6 +18,7 @@ public class ConcertMapper {
             concert.getStatus(),
             concert.getBudget(),
             concert.getDescription(),
+            concert.getCancellationReason(),
             concert.getCoordinator() != null ? concert.getCoordinator().getId() : null,
             concert.getCoordinator() != null
                 ? concert.getCoordinator().getFirstName() + " " + concert.getCoordinator().getLastName()

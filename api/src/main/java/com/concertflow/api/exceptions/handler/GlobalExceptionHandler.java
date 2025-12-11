@@ -7,6 +7,7 @@ import com.concertflow.api.exceptions.types.ConcertValidationException;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -54,6 +55,14 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ProblemDetail handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        pd.setTitle("UNAUTHORIZED_ACCESS");
+        return pd;
+    }
+
     @ExceptionHandler(ArtistNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleArtistNotFoundException(ArtistNotFoundException ex) {
@@ -98,6 +107,14 @@ public class GlobalExceptionHandler {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
         pd.setTitle("VALIDATION_ERROR");
         pd.setProperty("errors", errors);
+        return pd;
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleIllegalStateException(IllegalStateException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("ILLEGAL_STATE");
         return pd;
     }
 }

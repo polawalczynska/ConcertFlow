@@ -21,3 +21,8 @@
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+# Ignore markdown files and docs folder
+*.md
+docs/**
+git_push.sh

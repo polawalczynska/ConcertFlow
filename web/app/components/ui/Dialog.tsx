@@ -54,6 +54,7 @@ export function DialogContent({ className, children }: DialogContentProps) {
         "bg-bg-main rounded-xl border border-border-light shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto",
         className
       )}
+      style={className?.includes("max-w") ? undefined : {}}
       onClick={(e) => e.stopPropagation()}
     >
       {children}

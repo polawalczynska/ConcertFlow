@@ -25,7 +25,8 @@ if wget http://localhost:8080/api/api-docs -O "$SPEC_FILE"; then
     --model-package models \
     --type-mappings integer=number \
     --language-specific-primitives "string,number" \
-    --skip-validate-spec
+    --skip-validate-spec \
+    --additional-properties=generateMarkdown=false,generateGitPush=false
 else
   echo "run server first"
   exit 1

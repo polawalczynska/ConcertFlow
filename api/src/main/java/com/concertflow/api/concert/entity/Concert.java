@@ -46,6 +46,8 @@ public class Concert {
 
     private String description;
 
+    private String cancellationReason;
+
     @ManyToOne
     @JoinColumn(name = "coordinator_id", nullable = false)
     private User coordinator;
