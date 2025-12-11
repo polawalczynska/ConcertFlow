@@ -9,6 +9,35 @@ interface DateTimePickerProps {
   error?: string;
 }
 
+const parseISOString = (isoString: string): { date: Date; time: string } | null => {
+  try {
+    const cleanString = isoString.replace("Z", "").split(".")[0];
+    const [datePart, timePart] = cleanString.split("T");
+    
+    if (!datePart || !timePart) {
+      return null;
+    }
+    
+    const [year, month, day] = datePart.split("-").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+    
+    const date = new Date(year, month - 1, day);
+    const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    
+    return { date, time };
+  } catch {
+    return null;
+  }
+};
+
+const formatToISOString = (date: Date, time: string): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const [hours, minutes] = time.split(":");
+  return `${year}-${month}-${day}T${hours}:${minutes}:00`;
+};
+
 export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -16,29 +45,23 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
 
   useEffect(() => {
     if (value) {
-      try {
-        const date = new Date(value);
-        if (isNaN(date.getTime())) {
-          return;
-        }
-        
-        setSelectedDate(date);
-        const hours = String(date.getUTCHours()).padStart(2, "0");
-        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-        setSelectedTime(`${hours}:${minutes}`);
-      } catch {
+      const parsed = parseISOString(value);
+      if (parsed) {
+        setSelectedDate(parsed.date);
+        setSelectedTime(parsed.time);
+        setCurrentMonth(new Date(parsed.date.getFullYear(), parsed.date.getMonth(), 1));
       }
+    } else {
+      setSelectedDate(null);
+      setSelectedTime(null);
+      setCurrentMonth(new Date());
     }
   }, [value]);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     if (selectedTime) {
-      const [hours, minutes] = selectedTime.split(":");
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      const isoString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      const isoString = formatToISOString(date, selectedTime);
       onChange(isoString);
     }
   };
@@ -46,11 +69,7 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
   const handleTimeChange = (time24: string) => {
     setSelectedTime(time24);
     if (selectedDate) {
-      const [hours, minutes] = time24.split(":");
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(selectedDate.getDate()).padStart(2, "0");
-      const isoString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      const isoString = formatToISOString(selectedDate, time24);
       onChange(isoString);
     }
   };
