@@ -3,7 +3,7 @@ import { Label } from "~/components/ui/Label";
 import { HourSelect } from "./HourSelect";
 import { MinuteSelect } from "./MinuteSelect";
 import { PeriodSelect } from "./PeriodSelect";
-import { convertTo24Hour, parseTime24To12 } from "../../utils/timeUtils";
+import { convertTo24Hour, parseTime24To12 } from "../../../utils/timeUtils";
 
 interface TimeInputProps {
   selectedTime: string | null;

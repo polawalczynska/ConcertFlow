@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/Select";
 import { Label } from "~/components/ui/Label";
-import { hourOptions } from "../../utils/timeUtils";
+import { hourOptions } from "../../../utils/timeUtils";
 
 interface HourSelectProps {
   value: string;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/Select";
 import { Label } from "~/components/ui/Label";
-import { generateMinuteOptions } from "../../utils/timeUtils";
+import { generateMinuteOptions } from "../../../utils/timeUtils";
 
 interface MinuteSelectProps {
   value: string;

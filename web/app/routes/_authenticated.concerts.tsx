@@ -8,9 +8,9 @@ import { ConcertsFilters } from "~/routes/_authenticated.concerts/components/Con
 import { ConcertsTable } from "~/routes/_authenticated.concerts/components/ConcertsTable";
 import { ConcertsEmptyState } from "~/routes/_authenticated.concerts/components/ConcertsEmptyState";
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
-import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/DeleteConcertDialog";
-import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/CancelConcertDialog";
-import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/ViewConcertDialog";
+import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
+import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
+import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/ViewConcertDialog";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
 

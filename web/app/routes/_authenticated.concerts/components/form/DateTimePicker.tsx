@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { CalendarGrid } from "./CalendarGrid";
-import { TimeSlotList } from "./TimeSlotList";
+import { TimeSlotList } from "./time/TimeSlotList";
 import { Label } from "~/components/ui/Label";
 
 interface DateTimePickerProps {

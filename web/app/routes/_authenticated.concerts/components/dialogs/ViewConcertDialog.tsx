@@ -5,8 +5,8 @@ import {
   DialogTitle,
 } from "~/components/ui/Dialog";
 import type { ConcertResponse } from "~/api";
-import { ConcertStatusBadge } from "./table/ConcertStatusBadge";
-import { formatDate } from "./table/concertsTableUtils";
+import { ConcertStatusBadge } from "../table/ConcertStatusBadge";
+import { formatDate } from "../table/concertsTableUtils";
 import { Label } from "~/components/ui/Label";
 
 interface ViewConcertDialogProps {
