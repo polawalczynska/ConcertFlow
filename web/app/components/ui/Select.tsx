@@ -100,8 +100,11 @@ export const SelectTrigger = forwardRef<
 
 SelectTrigger.displayName = "SelectTrigger";
 
-export function SelectValue({placeholder}: { placeholder?: string }) {
+export function SelectValue({placeholder, children}: { placeholder?: string; children?: ReactNode }) {
   const {value} = useSelectContext();
+  if (children !== undefined) {
+    return <span>{children || <span className="text-text-secondary">{placeholder}</span>}</span>;
+  }
   return <span>{value || <span className="text-text-secondary">{placeholder}</span>}</span>;
 }
 

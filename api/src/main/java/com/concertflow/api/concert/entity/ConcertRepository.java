@@ -19,15 +19,13 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
         "(:status IS NULL OR c.status = CAST(:status AS text)) AND " +
         "(:artistId IS NULL OR c.artist_id = :artistId) AND " +
         "(:coordinatorId IS NULL OR c.coordinator_id = :coordinatorId) AND " +
-        "(:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')) OR " +
-        "LOWER(c.venue) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%'))) " +
+        "(:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%'))) " +
         "ORDER BY c.date ASC",
         countQuery = "SELECT COUNT(*) FROM concerts c WHERE " +
         "(:status IS NULL OR c.status = CAST(:status AS text)) AND " +
         "(:artistId IS NULL OR c.artist_id = :artistId) AND " +
         "(:coordinatorId IS NULL OR c.coordinator_id = :coordinatorId) AND " +
-        "(:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')) OR " +
-        "LOWER(c.venue) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')))",
+        "(:search IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')))",
         nativeQuery = true)
     Page<Concert> findWithFilters(
         @Param("status") String status,
@@ -43,6 +41,12 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
         @Param("endDate") LocalDateTime endDate,
         Pageable pageable
     );
+
+    @Query("SELECT c FROM Concert c WHERE c.date < :currentDate AND c.status = com.concertflow.api.concert.entity.ConcertStatus.APPROVED")
+    List<Concert> findConcertsToComplete(@Param("currentDate") LocalDateTime currentDate);
+
+    @Query("SELECT c FROM Concert c WHERE c.date < :currentDate AND c.status = com.concertflow.api.concert.entity.ConcertStatus.PLANNING")
+    List<Concert> findUnapprovedPastConcerts(@Param("currentDate") LocalDateTime currentDate);
 
     Optional<Concert> findById(Long id);
 }
