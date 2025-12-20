@@ -36,7 +36,7 @@ export function Navbar() {
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/artists" className="flex flex-col items-start">
+            <Link to="/dashboard" className="flex flex-col items-start">
               <h1 className="text-xl font-bold bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent leading-tight">
                 ConcertFlow
               </h1>
