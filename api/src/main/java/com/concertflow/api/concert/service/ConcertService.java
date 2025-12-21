@@ -18,6 +18,7 @@ import com.concertflow.api.mappers.ConcertMapper;
 import com.concertflow.api.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +75,7 @@ public class ConcertService {
         return concertMapper.toResponse(concert);
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void createConcert(ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
@@ -85,6 +87,7 @@ public class ConcertService {
         concertRepository.save(concert);
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void updateConcert(Long id, ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
@@ -96,12 +99,14 @@ public class ConcertService {
         concertRepository.save(concert);
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void deleteConcert(Long id, User coordinator) {
         Concert concert = findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         concertRepository.delete(concert);
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void cancelConcert(Long id, CancelConcertRequest request, User coordinator) {
         Concert concert = findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
@@ -120,6 +125,7 @@ public class ConcertService {
             .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void completePastConcerts() {
         LocalDateTime now = LocalDateTime.now();
         List<Concert> concertsToComplete = concertRepository.findConcertsToComplete(now);
@@ -132,6 +138,7 @@ public class ConcertService {
         }
     }
 
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     public void cancelUnapprovedPastConcerts() {
         LocalDateTime now = LocalDateTime.now();
         List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);

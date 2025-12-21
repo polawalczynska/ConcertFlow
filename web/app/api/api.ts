@@ -113,6 +113,7 @@ export interface ConcertResponse {
     'artistId'?: number;
     'artistName'?: string;
     'approvals'?: Array<ApprovalResponse>;
+    'createdAt'?: string;
 }
 
 export const ConcertResponseStatusEnum = {
@@ -124,6 +125,93 @@ export const ConcertResponseStatusEnum = {
 
 export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
 
+export interface ConcertsByMonth {
+    'month'?: ConcertsByMonthMonth;
+    'concertCount'?: number;
+}
+export interface ConcertsByMonthChartData {
+    'month'?: string;
+    'concertCount'?: number;
+}
+export interface ConcertsByMonthMonth {
+    'year'?: number;
+    'month'?: ConcertsByMonthMonthMonthEnum;
+    'monthValue'?: number;
+    'leapYear'?: boolean;
+}
+
+export const ConcertsByMonthMonthMonthEnum = {
+    January: 'JANUARY',
+    February: 'FEBRUARY',
+    March: 'MARCH',
+    April: 'APRIL',
+    May: 'MAY',
+    June: 'JUNE',
+    July: 'JULY',
+    August: 'AUGUST',
+    September: 'SEPTEMBER',
+    October: 'OCTOBER',
+    November: 'NOVEMBER',
+    December: 'DECEMBER'
+} as const;
+
+export type ConcertsByMonthMonthMonthEnum = typeof ConcertsByMonthMonthMonthEnum[keyof typeof ConcertsByMonthMonthMonthEnum];
+
+export interface CoordinatorAlert {
+    'id'?: string;
+    'type'?: CoordinatorAlertTypeEnum;
+    'title'?: string;
+    'message'?: string;
+    'concertId'?: string;
+    'actionRequired'?: CoordinatorAlertActionRequiredEnum;
+    'createdAt'?: string;
+    'dismissed'?: boolean;
+}
+
+export const CoordinatorAlertTypeEnum = {
+    Warning: 'WARNING',
+    Info: 'INFO',
+    Error: 'ERROR',
+    Success: 'SUCCESS'
+} as const;
+
+export type CoordinatorAlertTypeEnum = typeof CoordinatorAlertTypeEnum[keyof typeof CoordinatorAlertTypeEnum];
+export const CoordinatorAlertActionRequiredEnum = {
+    TicketCheck: 'TICKET_CHECK',
+    ApprovalNeeded: 'APPROVAL_NEEDED',
+    UpcomingEvent: 'UPCOMING_EVENT'
+} as const;
+
+export type CoordinatorAlertActionRequiredEnum = typeof CoordinatorAlertActionRequiredEnum[keyof typeof CoordinatorAlertActionRequiredEnum];
+
+export interface CoordinatorStatsResponse {
+    'totalConcerts'?: number;
+    'plannedConcerts'?: number;
+    'approvedConcerts'?: number;
+    'completedConcerts'?: number;
+    'cancelledConcerts'?: number;
+    'totalRevenue'?: number;
+    'upcomingConcertsCount'?: number;
+    'concertsNeedingAttention'?: number;
+    'genreStats'?: Array<GenreStats>;
+    'concertsByMonth'?: Array<ConcertsByMonth>;
+    'statusDistribution'?: Array<StatusDistribution>;
+    'recentConcerts'?: Array<RecentConcert>;
+    'alerts'?: Array<CoordinatorAlert>;
+    'upcomingEvents'?: Array<UpcomingEvent>;
+    'genreChartData'?: Array<GenreChartData>;
+    'concertsByMonthChartData'?: Array<ConcertsByMonthChartData>;
+    'lastUpdated'?: string;
+}
+export interface GenreChartData {
+    'name'?: string;
+    'value'?: number;
+    'color'?: string;
+}
+export interface GenreStats {
+    'genre'?: string;
+    'concertCount'?: number;
+}
 export interface LoginRequest {
     'email': string;
     'password': string;
@@ -136,6 +224,11 @@ export interface ProblemDetail {
     'detail'?: string;
     'instance'?: string;
     'properties'?: { [key: string]: object; };
+}
+export interface RecentConcert {
+    'name'?: string;
+    'artist'?: string;
+    'status'?: string;
 }
 export interface RefreshTokenRequest {
     'refreshToken': string;
@@ -157,6 +250,18 @@ export const RegisterRequestRoleEnum = {
 
 export type RegisterRequestRoleEnum = typeof RegisterRequestRoleEnum[keyof typeof RegisterRequestRoleEnum];
 
+export interface StatusDistribution {
+    'status'?: string;
+    'count'?: number;
+    'color'?: string;
+}
+export interface UpcomingEvent {
+    'id'?: number;
+    'name'?: string;
+    'date'?: string;
+    'daysUntil'?: number;
+    'status'?: string;
+}
 export interface UserResponse {
     'id'?: number;
     'email'?: string;
@@ -1459,6 +1564,96 @@ export const GetAllConcertsStatusEnum = {
     Cancelled: 'CANCELLED'
 } as const;
 export type GetAllConcertsStatusEnum = typeof GetAllConcertsStatusEnum[keyof typeof GetAllConcertsStatusEnum];
+
+
+/**
+ * DashboardControllerApi - axios parameter creator
+ */
+export const DashboardControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCoordinatorStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/dashboard/coordinator/stats`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DashboardControllerApi - functional programming interface
+ */
+export const DashboardControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DashboardControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCoordinatorStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CoordinatorStatsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCoordinatorStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DashboardControllerApi.getCoordinatorStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DashboardControllerApi - factory interface
+ */
+export const DashboardControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DashboardControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCoordinatorStats(options?: RawAxiosRequestConfig): AxiosPromise<CoordinatorStatsResponse> {
+            return localVarFp.getCoordinatorStats(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DashboardControllerApi - object-oriented interface
+ */
+export class DashboardControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getCoordinatorStats(options?: RawAxiosRequestConfig) {
+        return DashboardControllerApiFp(this.configuration).getCoordinatorStats(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 
 /**

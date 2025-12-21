@@ -20,6 +20,7 @@ public record ConcertResponse(
     String coordinatorName,
     Long artistId,
     String artistName,
-    List<ApprovalResponse> approvals
+    List<ApprovalResponse> approvals,
+    LocalDateTime createdAt
 ) {
 }

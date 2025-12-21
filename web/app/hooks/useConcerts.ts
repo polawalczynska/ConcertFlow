@@ -39,6 +39,7 @@ export function useCreateConcert() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 }
@@ -59,6 +60,7 @@ export function useUpdateConcert() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
       queryClient.invalidateQueries({ queryKey: ["concert", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 }
@@ -72,6 +74,7 @@ export function useDeleteConcert() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 }
@@ -93,6 +96,7 @@ export function useCancelConcert() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
       queryClient.invalidateQueries({ queryKey: ["concert", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 }

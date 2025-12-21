@@ -30,7 +30,7 @@ export function useLogin() {
       }
 
       queryClient.invalidateQueries({ queryKey: ["auth"] });
-      navigate("/");
+      navigate("/dashboard");
     },
     onError: (error: unknown) => {
       console.error("Login error:", error);

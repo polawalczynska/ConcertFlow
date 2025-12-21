@@ -12,7 +12,8 @@ function getDaysInMonth(date: Date): number {
 }
 
 function getFirstDayOfMonth(date: Date): number {
-  return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  return (dayOfWeek + 6) % 7;
 }
 
 function isToday(date: Date): boolean {
@@ -104,8 +105,8 @@ export function CalendarGrid({ currentMonth, selectedDate, onDateSelect, onMonth
       </div>
       <div className="w-full flex flex-col">
         <div className="grid grid-cols-7 gap-1 mb-2 flex-shrink-0">
-          {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
-            <div key={day} className="h-6 flex items-center justify-center text-xs font-medium text-text-secondary">
+          {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
+            <div key={`day-header-${index}`} className="h-6 flex items-center justify-center text-xs font-medium text-text-secondary">
               {day}
             </div>
           ))}
