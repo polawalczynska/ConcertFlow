@@ -60,9 +60,11 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-    if (selectedTime) {
-      const isoString = formatToISOString(date, selectedTime);
-      onChange(isoString);
+    const timeToUse = selectedTime || "00:00";
+    const isoString = formatToISOString(date, timeToUse);
+    onChange(isoString);
+    if (!selectedTime) {
+      setSelectedTime("00:00");
     }
   };
 
