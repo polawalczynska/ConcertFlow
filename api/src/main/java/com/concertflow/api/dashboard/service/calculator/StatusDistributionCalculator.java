@@ -9,17 +9,18 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class StatusDistributionCalculator implements StatCalculator<List<StatusDistribution>> {
+    private final StatusCountCalculator statusCountCalculator;
+
+    public StatusDistributionCalculator(StatusCountCalculator statusCountCalculator) {
+        this.statusCountCalculator = statusCountCalculator;
+    }
+
     @Override
     public List<StatusDistribution> calculate(List<Concert> concerts) {
-        Map<ConcertStatus, Long> statusCounts = concerts.stream()
-            .collect(Collectors.groupingBy(
-                Concert::getStatus,
-                Collectors.counting()
-            ));
+        Map<ConcertStatus, Long> statusCounts = statusCountCalculator.calculate(concerts);
 
         return Arrays.asList(
             StatusDistribution.builder()
