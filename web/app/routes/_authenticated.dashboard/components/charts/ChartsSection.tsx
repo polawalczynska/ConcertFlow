@@ -2,11 +2,9 @@ import { RevenueChart } from "./RevenueChart";
 import { GenreDistributionChart } from "./GenreDistributionChart";
 import { StatusDistributionChart } from "./StatusDistributionChart";
 
-interface RevenueData {
+interface ConcertsByMonthData {
   month: string;
-  revenue: number;
-  concerts: number;
-  tickets: number;
+  concertCount: number;
 }
 
 interface GenreData {
@@ -22,16 +20,16 @@ interface StatusData {
 }
 
 interface ChartsSectionProps {
-  revenueData: RevenueData[];
+  concertsByMonthData: ConcertsByMonthData[];
   genreData: GenreData[];
   statusData: StatusData[];
 }
 
-export function ChartsSection({ revenueData, genreData, statusData }: ChartsSectionProps) {
+export function ChartsSection({ concertsByMonthData, genreData, statusData }: ChartsSectionProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
-        <RevenueChart data={revenueData} />
+        <RevenueChart data={concertsByMonthData} />
         <GenreDistributionChart data={genreData} />
       </div>
       <StatusDistributionChart data={statusData} />

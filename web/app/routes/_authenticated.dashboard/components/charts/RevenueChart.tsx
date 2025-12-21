@@ -1,23 +1,21 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 
-interface RevenueData {
+interface ConcertsByMonthData {
   month: string;
-  revenue: number;
-  concerts: number;
-  tickets: number;
+  concertCount: number;
 }
 
-interface RevenueChartProps {
-  data: RevenueData[];
+interface ConcertsByMonthChartProps {
+  data: ConcertsByMonthData[];
 }
 
-export function RevenueChart({ data }: RevenueChartProps) {
+export function RevenueChart({ data }: ConcertsByMonthChartProps) {
   return (
     <Card className="border-0 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-lg">Monthly Revenue</CardTitle>
-        <CardDescription>Revenue trends for last 6 months</CardDescription>
+        <CardTitle className="text-lg">Concerts by Month</CardTitle>
+        <CardDescription>Number of concerts for last 6 months</CardDescription>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={250}>
@@ -35,7 +33,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
             />
             <Line
               type="monotone"
-              dataKey="revenue"
+              dataKey="concertCount"
               stroke="#8B5CF6"
               strokeWidth={2}
               dot={{ fill: "#8B5CF6", r: 4 }}

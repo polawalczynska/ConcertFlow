@@ -133,7 +133,12 @@ export interface CoordinatorStatsResponse {
     'totalRevenue'?: number;
     'upcomingConcertsCount'?: number;
     'genreStats'?: Array<GenreStats>;
+    'concertsByMonth'?: Array<ConcertsByMonth>;
     'lastUpdated'?: string;
+}
+export interface ConcertsByMonth {
+    'month'?: string;
+    'concertCount'?: number;
 }
 export interface GenreStats {
     'genre'?: string;

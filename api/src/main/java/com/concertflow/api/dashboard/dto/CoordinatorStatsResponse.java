@@ -16,6 +16,7 @@ public record CoordinatorStatsResponse(
     long totalRevenue,
     long upcomingConcertsCount,
     List<GenreStats> genreStats,
+    List<ConcertsByMonth> concertsByMonth,
     LocalDateTime lastUpdated
 ) {}
 
