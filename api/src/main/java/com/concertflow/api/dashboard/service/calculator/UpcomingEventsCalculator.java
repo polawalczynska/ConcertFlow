@@ -15,12 +15,10 @@ public class UpcomingEventsCalculator implements StatCalculator<List<UpcomingEve
     @Override
     public List<UpcomingEvent> calculate(List<Concert> concerts) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime endDate = now.plusDays(DashboardConstants.UPCOMING_DAYS.getValue() * 2L);
 
         return concerts.stream()
             .filter(concert -> concert.getDate() != null
                 && concert.getDate().isAfter(now)
-                && concert.getDate().isBefore(endDate)
                 && concert.getStatus() != ConcertStatus.CANCELLED)
             .sorted((a, b) -> a.getDate().compareTo(b.getDate()))
             .limit(DashboardConstants.UPCOMING_EVENTS_COUNT.getValue())
