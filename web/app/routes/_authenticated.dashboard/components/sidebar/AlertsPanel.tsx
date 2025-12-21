@@ -4,57 +4,60 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { Badge } from "~/components/ui/Badge";
 import { cn } from "~/lib/utils";
-
-interface Alert {
-  id: number;
-  type: "error" | "warning" | "success" | "info";
-  title: string;
-  message: string;
-  time: string;
-  action: string;
-  actionUrl?: string;
-}
+import type { CoordinatorAlert } from "~/api";
 
 interface AlertsPanelProps {
-  alerts: Alert[];
-  onDismiss?: (id: number) => void;
+  alerts: CoordinatorAlert[];
+  onDismiss?: (id: string) => void;
 }
 
-function getAlertIcon(type: string) {
+function getAlertIcon(type?: string) {
   switch (type) {
-    case "error":
+    case "ERROR":
       return <AlertCircle className="h-5 w-5 text-red-500" />;
-    case "warning":
+    case "WARNING":
       return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
-    case "success":
+    case "SUCCESS":
       return <CheckCircle2 className="h-5 w-5 text-green-500" />;
     default:
       return <Info className="h-5 w-5 text-blue-500" />;
   }
 }
 
-function getAlertBgColor(type: string) {
+function getAlertBgColor(type?: string) {
   switch (type) {
-    case "error":
+    case "ERROR":
       return "bg-red-50 border-red-200";
-    case "warning":
+    case "WARNING":
       return "bg-yellow-50 border-yellow-200";
-    case "success":
+    case "SUCCESS":
       return "bg-green-50 border-green-200";
     default:
       return "bg-blue-50 border-blue-200";
   }
 }
 
-export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
-  const [dismissedAlerts, setDismissedAlerts] = useState<number[]>([]);
+function getActionText(actionRequired?: string) {
+  switch (actionRequired) {
+    case "APPROVAL_NEEDED":
+      return "Approve Now";
+    case "UPCOMING_EVENT":
+      return "Review";
+    default:
+      return "View";
+  }
+}
 
-  const handleDismiss = (id: number) => {
+export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
+  const [dismissedAlerts, setDismissedAlerts] = useState<string[]>([]);
+
+  const handleDismiss = (id?: string) => {
+    if (!id) return;
     setDismissedAlerts([...dismissedAlerts, id]);
     onDismiss?.(id);
   };
 
-  const visibleAlerts = alerts.filter((alert) => !dismissedAlerts.includes(alert.id));
+  const visibleAlerts = alerts.filter((alert) => !alert.dismissed && !dismissedAlerts.includes(alert.id ?? ""));
 
   if (visibleAlerts.length === 0) {
     return null;
@@ -76,9 +79,13 @@ export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
             <div className="mb-2 flex items-start gap-2">
               {getAlertIcon(alert.type)}
               <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">{alert.title}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{alert.message}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{alert.time}</p>
+                <p className="text-sm font-medium text-foreground">{alert.title ?? ""}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{alert.message ?? ""}</p>
+                {alert.createdAt && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {new Date(alert.createdAt).toLocaleString()}
+                  </p>
+                )}
               </div>
               <Button
                 size="sm"
@@ -89,15 +96,15 @@ export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
                 <XCircle className="h-4 w-4" />
               </Button>
             </div>
-            {alert.actionUrl ? (
-              <a href={alert.actionUrl}>
+            {alert.concertId ? (
+              <a href={`/concerts/${alert.concertId}`}>
                 <Button size="sm" className="w-full bg-transparent" variant="outline">
-                  {alert.action}
+                  {getActionText(alert.actionRequired)}
                 </Button>
               </a>
             ) : (
               <Button size="sm" className="w-full bg-transparent" variant="outline">
-                {alert.action}
+                {getActionText(alert.actionRequired)}
               </Button>
             )}
           </div>

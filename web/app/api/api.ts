@@ -113,6 +113,7 @@ export interface ConcertResponse {
     'artistId'?: number;
     'artistName'?: string;
     'approvals'?: Array<ApprovalResponse>;
+    'createdAt'?: string;
 }
 
 export const ConcertResponseStatusEnum = {
@@ -126,6 +127,10 @@ export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof t
 
 export interface ConcertsByMonth {
     'month'?: ConcertsByMonthMonth;
+    'concertCount'?: number;
+}
+export interface ConcertsByMonthChartData {
+    'month'?: string;
     'concertCount'?: number;
 }
 export interface ConcertsByMonthMonth {
@@ -152,6 +157,33 @@ export const ConcertsByMonthMonthMonthEnum = {
 
 export type ConcertsByMonthMonthMonthEnum = typeof ConcertsByMonthMonthMonthEnum[keyof typeof ConcertsByMonthMonthMonthEnum];
 
+export interface CoordinatorAlert {
+    'id'?: string;
+    'type'?: CoordinatorAlertTypeEnum;
+    'title'?: string;
+    'message'?: string;
+    'concertId'?: string;
+    'actionRequired'?: CoordinatorAlertActionRequiredEnum;
+    'createdAt'?: string;
+    'dismissed'?: boolean;
+}
+
+export const CoordinatorAlertTypeEnum = {
+    Warning: 'WARNING',
+    Info: 'INFO',
+    Error: 'ERROR',
+    Success: 'SUCCESS'
+} as const;
+
+export type CoordinatorAlertTypeEnum = typeof CoordinatorAlertTypeEnum[keyof typeof CoordinatorAlertTypeEnum];
+export const CoordinatorAlertActionRequiredEnum = {
+    TicketCheck: 'TICKET_CHECK',
+    ApprovalNeeded: 'APPROVAL_NEEDED',
+    UpcomingEvent: 'UPCOMING_EVENT'
+} as const;
+
+export type CoordinatorAlertActionRequiredEnum = typeof CoordinatorAlertActionRequiredEnum[keyof typeof CoordinatorAlertActionRequiredEnum];
+
 export interface CoordinatorStatsResponse {
     'totalConcerts'?: number;
     'plannedConcerts'?: number;
@@ -163,7 +195,18 @@ export interface CoordinatorStatsResponse {
     'concertsNeedingAttention'?: number;
     'genreStats'?: Array<GenreStats>;
     'concertsByMonth'?: Array<ConcertsByMonth>;
+    'statusDistribution'?: Array<StatusDistribution>;
+    'recentConcerts'?: Array<RecentConcert>;
+    'alerts'?: Array<CoordinatorAlert>;
+    'upcomingEvents'?: Array<UpcomingEvent>;
+    'genreChartData'?: Array<GenreChartData>;
+    'concertsByMonthChartData'?: Array<ConcertsByMonthChartData>;
     'lastUpdated'?: string;
+}
+export interface GenreChartData {
+    'name'?: string;
+    'value'?: number;
+    'color'?: string;
 }
 export interface GenreStats {
     'genre'?: string;
@@ -181,6 +224,11 @@ export interface ProblemDetail {
     'detail'?: string;
     'instance'?: string;
     'properties'?: { [key: string]: object; };
+}
+export interface RecentConcert {
+    'name'?: string;
+    'artist'?: string;
+    'status'?: string;
 }
 export interface RefreshTokenRequest {
     'refreshToken': string;
@@ -202,6 +250,18 @@ export const RegisterRequestRoleEnum = {
 
 export type RegisterRequestRoleEnum = typeof RegisterRequestRoleEnum[keyof typeof RegisterRequestRoleEnum];
 
+export interface StatusDistribution {
+    'status'?: string;
+    'count'?: number;
+    'color'?: string;
+}
+export interface UpcomingEvent {
+    'id'?: number;
+    'name'?: string;
+    'date'?: string;
+    'daysUntil'?: number;
+    'status'?: string;
+}
 export interface UserResponse {
     'id'?: number;
     'email'?: string;

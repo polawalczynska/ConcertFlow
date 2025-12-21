@@ -19,6 +19,11 @@ export function useRecentConcerts(
 ): RecentConcert[] {
   return useMemo(() => {
     return concerts
+      .filter((c) => c.createdAt)
+      .sort((a, b) => {
+        if (!a.createdAt || !b.createdAt) return 0;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      })
       .slice(0, 3)
       .map((c) => ({
         name: c.name || "Unnamed Concert",

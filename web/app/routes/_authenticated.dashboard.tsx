@@ -1,4 +1,3 @@
-import { useConcerts } from "~/hooks/useConcerts";
 import { useArtists } from "~/hooks/useArtists";
 import { useDashboardStats } from "~/hooks/useDashboardStats";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
@@ -11,21 +10,12 @@ import { QuickActions } from "./_authenticated.dashboard/components/sidebar/Quic
 import { AlertsPanel } from "./_authenticated.dashboard/components/sidebar/AlertsPanel";
 import { UpcomingEvents } from "./_authenticated.dashboard/components/sidebar/UpcomingEvents";
 import { useCoordinatorAccess } from "./_authenticated.dashboard/hooks/useCoordinatorAccess";
-import { useDashboardAlerts } from "./_authenticated.dashboard/hooks/useDashboardAlerts";
-import { useDashboardEvents } from "./_authenticated.dashboard/hooks/useDashboardEvents";
-import { useRecentConcerts, useStatusDistribution } from "./_authenticated.dashboard/hooks/useDashboardData";
 
 export default function CoordinatorDashboard() {
   const {user, userLoading, isCoordinator} = useCoordinatorAccess();
-  const {data: concerts = [], isLoading: concertsLoading} = useConcerts();
   const {data: artists = []} = useArtists();
   const {data: dashboardStats} = useDashboardStats();
   const concertForm = useConcertForm();
-
-  const alerts = useDashboardAlerts(concerts);
-  const upcomingEvents = useDashboardEvents(concerts);
-  const recentConcerts = useRecentConcerts(concerts, artists);
-  const statusDistributionData = useStatusDistribution(concerts);
   
   const pendingApprovals = dashboardStats?.concertsNeedingAttention ?? 0;
 
@@ -45,39 +35,13 @@ export default function CoordinatorDashboard() {
     upcomingConcerts: 0,
   };
 
-  const genreData = dashboardStats?.genreStats?.map((genre, index) => {
-    const colors = ["#8B5CF6", "#A78BFA", "#7C3AED", "#C4B5FD", "#6D28D9"];
-    const total = dashboardStats.genreStats?.reduce((sum, g) => sum + (g.concertCount ?? 0), 0) ?? 1;
-    const percentage = Math.round(((genre.concertCount ?? 0) / total) * 100);
-    return {
-      name: genre.genre ?? "Unknown",
-      value: percentage,
-      color: colors[index % colors.length],
-    };
-  }) ?? [];
-
-  const concertsByMonthData = dashboardStats?.concertsByMonth?.map((item) => {
-    let year = 0;
-    let monthValue = 1;
-    
-    const monthData = item.month as unknown;
-    if (typeof monthData === "string") {
-      const [yearStr, monthStr] = monthData.split("-");
-      year = parseInt(yearStr || "0", 10);
-      monthValue = parseInt(monthStr || "1", 10);
-    } else if (monthData && typeof monthData === "object" && "year" in monthData && "monthValue" in monthData) {
-      const monthObj = monthData as { year?: number; monthValue?: number };
-      year = monthObj.year ?? 0;
-      monthValue = monthObj.monthValue ?? 1;
-    }
-    
-    const monthDate = new Date(year, monthValue - 1, 1);
-    const monthName = monthDate.toLocaleDateString("en-US", { month: "short" });
-    return {
-      month: monthName,
-      concertCount: item.concertCount ?? 0,
-    };
-  }) ?? [];
+  // Use data from backend API
+  const genreData = dashboardStats?.genreChartData ?? [];
+  const concertsByMonthData = dashboardStats?.concertsByMonthChartData ?? [];
+  const statusDistributionData = dashboardStats?.statusDistribution ?? [];
+  const recentConcerts = dashboardStats?.recentConcerts ?? [];
+  const alerts = dashboardStats?.alerts ?? [];
+  const upcomingEvents = dashboardStats?.upcomingEvents ?? [];
 
   if (userLoading || !user || !isCoordinator) {
     return null;
@@ -90,7 +54,7 @@ export default function CoordinatorDashboard() {
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
           <ChartsSection concertsByMonthData={concertsByMonthData} genreData={genreData} statusData={statusDistributionData}/>
-          {!concertsLoading && recentConcerts.length > 0 && <RecentConcerts concerts={recentConcerts}/>}
+          {recentConcerts.length > 0 && <RecentConcerts concerts={recentConcerts}/>}
         </div>
         <div className="space-y-6">
           <QuickActions onCreateConcert={concertForm.openCreateModal} pendingApprovals={pendingApprovals}/>

@@ -18,6 +18,12 @@ public record CoordinatorStatsResponse(
     long concertsNeedingAttention,
     List<GenreStats> genreStats,
     List<ConcertsByMonth> concertsByMonth,
+    List<StatusDistribution> statusDistribution,
+    List<RecentConcert> recentConcerts,
+    List<CoordinatorAlert> alerts,
+    List<UpcomingEvent> upcomingEvents,
+    List<GenreChartData> genreChartData,
+    List<ConcertsByMonthChartData> concertsByMonthChartData,
     LocalDateTime lastUpdated
 ) {}
 

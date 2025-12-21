@@ -2,12 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/com
 import { Button } from "~/components/ui/Button";
 import { Badge } from "~/components/ui/Badge";
 import { getStatusColor, formatStatus } from "~/routes/_authenticated.concerts/components/table/concertsTableUtils";
-
-interface RecentConcert {
-  name: string;
-  artist: string;
-  status: string;
-}
+import type { RecentConcert } from "~/api";
 
 interface RecentConcertsProps {
   concerts: RecentConcert[];
@@ -23,8 +18,8 @@ export function RecentConcerts({ concerts }: RecentConcertsProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-lg">Recent Concerts</CardTitle>
-            <CardDescription>Latest concert activities</CardDescription>
+            <CardTitle className="text-lg">Recently Created</CardTitle>
+            <CardDescription>Newest concerts in the system</CardDescription>
           </div>
           <a href="/concerts">
             <Button variant="outline" size="sm">View All</Button>
@@ -36,10 +31,10 @@ export function RecentConcerts({ concerts }: RecentConcertsProps) {
           {concerts.map((concert, i) => (
             <div key={i} className="flex items-center justify-between rounded-lg border border-border p-3">
               <div className="flex-1">
-                <p className="font-medium text-foreground">{concert.name}</p>
-                <p className="text-sm text-muted-foreground">{concert.artist}</p>
+                <p className="font-medium text-foreground">{concert.name ?? "Unnamed Concert"}</p>
+                <p className="text-sm text-muted-foreground">{concert.artist ?? "Unknown Artist"}</p>
               </div>
-              <Badge className={getStatusColor(concert.status)}>{formatStatus(concert.status)}</Badge>
+              <Badge className={getStatusColor(concert.status ?? "PLANNING")}>{formatStatus(concert.status ?? "PLANNING")}</Badge>
             </div>
           ))}
         </div>
