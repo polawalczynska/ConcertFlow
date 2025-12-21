@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.YearMonth;
 
 @Builder
-public record MonthlyRevenue(
+public record RevenueByMonth(
     @JsonFormat(pattern = "yyyy-MM")
     YearMonth month,
     BigDecimal revenue
