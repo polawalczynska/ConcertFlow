@@ -7,6 +7,7 @@ import com.concertflow.api.dashboard.dto.CoordinatorStatsResponse;
 import com.concertflow.api.dashboard.dto.GenreStats;
 import com.concertflow.api.dashboard.dto.ConcertsByMonth;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,7 @@ public class DashboardService {
 
     private final ConcertRepository concertRepository;
 
+    @Cacheable(value = "dashboardStats", key = "'coordinatorStats'")
     public CoordinatorStatsResponse getCoordinatorStats() {
         List<Concert> allConcerts = concertRepository.findAll();
         Map<ConcertStatus, Long> statusCounts = calculateStatusCounts(allConcerts);
