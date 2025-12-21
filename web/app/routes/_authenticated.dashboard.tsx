@@ -34,9 +34,18 @@ export default function CoordinatorDashboard() {
     upcomingConcerts: 0,
   };
 
-  const genreData = dashboardStats?.genreChartData ?? [];
-  const concertsByMonthData = dashboardStats?.concertsByMonthChartData ?? [];
-  const statusDistributionData = dashboardStats?.statusDistribution ?? [];
+  const genreData = (dashboardStats?.genreChartData ?? []).filter(
+    (item): item is { name: string; value: number; color: string } =>
+      item.name !== undefined && item.value !== undefined && item.color !== undefined
+  );
+  const concertsByMonthData = (dashboardStats?.concertsByMonthChartData ?? []).filter(
+    (item): item is { month: string; concertCount: number } =>
+      item.month !== undefined && item.concertCount !== undefined
+  );
+  const statusDistributionData = (dashboardStats?.statusDistribution ?? []).filter(
+    (item): item is { status: string; count: number; color: string } =>
+      item.status !== undefined && item.count !== undefined && item.color !== undefined
+  );
   const recentConcerts = dashboardStats?.recentConcerts ?? [];
   const alerts = dashboardStats?.alerts ?? [];
   const upcomingEvents = dashboardStats?.upcomingEvents ?? [];
