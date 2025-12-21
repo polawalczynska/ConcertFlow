@@ -57,8 +57,20 @@ export default function CoordinatorDashboard() {
   }) ?? [];
 
   const concertsByMonthData = dashboardStats?.concertsByMonth?.map((item) => {
-    const year = item.month?.year ?? 0;
-    const monthValue = item.month?.monthValue ?? 1;
+    let year = 0;
+    let monthValue = 1;
+    
+    const monthData = item.month as unknown;
+    if (typeof monthData === "string") {
+      const [yearStr, monthStr] = monthData.split("-");
+      year = parseInt(yearStr || "0", 10);
+      monthValue = parseInt(monthStr || "1", 10);
+    } else if (monthData && typeof monthData === "object" && "year" in monthData && "monthValue" in monthData) {
+      const monthObj = monthData as { year?: number; monthValue?: number };
+      year = monthObj.year ?? 0;
+      monthValue = monthObj.monthValue ?? 1;
+    }
+    
     const monthDate = new Date(year, monthValue - 1, 1);
     const monthName = monthDate.toLocaleDateString("en-US", { month: "short" });
     return {
