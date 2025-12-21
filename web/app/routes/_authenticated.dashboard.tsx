@@ -26,7 +26,8 @@ export default function CoordinatorDashboard() {
   const upcomingEvents = useDashboardEvents(concerts);
   const recentConcerts = useRecentConcerts(concerts, artists);
   const statusDistributionData = useStatusDistribution(concerts);
-  const pendingApprovals = concerts.filter((c) => c.status === "PLANNING").length;
+  
+  const pendingApprovals = dashboardStats?.concertsNeedingAttention ?? 0;
 
   const stats = dashboardStats ? {
     totalConcerts: dashboardStats.totalConcerts ?? 0,
@@ -56,8 +57,9 @@ export default function CoordinatorDashboard() {
   }) ?? [];
 
   const concertsByMonthData = dashboardStats?.concertsByMonth?.map((item) => {
-    const [year, month] = item.month?.split("-") ?? ["", ""];
-    const monthDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+    const year = item.month?.year ?? 0;
+    const monthValue = item.month?.monthValue ?? 1;
+    const monthDate = new Date(year, monthValue - 1, 1);
     const monthName = monthDate.toLocaleDateString("en-US", { month: "short" });
     return {
       month: monthName,

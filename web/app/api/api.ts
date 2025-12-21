@@ -160,6 +160,7 @@ export interface CoordinatorStatsResponse {
     'cancelledConcerts'?: number;
     'totalRevenue'?: number;
     'upcomingConcertsCount'?: number;
+    'concertsNeedingAttention'?: number;
     'genreStats'?: Array<GenreStats>;
     'concertsByMonth'?: Array<ConcertsByMonth>;
     'lastUpdated'?: string;
