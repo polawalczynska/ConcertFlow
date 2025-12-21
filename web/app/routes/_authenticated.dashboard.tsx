@@ -2,7 +2,6 @@ import { useArtists } from "~/hooks/useArtists";
 import { useDashboardStats } from "~/hooks/useDashboardStats";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
-import { DashboardHeader } from "./_authenticated.dashboard/components/DashboardHeader";
 import { StatisticsGrid } from "./_authenticated.dashboard/components/statistics/StatisticsGrid";
 import { ChartsSection } from "./_authenticated.dashboard/components/charts/ChartsSection";
 import { RecentConcerts } from "./_authenticated.dashboard/components/RecentConcerts";
@@ -35,7 +34,6 @@ export default function CoordinatorDashboard() {
     upcomingConcerts: 0,
   };
 
-  // Use data from backend API
   const genreData = dashboardStats?.genreChartData ?? [];
   const concertsByMonthData = dashboardStats?.concertsByMonthChartData ?? [];
   const statusDistributionData = dashboardStats?.statusDistribution ?? [];
@@ -49,7 +47,9 @@ export default function CoordinatorDashboard() {
 
   return (
     <div className="p-6 lg:p-8 min-h-screen bg-bg-secondary">
-      <DashboardHeader/>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-text-primary">Dashboard</h1>
+      </div>
       <StatisticsGrid stats={stats}/>
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="space-y-8 lg:col-span-2">
