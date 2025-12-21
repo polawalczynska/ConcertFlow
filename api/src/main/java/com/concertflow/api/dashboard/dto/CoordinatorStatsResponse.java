@@ -2,7 +2,6 @@ package com.concertflow.api.dashboard.dto;
 
 import lombok.Builder;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +12,6 @@ public record CoordinatorStatsResponse(
     long approvedConcerts,
     long completedConcerts,
     long cancelledConcerts,
-    long totalRevenue,
     long upcomingConcertsCount,
     long concertsNeedingAttention,
     List<GenreStats> genreStats,
@@ -25,5 +23,6 @@ public record CoordinatorStatsResponse(
     List<GenreChartData> genreChartData,
     List<ConcertsByMonthChartData> concertsByMonthChartData,
     LocalDateTime lastUpdated
-) {}
+) {
+}
 

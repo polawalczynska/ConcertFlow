@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
@@ -41,7 +40,6 @@ public class DashboardService {
             .approvedConcerts(statusCounts.getOrDefault(ConcertStatus.APPROVED, 0L))
             .completedConcerts(statusCounts.getOrDefault(ConcertStatus.COMPLETED, 0L))
             .cancelledConcerts(statusCounts.getOrDefault(ConcertStatus.CANCELLED, 0L))
-            .totalRevenue(calculateTotalRevenue(allConcerts))
             .upcomingConcertsCount(countUpcomingConcerts(allConcerts))
             .concertsNeedingAttention(countConcertsNeedingAttention(allConcerts))
             .genreStats(calculateGenreStats(allConcerts))
@@ -62,14 +60,6 @@ public class DashboardService {
                 Concert::getStatus,
                 Collectors.counting()
             ));
-    }
-
-    private long calculateTotalRevenue(List<Concert> concerts) {
-        return concerts.stream()
-            .filter(concert -> concert.getStatus() == ConcertStatus.COMPLETED)
-            .map(Concert::getBudget)
-            .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .longValue();
     }
 
     private long countUpcomingConcerts(List<Concert> concerts) {
@@ -200,7 +190,7 @@ public class DashboardService {
 
         List<Concert> planningConcerts = concerts.stream()
             .filter(c -> c.getStatus() == ConcertStatus.PLANNING && c.getDate() != null)
-            .collect(Collectors.toList());
+            .toList();
 
         for (Concert concert : planningConcerts) {
             long hoursUntil = java.time.Duration.between(now, concert.getDate()).toHours();
@@ -223,7 +213,7 @@ public class DashboardService {
             .filter(c -> c.getDate() != null && c.getDate().isAfter(now))
             .sorted((a, b) -> a.getDate().compareTo(b.getDate()))
             .limit(1)
-            .collect(Collectors.toList());
+            .toList();
 
         for (Concert concert : upcomingConcerts) {
             long daysUntil = java.time.Duration.between(now, concert.getDate()).toDays();
@@ -238,7 +228,7 @@ public class DashboardService {
                     .createdAt(now)
                     .dismissed(false)
                     .build());
-                break; 
+                break;
             }
         }
 
@@ -247,7 +237,7 @@ public class DashboardService {
 
     private List<UpcomingEvent> calculateUpcomingEvents(List<Concert> concerts) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime endDate = now.plusDays(DashboardConstants.UPCOMING_DAYS.getValue() * 2); // Get more concerts to filter
+        LocalDateTime endDate = now.plusDays(DashboardConstants.UPCOMING_DAYS.getValue() * 2L); // Get more concerts to filter
 
         return concerts.stream()
             .filter(concert -> concert.getDate() != null
@@ -296,7 +286,7 @@ public class DashboardService {
 
     private List<ConcertsByMonthChartData> calculateConcertsByMonthChartData(List<Concert> concerts) {
         List<ConcertsByMonth> concertsByMonth = calculateConcertsByMonth(concerts);
-        
+
         return concertsByMonth.stream()
             .map(item -> {
                 String monthName = item.month().getMonth()
