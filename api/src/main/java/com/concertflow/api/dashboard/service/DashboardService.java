@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
 public class DashboardService {
     private static final int UPCOMING_DAYS = 7;
     private static final int MONTHS_TO_DISPLAY = 6;
+    private static final int ATTENTION_NEEDED_DAYS = 30;
 
     private final ConcertRepository concertRepository;
 
@@ -41,6 +42,7 @@ public class DashboardService {
             .cancelledConcerts(statusCounts.getOrDefault(ConcertStatus.CANCELLED, 0L))
             .totalRevenue(calculateTotalRevenue(allConcerts))
             .upcomingConcertsCount(countUpcomingConcerts(allConcerts))
+            .concertsNeedingAttention(countConcertsNeedingAttention(allConcerts))
             .genreStats(calculateGenreStats(allConcerts))
             .concertsByMonth(calculateConcertsByMonth(allConcerts))
             .lastUpdated(LocalDateTime.now())
@@ -77,6 +79,22 @@ public class DashboardService {
             && concert.getDate().isAfter(now)
             && concert.getDate().isBefore(endDate)
             && concert.getStatus() != ConcertStatus.CANCELLED;
+    }
+
+    private long countConcertsNeedingAttention(List<Concert> concerts) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneMonthFromNow = now.plusDays(ATTENTION_NEEDED_DAYS);
+
+        return concerts.stream()
+            .filter(concert -> needsAttention(concert, now, oneMonthFromNow))
+            .count();
+    }
+
+    private boolean needsAttention(Concert concert, LocalDateTime now, LocalDateTime oneMonthFromNow) {
+        return concert.getStatus() == ConcertStatus.PLANNING
+            && concert.getDate() != null
+            && concert.getDate().isAfter(now)
+            && concert.getDate().isBefore(oneMonthFromNow);
     }
 
     private List<GenreStats> calculateGenreStats(List<Concert> concerts) {

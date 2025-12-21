@@ -124,6 +124,34 @@ export const ConcertResponseStatusEnum = {
 
 export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
 
+export interface ConcertsByMonth {
+    'month'?: ConcertsByMonthMonth;
+    'concertCount'?: number;
+}
+export interface ConcertsByMonthMonth {
+    'year'?: number;
+    'month'?: ConcertsByMonthMonthMonthEnum;
+    'monthValue'?: number;
+    'leapYear'?: boolean;
+}
+
+export const ConcertsByMonthMonthMonthEnum = {
+    January: 'JANUARY',
+    February: 'FEBRUARY',
+    March: 'MARCH',
+    April: 'APRIL',
+    May: 'MAY',
+    June: 'JUNE',
+    July: 'JULY',
+    August: 'AUGUST',
+    September: 'SEPTEMBER',
+    October: 'OCTOBER',
+    November: 'NOVEMBER',
+    December: 'DECEMBER'
+} as const;
+
+export type ConcertsByMonthMonthMonthEnum = typeof ConcertsByMonthMonthMonthEnum[keyof typeof ConcertsByMonthMonthMonthEnum];
+
 export interface CoordinatorStatsResponse {
     'totalConcerts'?: number;
     'plannedConcerts'?: number;
@@ -135,10 +163,6 @@ export interface CoordinatorStatsResponse {
     'genreStats'?: Array<GenreStats>;
     'concertsByMonth'?: Array<ConcertsByMonth>;
     'lastUpdated'?: string;
-}
-export interface ConcertsByMonth {
-    'month'?: string;
-    'concertCount'?: number;
 }
 export interface GenreStats {
     'genre'?: string;

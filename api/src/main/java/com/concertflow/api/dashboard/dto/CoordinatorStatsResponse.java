@@ -15,6 +15,7 @@ public record CoordinatorStatsResponse(
     long cancelledConcerts,
     long totalRevenue,
     long upcomingConcertsCount,
+    long concertsNeedingAttention,
     List<GenreStats> genreStats,
     List<ConcertsByMonth> concertsByMonth,
     LocalDateTime lastUpdated
