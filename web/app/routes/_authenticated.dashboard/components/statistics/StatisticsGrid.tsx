@@ -19,31 +19,23 @@ export function StatisticsGrid({ stats }: StatisticsGridProps) {
         title="Total Concerts"
         value={stats.totalConcerts}
         icon={Music2}
-        trend={12.5}
-        trendUp={true}
       />
       <StatisticsCard
         title="Planned"
         value={stats.plannedConcerts}
         icon={Clock}
-        trend={-5.2}
-        trendUp={false}
         color="yellow"
       />
       <StatisticsCard
         title="Approved"
         value={stats.approvedConcerts}
         icon={CheckCircle2}
-        trend={8.3}
-        trendUp={true}
         color="green"
       />
       <StatisticsCard
         title="Completed"
         value={stats.completedConcerts}
         icon={CheckCircle2}
-        trend={15.7}
-        trendUp={true}
         color="blue"
       />
       <StatisticsCard

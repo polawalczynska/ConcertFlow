@@ -1,4 +1,3 @@
-import { TrendingUp, TrendingDown } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "~/components/ui/Card";
 import { cn } from "~/lib/utils";
@@ -7,8 +6,6 @@ interface StatisticsCardProps {
   title: string;
   value: number;
   icon: LucideIcon;
-  trend?: number;
-  trendUp?: boolean;
   subtitle?: string;
   color?: "purple" | "green" | "blue" | "yellow" | "red";
   format?: "default" | "number";
@@ -26,8 +23,6 @@ export function StatisticsCard({
   title,
   value,
   icon: Icon,
-  trend,
-  trendUp,
   subtitle,
   color = "purple",
   format = "default",
@@ -39,17 +34,6 @@ export function StatisticsCard({
           <div className={cn("rounded-lg p-2", colorClasses[color])}>
             <Icon className="h-5 w-5" />
           </div>
-          {trend !== undefined && (
-            <div
-              className={cn(
-                "flex items-center gap-1 text-xs font-medium",
-                trendUp ? "text-green-600" : "text-red-600"
-              )}
-            >
-              {trendUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-              {Math.abs(trend)}%
-            </div>
-          )}
         </div>
         <div className="mt-3">
           <p className="text-2xl font-bold text-text-primary">
