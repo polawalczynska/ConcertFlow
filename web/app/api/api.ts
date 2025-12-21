@@ -124,6 +124,21 @@ export const ConcertResponseStatusEnum = {
 
 export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
 
+export interface CoordinatorStatsResponse {
+    'totalConcerts'?: number;
+    'plannedConcerts'?: number;
+    'approvedConcerts'?: number;
+    'completedConcerts'?: number;
+    'cancelledConcerts'?: number;
+    'totalRevenue'?: number;
+    'upcomingConcertsCount'?: number;
+    'genreStats'?: Array<GenreStats>;
+    'lastUpdated'?: string;
+}
+export interface GenreStats {
+    'genre'?: string;
+    'concertCount'?: number;
+}
 export interface LoginRequest {
     'email': string;
     'password': string;
@@ -1459,6 +1474,96 @@ export const GetAllConcertsStatusEnum = {
     Cancelled: 'CANCELLED'
 } as const;
 export type GetAllConcertsStatusEnum = typeof GetAllConcertsStatusEnum[keyof typeof GetAllConcertsStatusEnum];
+
+
+/**
+ * DashboardControllerApi - axios parameter creator
+ */
+export const DashboardControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCoordinatorStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/dashboard/coordinator/stats`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DashboardControllerApi - functional programming interface
+ */
+export const DashboardControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DashboardControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCoordinatorStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CoordinatorStatsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCoordinatorStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DashboardControllerApi.getCoordinatorStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DashboardControllerApi - factory interface
+ */
+export const DashboardControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DashboardControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCoordinatorStats(options?: RawAxiosRequestConfig): AxiosPromise<CoordinatorStatsResponse> {
+            return localVarFp.getCoordinatorStats(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DashboardControllerApi - object-oriented interface
+ */
+export class DashboardControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getCoordinatorStats(options?: RawAxiosRequestConfig) {
+        return DashboardControllerApiFp(this.configuration).getCoordinatorStats(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
 
 
 /**
