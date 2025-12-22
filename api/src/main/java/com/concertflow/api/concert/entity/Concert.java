@@ -93,4 +93,8 @@ public class Concert {
     private LocalDateTime budgetApprovedAt;
 
     private Long budgetApprovedById;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer budgetVersion = 1;
 }
