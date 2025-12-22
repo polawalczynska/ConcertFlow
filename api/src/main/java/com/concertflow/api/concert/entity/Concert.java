@@ -65,4 +65,32 @@ public class Concert {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private BudgetStatus budgetStatus = BudgetStatus.PENDING;
+
+    @Column(nullable = false)
+    private BigDecimal estimatedBudget;
+
+    @Column(nullable = false)
+    private BigDecimal approvedBudget;
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<BudgetItem> budgetItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<BudgetApproval> budgetApprovals = new ArrayList<>();
+
+    private BigDecimal actualExpenses;
+
+    @Column(length = 1000)
+    private String budgetRejectionReason;
+
+    private LocalDateTime budgetApprovedAt;
+
+    private Long budgetApprovedById;
 }
