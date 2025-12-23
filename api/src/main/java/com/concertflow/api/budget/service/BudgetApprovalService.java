@@ -33,13 +33,15 @@ public class BudgetApprovalService {
     private final BudgetItemService budgetItemService;
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
-    public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, User budgetManager) {
-        log.debug("Fetching pending budgets for approval, budget manager: {}", budgetManager.getId());
+    public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
+        log.debug("Fetching pending budgets for approval, budget manager ID: {}", budgetManagerId);
+
+        accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
         Page<Concert> concerts = concertRepository.findByBudgetStatusAndStatusAndBudgetManagerId(
             BudgetStatus.SUBMITTED,
             ConcertStatus.PLANNING,
-            budgetManager.getId(),
+            budgetManagerId,
             pageable
         );
 
@@ -50,11 +52,13 @@ public class BudgetApprovalService {
     }
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
-    public BudgetDetailResponse getBudgetDetails(Long concertId, User budgetManager) {
-        log.debug("Fetching budget details for concert: {}, budget manager: {}", concertId, budgetManager.getId());
+    public BudgetDetailResponse getBudgetDetails(Long concertId, Long budgetManagerId, User authenticatedUser) {
+        log.debug("Fetching budget details for concert: {}, budget manager ID: {}", concertId, budgetManagerId);
+
+        accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
         Concert concert = findConcertById(concertId);
-        accessValidator.validateBudgetManagerAccess(concert, budgetManager);
+        accessValidator.validateBudgetManagerAccessById(concert, budgetManagerId);
 
         if (concert.getBudgetStatus() != BudgetStatus.SUBMITTED &&
             concert.getBudgetStatus() != BudgetStatus.UNDER_REVIEW) {

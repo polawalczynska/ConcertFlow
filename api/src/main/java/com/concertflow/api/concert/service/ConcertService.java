@@ -7,6 +7,7 @@ import com.concertflow.api.concert.builder.ConcertBuilder;
 import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
+import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
@@ -104,6 +105,21 @@ public class ConcertService {
         User budgetManager = request.budgetManagerId() != null 
             ? findBudgetManagerById(request.budgetManagerId())
             : null;
+        
+        // If budget manager is being changed and budget was already approved/submitted,
+        // reset budget status to PENDING so new manager can review
+        boolean budgetManagerChanged = (concert.getBudgetManager() == null && budgetManager != null) ||
+            (concert.getBudgetManager() != null && budgetManager == null) ||
+            (concert.getBudgetManager() != null && budgetManager != null &&
+                !concert.getBudgetManager().getId().equals(budgetManager.getId()));
+        
+        if (budgetManagerChanged && 
+            (concert.getBudgetStatus() == BudgetStatus.APPROVED || 
+             concert.getBudgetStatus() == BudgetStatus.SUBMITTED ||
+             concert.getBudgetStatus() == BudgetStatus.UNDER_REVIEW)) {
+            concert.setBudgetStatus(BudgetStatus.PENDING);
+        }
+        
         concertBuilder.updateFields(concert, request, artist, budgetManager);
         concertRepository.save(concert);
     }

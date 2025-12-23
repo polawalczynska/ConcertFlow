@@ -29,6 +29,7 @@ public class ConcertMapper {
             concert.getBudgetManager() != null
                 ? concert.getBudgetManager().getFirstName() + " " + concert.getBudgetManager().getLastName()
                 : null,
+            concert.getBudgetStatus(),
             mapApprovals(concert),
             concert.getCreatedAt()
         );

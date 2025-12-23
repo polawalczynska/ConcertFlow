@@ -1,5 +1,6 @@
 package com.concertflow.api.budget.service;
 
+import com.concertflow.api.budget.config.BudgetApprovalConfig;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertStatus;
@@ -18,9 +19,22 @@ public class BudgetAccessValidator {
     private final BudgetApprovalConfig config;
 
     public void validateBudgetManagerAccess(Concert concert, User budgetManager) {
-        if (concert.getBudgetManager() == null || 
+        if (concert.getBudgetManager() == null ||
             !concert.getBudgetManager().getId().equals(budgetManager.getId())) {
             throw new UnauthorizedAccessException("You are not assigned to this concert");
+        }
+    }
+
+    public void validateBudgetManagerAccessById(Concert concert, Long budgetManagerId) {
+        if (concert.getBudgetManager() == null ||
+            !concert.getBudgetManager().getId().equals(budgetManagerId)) {
+            throw new UnauthorizedAccessException("You are not assigned to this concert");
+        }
+    }
+
+    public void validateBudgetManagerIdMatchesUser(Long budgetManagerId, User authenticatedUser) {
+        if (!authenticatedUser.getId().equals(budgetManagerId)) {
+            throw new UnauthorizedAccessException("You can only access your own budget approvals");
         }
     }
 
@@ -40,9 +54,9 @@ public class BudgetAccessValidator {
                 "Budget must be greater than 0");
         }
 
-        if (concert.getEstimatedBudget().compareTo(config.MIN_BUDGET) < 0) {
+        if (concert.getEstimatedBudget().compareTo(BudgetApprovalConfig.MIN_BUDGET) < 0) {
             throw new com.concertflow.api.exceptions.types.BudgetValidationException(
-                "Minimum budget is " + config.MIN_BUDGET);
+                "Minimum budget is " + BudgetApprovalConfig.MIN_BUDGET);
         }
     }
 

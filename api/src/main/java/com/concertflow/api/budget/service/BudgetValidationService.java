@@ -1,5 +1,6 @@
 package com.concertflow.api.budget.service;
 
+import com.concertflow.api.budget.config.BudgetApprovalConfig;
 import com.concertflow.api.budget.dto.BudgetValidation;
 import com.concertflow.api.concert.entity.BudgetItem;
 import com.concertflow.api.concert.entity.BudgetStatus;
@@ -43,33 +44,33 @@ public class BudgetValidationService {
             return;
         }
 
-        if (estimatedBudget.compareTo(config.MIN_BUDGET) < 0) {
+        if (estimatedBudget.compareTo(BudgetApprovalConfig.MIN_BUDGET) < 0) {
             validations.add(BudgetValidation.builder()
                 .code("BUDGET_BELOW_MINIMUM")
-                .message("Budget is below minimum threshold of " + config.MIN_BUDGET)
+                .message("Budget is below minimum threshold of " + BudgetApprovalConfig.MIN_BUDGET)
                 .severity("ERROR")
                 .passed(false)
-                .details("Minimum budget is " + config.MIN_BUDGET)
+                .details("Minimum budget is " + BudgetApprovalConfig.MIN_BUDGET)
                 .build());
         }
 
-        if (estimatedBudget.compareTo(config.MAX_BUDGET) > 0) {
+        if (estimatedBudget.compareTo(BudgetApprovalConfig.MAX_BUDGET) > 0) {
             validations.add(BudgetValidation.builder()
                 .code("BUDGET_EXCEEDS_MAXIMUM")
-                .message("Budget exceeds maximum threshold of " + config.MAX_BUDGET)
+                .message("Budget exceeds maximum threshold of " + BudgetApprovalConfig.MAX_BUDGET)
                 .severity("WARNING")
                 .passed(false)
                 .details("Budget exceeds maximum allowed amount")
                 .build());
         }
 
-        if (estimatedBudget.compareTo(config.BUDGET_THRESHOLD) > 0) {
+        if (estimatedBudget.compareTo(BudgetApprovalConfig.BUDGET_THRESHOLD) > 0) {
             validations.add(BudgetValidation.builder()
                 .code("BUDGET_EXCEEDS_THRESHOLD")
                 .message("Budget exceeds standard threshold and requires higher approval level")
                 .severity("INFO")
                 .passed(true)
-                .details("Budget exceeds " + config.BUDGET_THRESHOLD + " threshold")
+                .details("Budget exceeds " + BudgetApprovalConfig.BUDGET_THRESHOLD + " threshold")
                 .build());
         }
     }

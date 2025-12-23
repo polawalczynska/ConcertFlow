@@ -2,6 +2,8 @@ package com.concertflow.api.budget;
 
 import com.concertflow.api.budget.dto.*;
 import com.concertflow.api.budget.service.BudgetApprovalService;
+import com.concertflow.api.security.annotation.RequireBudgetManager;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,32 +21,32 @@ public class BudgetApprovalController {
     private final BudgetApprovalService budgetApprovalService;
 
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size,
         @RequestParam(defaultValue = "date") String sortBy,
         @RequestParam(defaultValue = "asc") String direction,
-        @AuthenticationPrincipal User budgetManager
+        @RequestParam Long budgetManagerId,
+        @AuthenticationPrincipal User authenticatedUser
     ) {
-
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-
-        return budgetApprovalService.getPendingBudgets(pageable, budgetManager);
+        return budgetApprovalService.getPendingBudgets(pageable, budgetManagerId, authenticatedUser);
     }
 
     @GetMapping("/concert/{concertId}")
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public BudgetDetailResponse getBudgetDetails(
         @PathVariable Long concertId,
-        @AuthenticationPrincipal User budgetManager
+        @RequestParam Long budgetManagerId,
+        @AuthenticationPrincipal User authenticatedUser
     ) {
-        return budgetApprovalService.getBudgetDetails(concertId, budgetManager);
+        return budgetApprovalService.getBudgetDetails(concertId, budgetManagerId, authenticatedUser);
     }
 
     @PostMapping("/concert/{concertId}/approve")
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void approveBudget(
         @PathVariable Long concertId,
         @Valid @RequestBody ApproveBudgetRequest request,
@@ -55,7 +56,7 @@ public class BudgetApprovalController {
     }
 
     @PostMapping("/concert/{concertId}/reject")
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void rejectBudget(
         @PathVariable Long concertId,
         @Valid @RequestBody RejectBudgetRequest request,
@@ -65,7 +66,7 @@ public class BudgetApprovalController {
     }
 
     @PostMapping("/concert/{concertId}/request-revision")
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void requestBudgetRevision(
         @PathVariable Long concertId,
         @Valid @RequestBody RequestBudgetRevisionRequest request,
@@ -75,7 +76,7 @@ public class BudgetApprovalController {
     }
 
     @PostMapping("/concert/{concertId}/submit")
-    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN') or hasRole('ORGANIZER')")
+    @RequireCoordinator
     public void submitBudgetForApproval(
         @PathVariable Long concertId,
         @Valid @RequestBody SubmitBudgetForApprovalRequest request,
