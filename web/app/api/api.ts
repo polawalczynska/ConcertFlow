@@ -244,6 +244,7 @@ export interface ConcertRequest {
     'budget': number;
     'description'?: string;
     'artistId': number;
+    'budgetManagerId'?: number;
 }
 export interface ConcertResponse {
     'id'?: number;
@@ -258,6 +259,8 @@ export interface ConcertResponse {
     'coordinatorName'?: string;
     'artistId'?: number;
     'artistName'?: string;
+    'budgetManagerId'?: number;
+    'budgetManagerName'?: string;
     'approvals'?: Array<ApprovalResponse>;
     'createdAt'?: string;
 }
@@ -363,14 +366,14 @@ export interface LoginRequest {
     'rememberMe'?: boolean;
 }
 export interface PageBudgetApprovalDashboardResponse {
-    'totalPages'?: number;
     'totalElements'?: number;
+    'totalPages'?: number;
     'size'?: number;
     'content'?: Array<BudgetApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'numberOfElements'?: number;
     'pageable'?: PageableObject;
+    'numberOfElements'?: number;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -378,10 +381,10 @@ export interface PageBudgetApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageNumber'?: number;
-    'pageSize'?: number;
     'paged'?: boolean;
     'unpaged'?: boolean;
+    'pageSize'?: number;
+    'pageNumber'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -436,8 +439,8 @@ export interface RevisionItem {
 }
 export interface SortObject {
     'empty'?: boolean;
-    'sorted'?: boolean;
     'unsorted'?: boolean;
+    'sorted'?: boolean;
 }
 export interface StatusDistribution {
     'status'?: string;
@@ -2338,6 +2341,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user/budget-managers`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCurrentUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2376,6 +2408,17 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getBudgetManagers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBudgetManagers(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.getBudgetManagers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getCurrentUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentUser(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -2396,6 +2439,14 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagers(options?: RawAxiosRequestConfig): AxiosPromise<Array<UserResponse>> {
+            return localVarFp.getBudgetManagers(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
             return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
         },
@@ -2406,6 +2457,15 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
  * UserControllerApi - object-oriented interface
  */
 export class UserControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getBudgetManagers(options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getBudgetManagers(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.
