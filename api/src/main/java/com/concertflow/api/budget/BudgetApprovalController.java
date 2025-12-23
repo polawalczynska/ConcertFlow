@@ -25,19 +25,23 @@ public class BudgetApprovalController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size,
         @RequestParam(defaultValue = "date") String sortBy,
-        @RequestParam(defaultValue = "asc") String direction
+        @RequestParam(defaultValue = "asc") String direction,
+        @AuthenticationPrincipal User budgetManager
     ) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return budgetApprovalService.getPendingBudgets(pageable);
+        return budgetApprovalService.getPendingBudgets(pageable, budgetManager);
     }
 
     @GetMapping("/concert/{concertId}")
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
-    public BudgetDetailResponse getBudgetDetails(@PathVariable Long concertId) {
-        return budgetApprovalService.getBudgetDetails(concertId);
+    public BudgetDetailResponse getBudgetDetails(
+        @PathVariable Long concertId,
+        @AuthenticationPrincipal User budgetManager
+    ) {
+        return budgetApprovalService.getBudgetDetails(concertId, budgetManager);
     }
 
     @PostMapping("/concert/{concertId}/approve")
