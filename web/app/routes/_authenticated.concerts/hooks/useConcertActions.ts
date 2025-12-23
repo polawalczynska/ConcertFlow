@@ -1,15 +1,18 @@
 import { useState } from "react";
 import type { ConcertResponse } from "~/api";
 import { useDeleteConcert, useCancelConcert } from "~/hooks/useConcerts";
+import { useSubmitBudget } from "~/hooks/useSubmitBudget";
 
 export function useConcertActions() {
   const [selectedConcert, setSelectedConcert] = useState<ConcertResponse | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isSubmitBudgetDialogOpen, setIsSubmitBudgetDialogOpen] = useState(false);
 
   const deleteConcert = useDeleteConcert();
   const cancelConcert = useCancelConcert();
+  const submitBudget = useSubmitBudget();
 
   const handleDelete = (concert: ConcertResponse) => {
     setSelectedConcert(concert);
@@ -66,21 +69,53 @@ export function useConcertActions() {
     }
   };
 
+  const handleSubmitBudget = (concert: ConcertResponse) => {
+    setSelectedConcert(concert);
+    setIsSubmitBudgetDialogOpen(true);
+  };
+
+  const confirmSubmitBudget = (notes: string, termsAccepted: boolean) => {
+    if (selectedConcert?.id) {
+      submitBudget.mutate({
+        concertId: selectedConcert.id,
+        request: {
+          concertId: selectedConcert.id,
+          notes,
+          termsAccepted,
+        },
+      });
+      setIsSubmitBudgetDialogOpen(false);
+      setSelectedConcert(null);
+    }
+  };
+
+  const closeSubmitBudgetDialog = (open: boolean) => {
+    if (!open) {
+      setIsSubmitBudgetDialogOpen(false);
+      setSelectedConcert(null);
+    }
+  };
+
   return {
     selectedConcert,
     isDeleteDialogOpen,
     isCancelDialogOpen,
     isViewDialogOpen,
+    isSubmitBudgetDialogOpen,
     handleDelete,
     confirmDelete,
     handleCancel,
     confirmCancel,
     handleView,
+    handleSubmitBudget,
+    confirmSubmitBudget,
     closeViewDialog,
     closeDeleteDialog,
     closeCancelDialog,
+    closeSubmitBudgetDialog,
     isDeleting: deleteConcert.isPending,
     isCancelling: cancelConcert.isPending,
+    isSubmittingBudget: submitBudget.isPending,
   };
 }
 

@@ -41,9 +41,9 @@ export function BudgetManagerSelectField({
             None
           </SearchableSelectItem>
           {budgetManagers.length === 0 ? (
-            <SearchableSelectItem value="no-managers" filterText="No budget managers available" disabled>
+            <div className="px-2 py-1.5 text-sm text-text-secondary">
               No budget managers available
-            </SearchableSelectItem>
+            </div>
           ) : (
             budgetManagers.map((manager) => {
               const name = `${manager.firstName || ""} ${manager.lastName || ""}`.trim();

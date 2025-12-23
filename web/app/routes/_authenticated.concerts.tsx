@@ -12,6 +12,7 @@ import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/f
 import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
 import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
 import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/ViewConcertDialog";
+import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
 
@@ -33,7 +34,7 @@ export default function ConcertsPage() {
     100
   );
   const { data: artists = [] } = useArtists();
-  const { data: budgetManagers = [], isLoading: budgetManagersLoading, error: budgetManagersError } = useBudgetManagers();
+  const { data: budgetManagers = [], error: budgetManagersError } = useBudgetManagers();
 
   if (budgetManagersError) {
     console.error("Error loading budget managers:", budgetManagersError);
@@ -111,6 +112,18 @@ export default function ConcertsPage() {
           isOpen={concertActions.isViewDialogOpen}
           onOpenChange={concertActions.closeViewDialog}
           concert={concertActions.selectedConcert}
+          onSubmitBudget={() => {
+            if (concertActions.selectedConcert) {
+              concertActions.handleSubmitBudget(concertActions.selectedConcert);
+            }
+          }}
+        />
+        <SubmitBudgetDialog
+          isOpen={concertActions.isSubmitBudgetDialogOpen}
+          onOpenChange={concertActions.closeSubmitBudgetDialog}
+          concertName={concertActions.selectedConcert?.name || ""}
+          onSubmit={concertActions.confirmSubmitBudget}
+          isLoading={concertActions.isSubmittingBudget}
         />
       </div>
     </AuthGuard>

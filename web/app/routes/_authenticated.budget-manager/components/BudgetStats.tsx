@@ -5,7 +5,7 @@ interface BudgetStatsProps {
   underReview: number;
 }
 
-export function BudgetStats({ pending, urgent, total, underReview }: BudgetStatsProps) {
+export function BudgetStats({ pending, urgent, total }: BudgetStatsProps) {
   return (
     <div className="flex items-center gap-4">
       <div className="flex items-center gap-2">

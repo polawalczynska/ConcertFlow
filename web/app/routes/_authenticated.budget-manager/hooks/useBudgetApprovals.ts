@@ -1,31 +1,48 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { budgetApprovalApi } from "~/lib/api-client";
+import { useUser } from "~/hooks/useUser";
 import type { BudgetApprovalDashboardResponse, ApproveBudgetRequest, RejectBudgetRequest } from "~/api";
 
 export function useBudgetApprovals() {
   const queryClient = useQueryClient();
   const [selectedBudgetId, setSelectedBudgetId] = useState<number | null>(null);
+  const { data: currentUser } = useUser();
 
-  const { data: budgetsPage, isLoading: budgetsLoading } = useQuery({
-    queryKey: ["budget-approvals", "pending"],
+  const { data: budgetsPage, isLoading: budgetsLoading, error: budgetsError } = useQuery({
+    queryKey: ["budget-approvals", "pending", currentUser?.id],
     queryFn: async () => {
-      const response = await budgetApprovalApi.getPendingBudgets(0, 100, "date", "asc");
+      if (!currentUser?.id) {
+        throw new Error("User not loaded");
+      }
+     
+      const response = await budgetApprovalApi.getPendingBudgets(
+        0, 
+        100, 
+        "date", 
+        "asc",
+        { params: { budgetManagerId: currentUser.id } }
+      );
       return response.data;
     },
+    enabled: !!currentUser?.id,
   });
 
-  const { data: budgetDetails, isLoading: detailsLoading } = useQuery({
-    queryKey: ["budget-details", selectedBudgetId],
+  const { data: budgetDetails, isLoading: detailsLoading, error: detailsError } = useQuery({
+    queryKey: ["budget-details", selectedBudgetId, currentUser?.id],
     queryFn: async () => {
-      if (!selectedBudgetId) return null;
-      const response = await budgetApprovalApi.getBudgetDetails(selectedBudgetId);
+      if (!selectedBudgetId || !currentUser?.id) return null;
+      
+      const response = await budgetApprovalApi.getBudgetDetails(
+        selectedBudgetId,
+        { params: { budgetManagerId: currentUser.id } }
+      );
       return response.data;
     },
-    enabled: !!selectedBudgetId,
+    enabled: !!selectedBudgetId && !!currentUser?.id,
   });
 
-  const budgets = budgetsPage?.content ?? [];
+  const budgets = useMemo(() => budgetsPage?.content ?? [], [budgetsPage?.content]);
   const selectedBudget = budgets.find((b) => b.concertId === selectedBudgetId);
 
   const approveMutation = useMutation({
@@ -57,7 +74,7 @@ export function useBudgetApprovals() {
     priorityFilter: string,
     sortBy: string
   ) => {
-    let filtered = budgets.filter((budget) => {
+    const filtered = budgets.filter((budget) => {
       const matchesSearch =
         (budget.concertName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
         (budget.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
@@ -99,6 +116,8 @@ export function useBudgetApprovals() {
     budgetDetails,
     budgetsLoading,
     detailsLoading,
+    budgetsError,
+    detailsError,
     approveMutation,
     rejectMutation,
     stats,

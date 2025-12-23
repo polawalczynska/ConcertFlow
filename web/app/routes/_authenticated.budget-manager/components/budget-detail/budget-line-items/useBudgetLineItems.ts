@@ -12,7 +12,7 @@ export function useBudgetLineItems(budget: BudgetDetailResponse) {
       groups[category].push(item);
     });
     return groups;
-  }, [budget.budgetItems]);
+  }, [budget]);
 
   const toggleCategory = (category: string) => {
     setExpandedCategories((prev) =>

@@ -40,7 +40,7 @@ export function useConcertForm() {
       budget: typeof concert.budget === "number" ? concert.budget : Number(concert.budget) || 0,
       description: concert.description || "",
       artistId: concert.artistId || 0,
-      budgetManagerId: concert.budgetManagerId || null,
+      budgetManagerId: concert.budgetManagerId ?? undefined,
     });
     setIsFormOpen(true);
   };
