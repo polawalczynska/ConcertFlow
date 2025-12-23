@@ -20,6 +20,8 @@ public record ConcertResponse(
     String coordinatorName,
     Long artistId,
     String artistName,
+    Long budgetManagerId,
+    String budgetManagerName,
     List<ApprovalResponse> approvals,
     LocalDateTime createdAt
 ) {

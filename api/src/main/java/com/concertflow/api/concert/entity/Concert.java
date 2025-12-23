@@ -56,6 +56,10 @@ public class Concert {
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
+    @ManyToOne
+    @JoinColumn(name = "budget_manager_id")
+    private User budgetManager;
+
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Approval> approvals = new ArrayList<>();

@@ -16,6 +16,8 @@ import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.ConcertMapper;
 import com.concertflow.api.user.entity.User;
+import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,6 +40,7 @@ import static com.concertflow.api.exceptions.ErrorMessage.CONCERT_NOT_FOUND;
 public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ArtistRepository artistRepository;
+    private final UserRepository userRepository;
     private final ConcertMapper concertMapper;
     private final ConcertValidator concertValidator;
     private final ConcertAuthorizationService authorizationService;
@@ -80,7 +83,10 @@ public class ConcertService {
         concertValidator.validate(request);
 
         Artist artist = findArtistById(request.artistId());
-        Concert concert = concertBuilder.build(request, artist, coordinator);
+        User budgetManager = request.budgetManagerId() != null 
+            ? findBudgetManagerById(request.budgetManagerId())
+            : null;
+        Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager);
 
         concert = concertRepository.save(concert);
         approvalWorkflowService.createApprovalWorkflow(concert);
@@ -95,7 +101,10 @@ public class ConcertService {
         authorizationService.validateCoordinatorAccess(concert, coordinator);
 
         Artist artist = findArtistById(request.artistId());
-        concertBuilder.updateFields(concert, request, artist);
+        User budgetManager = request.budgetManagerId() != null 
+            ? findBudgetManagerById(request.budgetManagerId())
+            : null;
+        concertBuilder.updateFields(concert, request, artist, budgetManager);
         concertRepository.save(concert);
     }
 
@@ -155,5 +164,11 @@ public class ConcertService {
     private Artist findArtistById(Long id) {
         return artistRepository.findById(id)
             .orElseThrow(() -> new ArtistNotFoundException(ARTIST_NOT_FOUND.message()));
+    }
+
+    private User findBudgetManagerById(Long id) {
+        return userRepository.findById(id)
+            .filter(user -> user.getRole() == Role.BUDGET_MANAGER && user.getActive())
+            .orElseThrow(() -> new IllegalArgumentException("Budget manager not found or inactive"));
     }
 }

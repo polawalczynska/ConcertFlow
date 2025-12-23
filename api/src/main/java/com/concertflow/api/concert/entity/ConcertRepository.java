@@ -51,4 +51,11 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     Optional<Concert> findById(Long id);
 
     Page<Concert> findByBudgetStatusAndStatus(BudgetStatus budgetStatus, ConcertStatus status, Pageable pageable);
+
+    Page<Concert> findByBudgetStatusAndStatusAndBudgetManagerId(
+        BudgetStatus budgetStatus, 
+        ConcertStatus status, 
+        Long budgetManagerId,
+        Pageable pageable
+    );
 }
