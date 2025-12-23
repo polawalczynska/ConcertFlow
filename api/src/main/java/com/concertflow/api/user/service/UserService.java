@@ -16,6 +16,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserResponse getUserResponse(User user) {
+        if (user == null) {
+            throw new org.springframework.security.authentication.AuthenticationCredentialsNotFoundException(
+                "User not authenticated");
+        }
         return UserResponse.fromUser(user);
     }
 
