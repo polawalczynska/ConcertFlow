@@ -1,0 +1,107 @@
+import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { budgetApprovalApi } from "~/lib/api-client";
+import type { BudgetApprovalDashboardResponse, ApproveBudgetRequest, RejectBudgetRequest } from "~/api";
+
+export function useBudgetApprovals() {
+  const queryClient = useQueryClient();
+  const [selectedBudgetId, setSelectedBudgetId] = useState<number | null>(null);
+
+  const { data: budgetsPage, isLoading: budgetsLoading } = useQuery({
+    queryKey: ["budget-approvals", "pending"],
+    queryFn: async () => {
+      const response = await budgetApprovalApi.getPendingBudgets(0, 100, "date", "asc");
+      return response.data;
+    },
+  });
+
+  const { data: budgetDetails, isLoading: detailsLoading } = useQuery({
+    queryKey: ["budget-details", selectedBudgetId],
+    queryFn: async () => {
+      if (!selectedBudgetId) return null;
+      const response = await budgetApprovalApi.getBudgetDetails(selectedBudgetId);
+      return response.data;
+    },
+    enabled: !!selectedBudgetId,
+  });
+
+  const budgets = budgetsPage?.content ?? [];
+  const selectedBudget = budgets.find((b) => b.concertId === selectedBudgetId);
+
+  const approveMutation = useMutation({
+    mutationFn: async (request: ApproveBudgetRequest) => {
+      if (!selectedBudgetId) throw new Error("No budget selected");
+      await budgetApprovalApi.approveBudget(selectedBudgetId, request);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
+      queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: async (request: RejectBudgetRequest) => {
+      if (!selectedBudgetId) throw new Error("No budget selected");
+      await budgetApprovalApi.rejectBudget(selectedBudgetId, request);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
+      queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
+    },
+  });
+
+  const filterAndSortBudgets = (
+    budgets: BudgetApprovalDashboardResponse[],
+    searchQuery: string,
+    statusFilter: string,
+    priorityFilter: string,
+    sortBy: string
+  ) => {
+    let filtered = budgets.filter((budget) => {
+      const matchesSearch =
+        (budget.concertName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+        (budget.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      const matchesStatus = statusFilter === "all" || budget.budgetStatus === statusFilter;
+      const matchesPriority = priorityFilter === "all" || budget.priority === priorityFilter;
+      return matchesSearch && matchesStatus && matchesPriority;
+    });
+
+    filtered.sort((a, b) => {
+      if (sortBy === "concertDate" && a.concertDate && b.concertDate) {
+        return new Date(a.concertDate).getTime() - new Date(b.concertDate).getTime();
+      }
+      if (sortBy === "budgetAmount" && a.submittedBudget && b.submittedBudget) {
+        return Number(b.submittedBudget) - Number(a.submittedBudget);
+      }
+      if (sortBy === "priority") {
+        const priorityOrder: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+        return (priorityOrder[a.priority ?? "LOW"] ?? 2) - (priorityOrder[b.priority ?? "LOW"] ?? 2);
+      }
+      return 0;
+    });
+
+    return filtered;
+  };
+
+  const stats = useMemo(() => ({
+    pending: budgets.filter((b) => b.budgetStatus === "SUBMITTED").length,
+    urgent: budgets.filter((b) => b.priority === "HIGH").length,
+    total: budgets.length,
+    underReview: budgets.filter((b) => b.budgetStatus === "UNDER_REVIEW").length,
+  }), [budgets]);
+
+  return {
+    budgets,
+    filterAndSortBudgets,
+    selectedBudgetId,
+    setSelectedBudgetId,
+    selectedBudget,
+    budgetDetails,
+    budgetsLoading,
+    detailsLoading,
+    approveMutation,
+    rejectMutation,
+    stats,
+  };
+}
+
