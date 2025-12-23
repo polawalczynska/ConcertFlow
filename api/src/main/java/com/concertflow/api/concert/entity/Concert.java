@@ -71,10 +71,8 @@ public class Concert {
     @Builder.Default
     private BudgetStatus budgetStatus = BudgetStatus.PENDING;
 
-    @Column(nullable = false)
     private BigDecimal estimatedBudget;
 
-    @Column(nullable = false)
     private BigDecimal approvedBudget;
 
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
