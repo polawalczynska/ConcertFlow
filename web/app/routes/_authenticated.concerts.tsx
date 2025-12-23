@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useConcerts } from "~/hooks/useConcerts";
 import { useArtists } from "~/hooks/useArtists";
+import { useBudgetManagers } from "~/hooks/useBudgetManagers";
 import type { GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/components/AuthGuard";
 import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";
@@ -32,6 +33,11 @@ export default function ConcertsPage() {
     100
   );
   const { data: artists = [] } = useArtists();
+  const { data: budgetManagers = [], isLoading: budgetManagersLoading, error: budgetManagersError } = useBudgetManagers();
+
+  if (budgetManagersError) {
+    console.error("Error loading budget managers:", budgetManagersError);
+  }
 
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();
@@ -61,7 +67,10 @@ export default function ConcertsPage() {
         ) : (
           <ConcertsTable
             concerts={concerts}
-            onEdit={concertForm.openEditModal}
+            onEdit={(concert) => {
+              const updatedConcert = concerts.find((c) => c.id === concert.id) || concert;
+              concertForm.openEditModal(updatedConcert);
+            }}
             onDelete={concertActions.handleDelete}
             onView={concertActions.handleView}
             onCancel={concertActions.handleCancel}
@@ -82,6 +91,7 @@ export default function ConcertsPage() {
           onFormDataChange={concertForm.setFormData}
           onSubmit={concertForm.handleSubmit}
           artists={artists}
+          budgetManagers={budgetManagers}
         />
         <DeleteConcertDialog
           isOpen={concertActions.isDeleteDialogOpen}

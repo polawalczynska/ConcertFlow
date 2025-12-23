@@ -21,6 +21,7 @@ interface ConcertFormDialogProps {
   onFormDataChange: (data: ConcertRequest) => void;
   onSubmit: (e: React.FormEvent) => void;
   artists: Array<{ id?: number; name?: string }>;
+  budgetManagers: Array<{ id?: number; firstName?: string; lastName?: string }>;
 }
 
 export function ConcertFormDialog({
@@ -34,8 +35,9 @@ export function ConcertFormDialog({
   onFormDataChange,
   onSubmit,
   artists,
+  budgetManagers,
 }: ConcertFormDialogProps) {
-  const handleFieldChange = (field: keyof ConcertRequest, value: string | number) => {
+  const handleFieldChange = (field: keyof ConcertRequest, value: string | number | null) => {
     onFormDataChange({ ...formData, [field]: value });
   };
 
@@ -61,6 +63,7 @@ export function ConcertFormDialog({
             formErrors={formErrors}
             onFieldChange={handleFieldChange}
             artists={artists}
+            budgetManagers={budgetManagers}
           />
           <DialogFooter>
             <Button
