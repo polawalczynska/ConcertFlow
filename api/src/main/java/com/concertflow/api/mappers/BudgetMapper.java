@@ -19,6 +19,7 @@ public class BudgetMapper {
     public BudgetApprovalDashboardResponse toDashboardResponse(Concert concert, List<String> flags) {
         int daysUntilConcert = calculateDaysUntil(concert.getDate());
         String priority = determinePriority(concert, daysUntilConcert);
+        BigDecimal submittedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
 
         return BudgetApprovalDashboardResponse.builder()
             .concertId(concert.getId())
@@ -26,7 +27,7 @@ public class BudgetMapper {
             .artistName(concert.getArtist() != null ? concert.getArtist().getName() : "Unknown")
             .concertDate(concert.getDate())
             .estimatedBudget(concert.getEstimatedBudget())
-            .submittedBudget(concert.getEstimatedBudget())
+            .submittedBudget(submittedBudget)
             .budgetStatus(concert.getBudgetStatus())
             .coordinatorName(concert.getCoordinator() != null
                 ? concert.getCoordinator().getFirstName() + " " + concert.getCoordinator().getLastName()
@@ -34,7 +35,7 @@ public class BudgetMapper {
             .submittedAt(findLatestSubmissionDate(concert))
             .daysUntilConcert(daysUntilConcert)
             .hasComments(hasComments(concert))
-            .approvalLevel(determineApprovalLevel(concert.getEstimatedBudget()))
+            .approvalLevel(determineApprovalLevel(submittedBudget))
             .flags(flags != null ? flags : new ArrayList<>())
             .priority(priority)
             .build();
@@ -50,6 +51,7 @@ public class BudgetMapper {
             .collect(Collectors.toList());
 
         BudgetStatistics statistics = calculateStatistics(concert);
+        BigDecimal requestedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
 
         return BudgetDetailResponse.builder()
             .concertId(concert.getId())
@@ -61,7 +63,7 @@ public class BudgetMapper {
             .concertStatus(concert.getStatus().name())
             .budgetStatus(concert.getBudgetStatus())
             .estimatedBudget(concert.getEstimatedBudget())
-            .requestedBudget(concert.getEstimatedBudget())
+            .requestedBudget(requestedBudget)
             .approvedBudget(concert.getApprovedBudget())
             .budgetDifference(calculateBudgetDifference(concert))
             .budgetItems(budgetItems)
