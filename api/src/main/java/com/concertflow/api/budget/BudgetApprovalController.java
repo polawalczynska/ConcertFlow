@@ -84,5 +84,14 @@ public class BudgetApprovalController {
     ) {
         budgetApprovalService.submitBudgetForApproval(concertId, request, submitter);
     }
+
+    @GetMapping("/concert/{concertId}/details")
+    @RequireCoordinator
+    public BudgetDetailResponse getBudgetDetailsForCoordinator(
+        @PathVariable Long concertId,
+        @AuthenticationPrincipal User coordinator
+    ) {
+        return budgetApprovalService.getBudgetDetailsForCoordinator(concertId, coordinator);
+    }
 }
 

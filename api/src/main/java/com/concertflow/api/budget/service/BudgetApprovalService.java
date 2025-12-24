@@ -179,6 +179,24 @@ public class BudgetApprovalService {
         log.info("Budget submitted for approval, concert: {}", concertId);
     }
 
+    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN')")
+    public BudgetDetailResponse getBudgetDetailsForCoordinator(Long concertId, User coordinator) {
+        log.debug("Fetching budget details for concert: {}, coordinator: {}", concertId, coordinator.getId());
+
+        Concert concert = findConcertById(concertId);
+        
+        if (!concert.getCoordinator().getId().equals(coordinator.getId())) {
+            throw new com.concertflow.api.exceptions.types.UnauthorizedAccessException(
+                "You can only view budget details for your own concerts");
+        }
+
+        List<BudgetValidation> validations = validationService.validateBudget(concert);
+        boolean isEligible = validations.stream()
+            .noneMatch(v -> "ERROR".equals(v.severity()));
+
+        return budgetMapper.toDetailResponse(concert, validations, isEligible);
+    }
+
     private Concert findConcertById(Long concertId) {
         return concertRepository.findById(concertId)
             .orElseThrow(() -> new ConcertNotFoundException("Concert not found with ID: " + concertId));

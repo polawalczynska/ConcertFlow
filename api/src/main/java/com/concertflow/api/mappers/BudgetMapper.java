@@ -20,13 +20,14 @@ public class BudgetMapper {
         int daysUntilConcert = calculateDaysUntil(concert.getDate());
         String priority = determinePriority(concert, daysUntilConcert);
         BigDecimal submittedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
+        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
 
         return BudgetApprovalDashboardResponse.builder()
             .concertId(concert.getId())
             .concertName(concert.getName())
             .artistName(concert.getArtist() != null ? concert.getArtist().getName() : "Unknown")
             .concertDate(concert.getDate())
-            .estimatedBudget(concert.getEstimatedBudget())
+            .estimatedBudget(estimatedBudget)
             .submittedBudget(submittedBudget)
             .budgetStatus(concert.getBudgetStatus())
             .coordinatorName(concert.getCoordinator() != null
@@ -52,6 +53,7 @@ public class BudgetMapper {
 
         BudgetStatistics statistics = calculateStatistics(concert);
         BigDecimal requestedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
+        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
 
         return BudgetDetailResponse.builder()
             .concertId(concert.getId())
@@ -62,7 +64,7 @@ public class BudgetMapper {
             .city(extractCity(concert.getVenue()))
             .concertStatus(concert.getStatus().name())
             .budgetStatus(concert.getBudgetStatus())
-            .estimatedBudget(concert.getEstimatedBudget())
+            .estimatedBudget(estimatedBudget)
             .requestedBudget(requestedBudget)
             .approvedBudget(concert.getApprovedBudget())
             .budgetDifference(calculateBudgetDifference(concert))
@@ -78,7 +80,7 @@ public class BudgetMapper {
             .build();
     }
 
-    private BudgetItemResponse toBudgetItemResponse(BudgetItem item) {
+    public BudgetItemResponse toBudgetItemResponse(BudgetItem item) {
         return BudgetItemResponse.builder()
             .id(item.getId())
             .category(item.getCategory())
@@ -88,7 +90,6 @@ public class BudgetMapper {
             .requestedAmount(item.getEstimatedAmount())
             .approvedAmount(item.getApprovedAmount())
             .status(item.getStatus() != null ? item.getStatus().name() : null)
-            .priority(item.getPriority())
             .isMandatory(item.getIsMandatory())
             .notes(item.getNotes())
             .requiresAttention(requiresAttention(item))
@@ -255,10 +256,21 @@ public class BudgetMapper {
     }
 
     private BigDecimal calculateBudgetDifference(Concert concert) {
-        if (concert.getEstimatedBudget() == null || concert.getApprovedBudget() == null) {
+        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
+        if (estimatedBudget == null || concert.getApprovedBudget() == null) {
             return BigDecimal.ZERO;
         }
-        return concert.getApprovedBudget().subtract(concert.getEstimatedBudget());
+        return concert.getApprovedBudget().subtract(estimatedBudget);
+    }
+
+    private BigDecimal calculateEstimatedBudgetFromItems(Concert concert) {
+        if (concert.getBudgetItems() == null || concert.getBudgetItems().isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return concert.getBudgetItems().stream()
+            .map(BudgetItem::getEstimatedAmount)
+            .filter(amount -> amount != null)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private boolean requiresAttention(BudgetItem item) {

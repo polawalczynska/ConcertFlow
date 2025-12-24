@@ -15,7 +15,6 @@ public record BudgetItemResponse(
     BigDecimal requestedAmount,
     BigDecimal approvedAmount,
     String status,
-    Integer priority,
     Boolean isMandatory,
     String notes,
     Boolean requiresAttention,

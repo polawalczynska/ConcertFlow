@@ -3,14 +3,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "~/components/ui/Dialog";
-import { Button } from "~/components/ui/Button";
 import type { ConcertResponse } from "~/api";
 import { ConcertHeader } from "./view/ConcertHeader";
 import { ConcertDetails } from "./view/ConcertDetails";
 import { ConcertDescription } from "./view/ConcertDescription";
 import { CancellationReason } from "./view/CancellationReason";
+import { BudgetManagement } from "../budget/BudgetManagement";
 import { useUser } from "~/hooks/useUser";
 import { UserResponseRoleEnum } from "~/api";
 
@@ -21,24 +20,16 @@ interface ViewConcertDialogProps {
   onSubmitBudget?: () => void;
 }
 
-export function ViewConcertDialog({ isOpen, onOpenChange, concert, onSubmitBudget }: ViewConcertDialogProps) {
+export function ViewConcertDialog({ isOpen, onOpenChange, concert }: ViewConcertDialogProps) {
   const { data: currentUser } = useUser();
   
   if (!concert) return null;
 
-  const canSubmitBudget = 
-    currentUser?.role === UserResponseRoleEnum.Coordinator;
-  
-  const budgetStatus = (concert as ConcertResponse & { budgetStatus?: string }).budgetStatus;
-  const shouldShowSubmitButton = 
-    canSubmitBudget &&
-    concert.status === "PLANNING" &&
-    (budgetStatus === "PENDING" || budgetStatus === "REVISION_REQUESTED" || budgetStatus === undefined) &&
-    concert.budgetManagerId != null;
+  const isCoordinator = currentUser?.role === UserResponseRoleEnum.Coordinator;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-[700px] w-[90vw]">
+      <DialogContent className="!max-w-[900px] w-[90vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Concert Details</DialogTitle>
         </DialogHeader>
@@ -49,17 +40,11 @@ export function ViewConcertDialog({ isOpen, onOpenChange, concert, onSubmitBudge
             <ConcertDescription concert={concert} />
             <CancellationReason concert={concert} />
           </div>
+
+          {isCoordinator && concert.id && (
+            <BudgetManagement concertId={concert.id} />
+          )}
         </div>
-        {shouldShowSubmitButton && (
-          <DialogFooter>
-            <Button
-              onClick={onSubmitBudget}
-              className="bg-purple-main hover:bg-purple-main/90"
-            >
-              Submit Budget for Approval
-            </Button>
-          </DialogFooter>
-        )}
       </DialogContent>
     </Dialog>
   );

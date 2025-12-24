@@ -47,9 +47,6 @@ public class BudgetItem {
     @Builder.Default
     private BudgetItemStatus status = BudgetItemStatus.PLANNED;
 
-    @Column(nullable = false)
-    private Integer priority;
-
     private Boolean isMandatory;
 
     @Column(length = 1000)

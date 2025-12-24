@@ -31,7 +31,7 @@ public class BudgetValidationService {
     }
 
     private void validateBudgetAmount(Concert concert, List<BudgetValidation> validations) {
-        BigDecimal estimatedBudget = concert.getEstimatedBudget();
+        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
 
         if (estimatedBudget == null || estimatedBudget.compareTo(BigDecimal.ZERO) <= 0) {
             validations.add(BudgetValidation.builder()
@@ -42,16 +42,6 @@ public class BudgetValidationService {
                 .details("Estimated budget is zero or negative")
                 .build());
             return;
-        }
-
-        if (estimatedBudget.compareTo(BudgetApprovalConfig.MIN_BUDGET) < 0) {
-            validations.add(BudgetValidation.builder()
-                .code("BUDGET_BELOW_MINIMUM")
-                .message("Budget is below minimum threshold of " + BudgetApprovalConfig.MIN_BUDGET)
-                .severity("ERROR")
-                .passed(false)
-                .details("Minimum budget is " + BudgetApprovalConfig.MIN_BUDGET)
-                .build());
         }
 
         if (estimatedBudget.compareTo(BudgetApprovalConfig.MAX_BUDGET) > 0) {
@@ -110,15 +100,27 @@ public class BudgetValidationService {
             .filter(amount -> amount != null && amount.compareTo(BigDecimal.ZERO) > 0)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if (totalItemsAmount.compareTo(concert.getEstimatedBudget()) > 0) {
+        
+        BigDecimal budget = concert.getBudget();
+        if (budget != null && totalItemsAmount.compareTo(budget) > 0) {
             validations.add(BudgetValidation.builder()
                 .code("ITEMS_EXCEED_BUDGET")
-                .message("Sum of budget items exceeds total estimated budget")
+                .message("Sum of budget items exceeds total concert budget")
                 .severity("WARNING")
                 .passed(false)
-                .details("Items total: " + totalItemsAmount + ", Budget: " + concert.getEstimatedBudget())
+                .details("Items total: " + totalItemsAmount + ", Budget: " + budget)
                 .build());
         }
+    }
+
+    private BigDecimal calculateEstimatedBudgetFromItems(Concert concert) {
+        if (concert.getBudgetItems() == null || concert.getBudgetItems().isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return concert.getBudgetItems().stream()
+            .map(BudgetItem::getEstimatedAmount)
+            .filter(amount -> amount != null)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private void validateBudgetStatus(Concert concert, List<BudgetValidation> validations) {
