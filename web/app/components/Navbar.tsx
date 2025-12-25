@@ -9,6 +9,8 @@ export function Navbar() {
   const logout = useLogout();
   const { data: user, isLoading } = useUser();
 
+  const concertsLink = user?.role === "BUDGET_MANAGER" ? "/budget" : "/manage";
+
   const menuItems = [
     {
       name: "Artists",
@@ -17,7 +19,7 @@ export function Navbar() {
     },
     {
       name: "Concerts",
-      href: "/concerts",
+      href: concertsLink,
       icon: Calendar,
     },
     {
@@ -31,12 +33,15 @@ export function Navbar() {
     return location.pathname === href || location.pathname.startsWith(`${href}/`);
   };
 
+  // Determine home page based on user role
+  const homePage = user?.role === "BUDGET_MANAGER" ? "/budget" : "/dashboard";
+
   return (
     <nav className="sticky top-0 z-50 border-b border-border-light bg-bg-main">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link to="/dashboard" className="flex flex-col items-start">
+            <Link to={homePage} className="flex flex-col items-start">
               <h1 className="text-xl font-bold bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent leading-tight">
                 ConcertFlow
               </h1>

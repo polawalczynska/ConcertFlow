@@ -4,19 +4,27 @@ import { useUser } from "~/hooks/useUser";
 
 export function useBudgetManagerAccess() {
   const navigate = useNavigate();
-  const { data: user, isLoading: userLoading } = useUser();
+  const { data: user, isLoading: userLoading, error: userError } = useUser();
 
   useEffect(() => {
-    if (!userLoading && user) {
+    if (!userLoading) {
+      if (userError || !user) {
+        return;
+      }
       if (user.role !== "BUDGET_MANAGER") {
-        navigate("/dashboard", { replace: true });
+        if (user.role === "COORDINATOR") {
+          navigate("/manage", { replace: true });
+        } else {
+          navigate("/dashboard", { replace: true });
+        }
       }
     }
-  }, [user, userLoading, navigate]);
+  }, [user, userLoading, userError, navigate]);
 
   return {
     user,
     userLoading,
+    error: userError,
     isBudgetManager: user?.role === "BUDGET_MANAGER",
   };
 }

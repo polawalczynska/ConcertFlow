@@ -15,8 +15,10 @@ import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/d
 import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
+import { useCoordinatorAccess } from "~/routes/_authenticated.dashboard/hooks/useCoordinatorAccess";
 
-export default function ConcertsPage() {
+export default function ConcertsManagePage() {
+  const { user, userLoading, isCoordinator, error: userError } = useCoordinatorAccess();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [artistIdFilter, setArtistIdFilter] = useState<string>("all");
@@ -25,7 +27,7 @@ export default function ConcertsPage() {
     statusFilter === "all" ? undefined : (statusFilter as GetAllConcertsStatusEnum);
   const artistIdNum = artistIdFilter === "all" ? undefined : Number.parseInt(artistIdFilter);
 
-  const { data: concerts = [], isLoading } = useConcerts(
+  const { data: concerts = [], isLoading, error: concertsError } = useConcerts(
     statusEnum,
     artistIdNum,
     undefined,
@@ -33,7 +35,7 @@ export default function ConcertsPage() {
     0,
     100
   );
-  const { data: artists = [] } = useArtists();
+  const { data: artists = [], error: artistsError } = useArtists();
   const { data: budgetManagers = [], error: budgetManagersError } = useBudgetManagers();
 
   if (budgetManagersError) {
@@ -42,6 +44,44 @@ export default function ConcertsPage() {
 
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();
+
+  // Debug logging
+  if (typeof window !== "undefined") {
+    console.log("ConcertsManagePage state:", { userLoading, userError, user, isCoordinator });
+  }
+
+  if (userLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-text-secondary">Loading...</p>
+      </div>
+    );
+  }
+
+  if (userError || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <p className="text-text-secondary mb-2">Unable to load user information</p>
+          <p className="text-sm text-text-secondary mb-4">
+            {userError ? "Authentication error. Please try logging out and back in." : "Please try refreshing the page."}
+          </p>
+          <button
+            onClick={() => window.location.href = "/login"}
+            className="px-4 py-2 bg-purple-main text-white rounded-lg hover:bg-purple-main/90"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isCoordinator) {
+    // This should not be reached due to useCoordinatorAccess redirect,
+    // but keeping as a safety check
+    return null;
+  }
 
   return (
     <AuthGuard>
