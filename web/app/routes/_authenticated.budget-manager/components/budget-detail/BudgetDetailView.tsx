@@ -8,14 +8,12 @@ import { BudgetActionButtons } from "./BudgetActionButtons";
 interface BudgetDetailViewProps {
   budget: BudgetDetailResponse;
   onApprove: () => void;
-  onReject: () => void;
   onRequestRevision: () => void;
 }
 
 export function BudgetDetailView({
   budget,
   onApprove,
-  onReject,
   onRequestRevision,
 }: BudgetDetailViewProps) {
   return (
@@ -26,7 +24,6 @@ export function BudgetDetailView({
       <ValidationResults budget={budget} />
       <BudgetActionButtons
         onApprove={onApprove}
-        onReject={onReject}
         onRequestRevision={onRequestRevision}
       />
     </div>

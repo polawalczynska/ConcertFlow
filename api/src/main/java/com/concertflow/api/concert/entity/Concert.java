@@ -79,6 +79,8 @@ public class Concert {
 
     private BigDecimal approvedBudget;
 
+    private BigDecimal submittedBudget;
+
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<BudgetItem> budgetItems = new ArrayList<>();

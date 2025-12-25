@@ -52,7 +52,16 @@ public class BudgetMapper {
             .collect(Collectors.toList());
 
         BudgetStatistics statistics = calculateStatistics(concert);
-        BigDecimal requestedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
+        BigDecimal requestedBudget;
+        if (concert.getBudgetStatus() == BudgetStatus.SUBMITTED ||
+            concert.getBudgetStatus() == BudgetStatus.UNDER_REVIEW ||
+            concert.getBudgetStatus() == BudgetStatus.APPROVED ||
+            concert.getBudgetStatus() == BudgetStatus.REJECTED ||
+            concert.getBudgetStatus() == BudgetStatus.REVISION_REQUESTED) {
+            requestedBudget = concert.getSubmittedBudget() != null ? concert.getSubmittedBudget() : BigDecimal.ZERO;
+        } else {
+            requestedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
+        }
         BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
 
         return BudgetDetailResponse.builder()

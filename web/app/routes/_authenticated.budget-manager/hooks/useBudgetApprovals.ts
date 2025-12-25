@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { budgetApprovalApi } from "~/lib/api-client";
 import { useUser } from "~/hooks/useUser";
-import type { BudgetApprovalDashboardResponse, ApproveBudgetRequest, RejectBudgetRequest } from "~/api";
+import type { BudgetApprovalDashboardResponse, ApproveBudgetRequest, RequestBudgetRevisionRequest } from "~/api";
 
 export function useBudgetApprovals() {
   const queryClient = useQueryClient();
@@ -60,22 +60,19 @@ export function useBudgetApprovals() {
     },
   });
 
-  const rejectMutation = useMutation({
-    mutationFn: async (request: RejectBudgetRequest) => {
+  const requestRevisionMutation = useMutation({
+    mutationFn: async (request: RequestBudgetRevisionRequest) => {
       if (!selectedBudgetId) throw new Error("No budget selected");
-      await budgetApprovalApi.rejectBudget(selectedBudgetId, request);
+      await budgetApprovalApi.requestBudgetRevision(selectedBudgetId, request);
     },
     onSuccess: () => {
-      // Save the budget ID before clearing it
       const budgetIdToRemove = selectedBudgetId;
-      // Clear selected budget first to prevent refetching details
       setSelectedBudgetId(null);
-      // Remove the budget details query to prevent refetch attempts
       if (budgetIdToRemove) {
         queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
       }
-      // Invalidate budget approvals list to refresh it
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
+      queryClient.invalidateQueries({ queryKey: ["concerts"] });
     },
   });
 
@@ -131,7 +128,7 @@ export function useBudgetApprovals() {
     budgetsError,
     detailsError,
     approveMutation,
-    rejectMutation,
+    requestRevisionMutation,
     stats,
   };
 }

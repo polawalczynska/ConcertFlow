@@ -71,20 +71,68 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
         {latestApproval && (
           <div className="border-t pt-4">
             <p className="text-sm font-medium text-text-secondary mb-2">Latest Response</p>
-            <div className="space-y-1">
+            <div className="space-y-2">
               <p className="text-sm">
                 <span className="font-medium">Decision: </span>
                 {latestApproval.decision}
               </p>
               {latestApproval.comments && (
-                <p className="text-sm">
-                  <span className="font-medium">Comments: </span>
-                  {latestApproval.comments}
-                </p>
+                <div className="space-y-2">
+                  {latestApproval.decision === "Returned for Revision" && (
+                    <>
+                      {(() => {
+                        const comments = latestApproval.comments;
+                        const deadlineMatch = comments.match(/Deadline:\s*(.+)/);
+                        const reasonMatch = comments.split('\n')[0];
+                        const deadline = deadlineMatch ? deadlineMatch[1].trim() : null;
+                        const reason = reasonMatch && !reasonMatch.includes('Deadline:') ? reasonMatch : null;
+                        
+                        return (
+                          <>
+                            {reason && (
+                              <div>
+                                <p className="text-sm font-medium text-text-primary mb-1">Revision Reason:</p>
+                                <p className="text-sm text-text-secondary pl-2 border-l-2 border-yellow-300">
+                                  {reason}
+                                </p>
+                              </div>
+                            )}
+                            {deadline && (
+                              <div>
+                                <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
+                                <p className="text-sm font-semibold text-yellow-700">
+                                  {new Date(deadline).toLocaleString(undefined, {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </>
+                  )}
+                  {latestApproval.decision !== "Returned for Revision" && latestApproval.comments && (
+                    <div>
+                      <p className="text-sm font-medium">Comments:</p>
+                      <p className="text-sm text-text-secondary">{latestApproval.comments}</p>
+                    </div>
+                  )}
+                </div>
               )}
               {latestApproval.decisionDate && (
-                <p className="text-sm text-text-secondary">
-                  {new Date(latestApproval.decisionDate).toLocaleDateString()}
+                <p className="text-xs text-text-secondary">
+                  {new Date(latestApproval.decisionDate).toLocaleString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </p>
               )}
             </div>

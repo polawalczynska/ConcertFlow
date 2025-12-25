@@ -93,7 +93,12 @@ public class BudgetApprovalService {
         concert.setBudgetStatus(BudgetStatus.APPROVED);
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(approver.getId());
-        concert.setApprovedBudget(concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
+
+        BigDecimal budgetToApprove = concert.getSubmittedBudget() != null && 
+            concert.getSubmittedBudget().compareTo(BigDecimal.ZERO) > 0
+            ? concert.getSubmittedBudget()
+            : (concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
+        concert.setApprovedBudget(budgetToApprove);
 
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
             concert,
@@ -110,33 +115,6 @@ public class BudgetApprovalService {
     }
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
-    public void rejectBudget(Long concertId, RejectBudgetRequest request, User rejector) {
-        log.info("Rejecting budget for concert: {}, rejector: {}", concertId, rejector.getEmail());
-
-        Concert concert = findConcertById(concertId);
-        accessValidator.validateBudgetManagerAccess(concert, rejector);
-        accessValidator.validateBudgetForRejection(concert);
-
-        concert.setBudgetStatus(BudgetStatus.REJECTED);
-        concert.setBudgetRejectionReason(request.rejectionReason());
-
-        String comments = request.rejectionReason() +
-            (request.suggestions() != null ? "\nSuggestions: " + request.suggestions() : "");
-        BudgetApproval rejection = approvalRecordService.createApprovalRecord(
-            concert,
-            rejector,
-            ApprovalDecision.REJECTED,
-            comments
-        );
-        concert.getBudgetApprovals().add(rejection);
-
-        concertRepository.save(concert);
-        notificationService.sendBudgetRejectedNotification(concert, rejector, request.rejectionReason());
-
-        log.info("Budget rejected for concert: {}", concertId);
-    }
-
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
     public void requestRevision(Long concertId, RequestBudgetRevisionRequest request, User requester) {
         log.info("Requesting budget revision for concert: {}", concertId);
 
@@ -145,7 +123,35 @@ public class BudgetApprovalService {
 
         concert.setBudgetStatus(BudgetStatus.REVISION_REQUESTED);
 
-        String comments = request.revisionReason() + "\nDeadline: " + request.deadline();
+        for (var revisionItem : request.requiredChanges()) {
+            BudgetItem item = concert.getBudgetItems().stream()
+                .filter(bi -> bi.getId().equals(revisionItem.itemId()))
+                .findFirst()
+                .orElse(null);
+            
+            if (item != null) {
+                StringBuilder revisionNote = new StringBuilder();
+                revisionNote.append("REVISION REQUESTED:\n");
+                revisionNote.append("Reason: ").append(revisionItem.changeReason()).append("\n");
+                
+                if (revisionItem.suggestedAmount() != null && !revisionItem.suggestedAmount().isBlank()) {
+                    revisionNote.append("Suggested Amount: $").append(revisionItem.suggestedAmount()).append("\n");
+                }
+                
+                if (revisionItem.notes() != null && !revisionItem.notes().isBlank()) {
+                    revisionNote.append("Notes: ").append(revisionItem.notes()).append("\n");
+                }
+                
+                String existingNotes = item.getNotes() != null ? item.getNotes() : "";
+                if (!existingNotes.isEmpty() && !existingNotes.contains("REVISION REQUESTED")) {
+                    item.setNotes(existingNotes + "\n\n" + revisionNote.toString());
+                } else {
+                    item.setNotes(revisionNote.toString());
+                }
+            }
+        }
+
+        String comments = request.revisionReason() + "\nDeadline: " + request.deadline().toString();
         BudgetApproval revisionRequest = approvalRecordService.createApprovalRecord(
             concert,
             requester,
@@ -171,6 +177,7 @@ public class BudgetApprovalService {
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetForSubmission(concert);
 
+        concert.setSubmittedBudget(concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
         concert.setBudgetStatus(BudgetStatus.SUBMITTED);
         concert.setBudgetVersion(concert.getBudgetVersion() + 1);
 

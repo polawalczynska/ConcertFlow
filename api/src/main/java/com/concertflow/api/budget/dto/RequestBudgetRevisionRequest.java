@@ -14,7 +14,6 @@ public record RequestBudgetRevisionRequest(
     Long concertId,
 
     @NotBlank(message = "Revision reason is required")
-    @Size(min = 10, max = 1000, message = "Reason must be 10-1000 characters")
     String revisionReason,
 
     @NotNull(message = "List of required changes is required")

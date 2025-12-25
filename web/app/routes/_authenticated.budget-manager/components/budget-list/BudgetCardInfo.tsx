@@ -4,15 +4,9 @@ interface BudgetCardInfoProps {
   budget: BudgetApprovalDashboardResponse;
 }
 
-const priorityIcons: Record<string, string> = {
-  HIGH: "🔥",
-  MEDIUM: "📌",
-  LOW: "💡",
-};
-
 export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
   return (
-    <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+    <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
       <div>
         <p className="text-text-secondary">Concert Date</p>
         <p className="font-medium text-text-primary">
@@ -26,12 +20,6 @@ export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
         <p className="text-text-secondary">Requested</p>
         <p className="font-semibold text-text-primary">
           ${budget.submittedBudget?.toLocaleString() ?? "0"}
-        </p>
-      </div>
-      <div>
-        <p className="text-text-secondary">Priority</p>
-        <p className="font-medium text-text-primary">
-          {priorityIcons[budget.priority ?? "LOW"]} {budget.priority ?? "LOW"}
         </p>
       </div>
     </div>
