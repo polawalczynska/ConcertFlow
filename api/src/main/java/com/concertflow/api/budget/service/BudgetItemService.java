@@ -91,7 +91,12 @@ public class BudgetItemService {
             BudgetItem item = findBudgetItem(concert, itemApproval.itemId());
             
             item.setStatus(BudgetItemStatus.APPROVED);
-            item.setApprovedAmount(itemApproval.approvedAmount());
+            
+            BigDecimal approvedAmount = itemApproval.approvedAmount();
+            if (approvedAmount == null) {
+                approvedAmount = item.getEstimatedAmount() != null ? item.getEstimatedAmount() : BigDecimal.ZERO;
+            }
+            item.setApprovedAmount(approvedAmount);
 
             if (itemApproval.comments() != null && !itemApproval.comments().isBlank()) {
                 String existingNotes = item.getNotes() != null ? item.getNotes() : "";

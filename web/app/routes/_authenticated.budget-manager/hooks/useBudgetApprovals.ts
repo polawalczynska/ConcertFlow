@@ -35,7 +35,7 @@ export function useBudgetApprovals() {
       
       const response = await budgetApprovalApi.getBudgetDetails(
         selectedBudgetId,
-        currentUser.id // budgetManagerId (second parameter, required)
+        currentUser.id
       );
       return response.data;
     },
@@ -55,8 +55,10 @@ export function useBudgetApprovals() {
       setSelectedBudgetId(null);
       if (budgetIdToRemove) {
         queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
+        queryClient.invalidateQueries({ queryKey: ["budget-details", budgetIdToRemove] });
       }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
+      queryClient.invalidateQueries({ queryKey: ["concerts"] });
     },
   });
 
@@ -80,7 +82,6 @@ export function useBudgetApprovals() {
     budgets: BudgetApprovalDashboardResponse[],
     searchQuery: string,
     statusFilter: string,
-    priorityFilter: string,
     sortBy: string
   ) => {
     const filtered = budgets.filter((budget) => {
@@ -88,8 +89,7 @@ export function useBudgetApprovals() {
         (budget.concertName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
         (budget.artistName?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
       const matchesStatus = statusFilter === "all" || budget.budgetStatus === statusFilter;
-      const matchesPriority = priorityFilter === "all" || budget.priority === priorityFilter;
-      return matchesSearch && matchesStatus && matchesPriority;
+      return matchesSearch && matchesStatus;
     });
 
     filtered.sort((a, b) => {
@@ -99,10 +99,6 @@ export function useBudgetApprovals() {
       if (sortBy === "budgetAmount" && a.submittedBudget && b.submittedBudget) {
         return Number(b.submittedBudget) - Number(a.submittedBudget);
       }
-      if (sortBy === "priority") {
-        const priorityOrder: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
-        return (priorityOrder[a.priority ?? "LOW"] ?? 2) - (priorityOrder[b.priority ?? "LOW"] ?? 2);
-      }
       return 0;
     });
 
@@ -111,7 +107,7 @@ export function useBudgetApprovals() {
 
   const stats = useMemo(() => ({
     pending: budgets.filter((b) => b.budgetStatus === "SUBMITTED").length,
-    urgent: budgets.filter((b) => b.priority === "HIGH").length,
+    urgent: budgets.filter((b) => (b.daysUntilConcert ?? 0) <= 7).length,
     total: budgets.length,
     underReview: budgets.filter((b) => b.budgetStatus === "UNDER_REVIEW").length,
   }), [budgets]);

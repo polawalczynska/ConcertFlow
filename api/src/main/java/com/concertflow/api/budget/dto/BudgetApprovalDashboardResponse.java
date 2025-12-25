@@ -15,6 +15,7 @@ public record BudgetApprovalDashboardResponse(
     LocalDateTime concertDate,
     BigDecimal estimatedBudget,
     BigDecimal submittedBudget,
+    BigDecimal approvedBudget,
     BudgetStatus budgetStatus,
     String coordinatorName,
     LocalDateTime submittedAt,

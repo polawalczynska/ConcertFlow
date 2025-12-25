@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
-import { Label } from "~/components/ui/Label";
-import { Input } from "~/components/ui/Input";
+import type { BudgetDetailResponse, BudgetItemApproval } from "~/api";
+import { ApprovedBudgetField } from "./approval/ApprovedBudgetField";
+import { BudgetItemsApprovalList } from "./approval/BudgetItemsApprovalList";
+import { useApproveBudgetForm } from "./approval/useApproveBudgetForm";
 
 interface ApproveBudgetDialogProps {
   isOpen: boolean;
@@ -11,7 +12,8 @@ interface ApproveBudgetDialogProps {
   concertName: string;
   budgetVersion: number;
   requestedBudget?: number;
-  onApprove: (approvedBudget: number) => void;
+  budgetDetails: BudgetDetailResponse | null;
+  onApprove: (approvedBudget: number, itemApprovals: BudgetItemApproval[]) => void;
   isLoading?: boolean;
 }
 
@@ -20,57 +22,51 @@ export function ApproveBudgetDialog({
   onOpenChange,
   concertName,
   requestedBudget,
+  budgetDetails,
   onApprove,
   isLoading,
 }: ApproveBudgetDialogProps) {
-  const [approvedBudget, setApprovedBudget] = useState<string>("");
-
-  useEffect(() => {
-    if (isOpen && requestedBudget) {
-      setApprovedBudget(requestedBudget.toString());
-    } else if (!isOpen) {
-      setApprovedBudget("");
-    }
-  }, [isOpen, requestedBudget]);
+  const {
+    approvedBudget,
+    setApprovedBudget,
+    itemApprovedAmounts,
+    handleItemAmountChange,
+    buildItemApprovals,
+    canApprove,
+  } = useApproveBudgetForm({
+    isOpen,
+    requestedBudget,
+    budgetDetails,
+  });
 
   const handleApprove = () => {
     const budgetValue = parseFloat(approvedBudget);
     if (!isNaN(budgetValue) && budgetValue > 0) {
-      onApprove(budgetValue);
+      const itemApprovals = buildItemApprovals();
+      onApprove(budgetValue, itemApprovals);
     }
   };
 
-  const canApprove = approvedBudget.trim() !== "" && parseFloat(approvedBudget) > 0;
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-3xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Approve Budget</DialogTitle>
           <DialogDescription>Review and approve the budget for {concertName}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          <div>
-            <Label htmlFor="approved-budget">
-              Approved Budget <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="approved-budget"
-              type="number"
-              step="0.01"
-              min="0"
-              value={approvedBudget}
-              onChange={(e) => setApprovedBudget(e.target.value)}
-              placeholder="Enter approved budget amount"
-              className="mt-1"
-            />
-            {requestedBudget && (
-              <p className="mt-1 text-xs text-text-secondary">
-                Requested: ${requestedBudget.toLocaleString()}
-              </p>
-            )}
-          </div>
+        <div className="space-y-6 py-4 max-h-[70vh] overflow-y-auto">
+          <ApprovedBudgetField
+            value={approvedBudget}
+            onChange={setApprovedBudget}
+            requestedBudget={requestedBudget}
+          />
+
+          <BudgetItemsApprovalList
+            items={budgetDetails?.budgetItems || []}
+            itemApprovedAmounts={itemApprovedAmounts}
+            onItemAmountChange={handleItemAmountChange}
+          />
         </div>
 
         <DialogFooter>

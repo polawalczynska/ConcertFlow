@@ -53,12 +53,13 @@ export default function BudgetManagerDashboard() {
     );
   }
 
-  const handleApprove = (approvedBudget: number) => {
+  const handleApprove = (approvedBudget: number, itemApprovals: Array<{ itemId: number; decision: string; approvedAmount?: number }>) => {
     if (selectedBudgetId && budgetDetails) {
       approveMutation.mutate({
         concertId: selectedBudgetId,
         budgetVersion: budgetDetails.budgetVersion ?? 1,
         approvedBudget,
+        itemApprovals: itemApprovals.length > 0 ? itemApprovals : undefined,
       });
       setApproveModal(false);
     }
@@ -143,6 +144,7 @@ export default function BudgetManagerDashboard() {
                     concertName={selectedBudget?.concertName ?? ""}
                     budgetVersion={budgetDetails?.budgetVersion ?? 1}
                     requestedBudget={budgetDetails?.requestedBudget}
+                    budgetDetails={budgetDetails}
                     onApprove={handleApprove}
                     isLoading={approveMutation.isPending}
                   />
