@@ -4,6 +4,7 @@ import { ArtistSelectField } from "./fields/ArtistSelectField";
 import { DateTimeField } from "./fields/DateTimeField";
 import { BudgetField } from "./fields/BudgetField";
 import { VenueField } from "./fields/VenueField";
+import { CityField } from "./fields/CityField";
 import { DescriptionField } from "./fields/DescriptionField";
 import { BudgetManagerSelectField } from "./fields/BudgetManagerSelectField";
 
@@ -49,6 +50,11 @@ export function ConcertFormFields({
         value={formData.venue}
         onChange={(value) => onFieldChange("venue", value)}
         error={formErrors.venue}
+      />
+      <CityField
+        value={formData.city}
+        onChange={(value) => onFieldChange("city", value)}
+        error={formErrors.city}
       />
       <BudgetManagerSelectField
         value={formData.budgetManagerId}

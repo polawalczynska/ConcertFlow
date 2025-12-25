@@ -46,6 +46,9 @@ export const concertSchema = z.object({
   venue: z
     .string()
     .min(1, "Venue is required"),
+  city: z
+    .string()
+    .min(1, "City is required"),
   budget: z
     .number()
     .positive("Budget must be greater than zero"),

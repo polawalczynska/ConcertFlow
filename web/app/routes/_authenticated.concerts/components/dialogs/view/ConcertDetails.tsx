@@ -20,6 +20,11 @@ export function ConcertDetails({ concert }: ConcertDetailsProps) {
       </div>
 
       <div>
+        <Label className="text-sm font-medium text-text-secondary">City</Label>
+        <p className="mt-1 text-base text-text-primary">{concert.city || "N/A"}</p>
+      </div>
+
+      <div>
         <Label className="text-sm font-medium text-text-secondary">Budget</Label>
         <p className="mt-1 text-base text-text-primary">${concert.budget?.toLocaleString() || "0"}</p>
       </div>

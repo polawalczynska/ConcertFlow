@@ -21,7 +21,7 @@ export function RecentConcerts({ concerts }: RecentConcertsProps) {
             <CardTitle className="text-lg">Recently Created</CardTitle>
             <CardDescription>Newest concerts in the system</CardDescription>
           </div>
-          <a href="/concerts">
+          <a href="/manage">
             <Button variant="outline" size="sm">View All</Button>
           </a>
         </div>

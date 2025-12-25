@@ -28,6 +28,9 @@ export function ConcertsTableRow({ concert, onEdit, onDelete, onView, onCancel }
       <td className="px-4 py-4 text-sm text-text-secondary break-words">
         {concert.venue}
       </td>
+      <td className="px-4 py-4 text-sm text-text-secondary break-words">
+        {concert.city || "N/A"}
+      </td>
       <td className="px-4 py-4">
         <ConcertStatusBadge status={concert.status} />
       </td>

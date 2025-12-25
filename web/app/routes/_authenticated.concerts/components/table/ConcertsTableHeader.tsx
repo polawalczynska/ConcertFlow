@@ -15,6 +15,9 @@ export function ConcertsTableHeader() {
           Venue
         </th>
         <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary">
+          City
+        </th>
+        <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary">
           Status
         </th>
         <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-text-secondary">
