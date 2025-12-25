@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
-import { ApprovalLevelSelect } from "./ApprovalLevelSelect";
 import { ApprovalCommentsField } from "./ApprovalCommentsField";
 
 interface ApproveBudgetDialogProps {
@@ -9,8 +8,6 @@ interface ApproveBudgetDialogProps {
   concertId: number;
   concertName: string;
   budgetVersion: number;
-  approvalLevel: string;
-  onApprovalLevelChange: (level: string) => void;
   comments: string;
   onCommentsChange: (comments: string) => void;
   onApprove: () => void;
@@ -21,8 +18,6 @@ export function ApproveBudgetDialog({
   isOpen,
   onOpenChange,
   concertName,
-  approvalLevel,
-  onApprovalLevelChange,
   comments,
   onCommentsChange,
   onApprove,
@@ -37,7 +32,6 @@ export function ApproveBudgetDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <ApprovalLevelSelect value={approvalLevel} onChange={onApprovalLevelChange} />
           <ApprovalCommentsField value={comments} onChange={onCommentsChange} />
         </div>
 

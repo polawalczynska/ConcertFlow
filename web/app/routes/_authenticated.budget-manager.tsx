@@ -35,7 +35,6 @@ export default function BudgetManagerDashboard() {
   const [approvalComments, setApprovalComments] = useState("");
   const [rejectionReason, setRejectionReason] = useState("");
   const [rejectionComments, setRejectionComments] = useState("");
-  const [approvalLevel, setApprovalLevel] = useState("1");
 
   const filteredBudgets = useMemo(() => {
     return filterAndSortBudgets(budgets, searchQuery, statusFilter, priorityFilter, sortBy);
@@ -61,7 +60,7 @@ export default function BudgetManagerDashboard() {
     if (selectedBudgetId && budgetDetails) {
       approveMutation.mutate({
         concertId: selectedBudgetId,
-        budgetVersion: budgetDetails.statistics ? 1 : 0,
+        budgetVersion: budgetDetails.budgetVersion ?? 1,
         comments: approvalComments,
       });
       setApproveModal(false);
@@ -73,7 +72,7 @@ export default function BudgetManagerDashboard() {
     if (selectedBudgetId && budgetDetails) {
       rejectMutation.mutate({
         concertId: selectedBudgetId,
-        budgetVersion: budgetDetails.statistics ? 1 : 0,
+        budgetVersion: budgetDetails.budgetVersion ?? 1,
         rejectionReason: rejectionComments || rejectionReason,
       });
       setRejectModal(false);
@@ -143,9 +142,7 @@ export default function BudgetManagerDashboard() {
             onOpenChange={setApproveModal}
             concertId={selectedBudgetId}
             concertName={selectedBudget?.concertName ?? ""}
-            budgetVersion={budgetDetails?.statistics ? 1 : 0}
-            approvalLevel={approvalLevel}
-            onApprovalLevelChange={setApprovalLevel}
+            budgetVersion={budgetDetails?.budgetVersion ?? 1}
             comments={approvalComments}
             onCommentsChange={setApprovalComments}
             onApprove={handleApprove}
@@ -156,7 +153,7 @@ export default function BudgetManagerDashboard() {
             onOpenChange={setRejectModal}
             concertId={selectedBudgetId}
             concertName={selectedBudget?.concertName ?? ""}
-            budgetVersion={budgetDetails?.statistics ? 1 : 0}
+            budgetVersion={budgetDetails?.budgetVersion ?? 1}
             rejectionReason={rejectionReason}
             onRejectionReasonChange={setRejectionReason}
             comments={rejectionComments}
