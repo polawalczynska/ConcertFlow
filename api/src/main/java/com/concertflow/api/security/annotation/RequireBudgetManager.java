@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+@PreAuthorize("hasRole('BUDGET_MANAGER')")
 public @interface RequireBudgetManager {
 }
 
