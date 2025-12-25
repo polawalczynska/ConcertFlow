@@ -31,18 +31,20 @@ public class BudgetValidationService {
     }
 
     private void validateBudgetAmount(Concert concert, List<BudgetValidation> validations) {
-        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
-
-        if (estimatedBudget == null || estimatedBudget.compareTo(BigDecimal.ZERO) <= 0) {
+        BigDecimal requestedBudget = concert.getBudget();
+        
+        if (requestedBudget == null || requestedBudget.compareTo(BigDecimal.ZERO) <= 0) {
             validations.add(BudgetValidation.builder()
                 .code("BUDGET_ZERO_OR_NEGATIVE")
                 .message("Budget must be greater than zero")
                 .severity("ERROR")
                 .passed(false)
-                .details("Estimated budget is zero or negative")
+                .details("Requested budget is zero or negative")
                 .build());
             return;
         }
+
+        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
 
         if (estimatedBudget.compareTo(BudgetApprovalConfig.MAX_BUDGET) > 0) {
             validations.add(BudgetValidation.builder()
@@ -144,16 +146,9 @@ public class BudgetValidationService {
     }
 
     private void validateBudgetCompleteness(Concert concert, List<BudgetValidation> validations) {
-        if (concert.getEstimatedBudget() == null) {
-            validations.add(BudgetValidation.builder()
-                .code("ESTIMATED_BUDGET_MISSING")
-                .message("Estimated budget is required")
-                .severity("ERROR")
-                .passed(false)
-                .details("Estimated budget must be set")
-                .build());
-        }
-
+        // Estimated budget is automatically calculated from budget items
+        // No validation needed for estimated budget as it's always calculated
+        
         if (concert.getBudgetItems() == null || concert.getBudgetItems().isEmpty()) {
             return;
         }

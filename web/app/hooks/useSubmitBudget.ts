@@ -9,9 +9,11 @@ export function useSubmitBudget() {
     mutationFn: async ({ concertId, request }: { concertId: number; request: SubmitBudgetForApprovalRequest }) => {
       await budgetApprovalApi.submitBudgetForApproval(concertId, request);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      const { concertId } = variables;
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
+      queryClient.invalidateQueries({ queryKey: ["budget-details", concertId] });
     },
   });
 }
