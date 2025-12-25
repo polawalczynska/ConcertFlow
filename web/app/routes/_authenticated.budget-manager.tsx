@@ -8,7 +8,6 @@ import { BudgetDetailView } from "./_authenticated.budget-manager/components/bud
 import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
 import { RequestRevisionDialog } from "./_authenticated.budget-manager/components/approve-dialog/RequestRevisionDialog";
 import { BudgetFilters } from "./_authenticated.budget-manager/components/BudgetFilters";
-import { BudgetStats } from "./_authenticated.budget-manager/components/BudgetStats";
 
 export default function BudgetManagerDashboard() {
   const { userLoading, isBudgetManager } = useBudgetManagerAccess();
@@ -22,20 +21,18 @@ export default function BudgetManagerDashboard() {
     budgetsLoading,
     approveMutation,
     requestRevisionMutation,
-    stats,
   } = useBudgetApprovals();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [priorityFilter, setPriorityFilter] = useState("all");
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("concertDate");
   const [approveModal, setApproveModal] = useState(false);
   const [revisionModal, setRevisionModal] = useState(false);
 
   const filteredBudgets = useMemo(() => {
-    return filterAndSortBudgets(budgets, searchQuery, statusFilter, priorityFilter, sortBy);
-  }, [budgets, searchQuery, statusFilter, priorityFilter, sortBy, filterAndSortBudgets]);
+    return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
+  }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
 
   if (userLoading || budgetsLoading) {
     return (
@@ -88,7 +85,6 @@ export default function BudgetManagerDashboard() {
         <main className="flex-1 overflow-hidden">
           <div className="border-b border-border bg-bg-main p-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <BudgetStats {...stats} />
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
                   <Filter className="mr-2 h-4 w-4" />
@@ -97,16 +93,14 @@ export default function BudgetManagerDashboard() {
               </div>
             </div>
 
-            {showFilters && (
-              <BudgetFilters
-                statusFilter={statusFilter}
-                onStatusFilterChange={setStatusFilter}
-                priorityFilter={priorityFilter}
-                onPriorityFilterChange={setPriorityFilter}
-                sortBy={sortBy}
-                onSortByChange={setSortBy}
-              />
-            )}
+                    {showFilters && (
+                      <BudgetFilters
+                        statusFilter={statusFilter}
+                        onStatusFilterChange={setStatusFilter}
+                        sortBy={sortBy}
+                        onSortByChange={setSortBy}
+                      />
+                    )}
           </div>
 
           <div className="flex h-[calc(100vh-180px)] overflow-hidden">
