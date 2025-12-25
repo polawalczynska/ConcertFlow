@@ -13,9 +13,6 @@ public record ApproveBudgetRequest(
     @NotNull(message = "Concert ID is required")
     Long concertId,
 
-    @Size(max = 2000, message = "Comment can have maximum 2000 characters")
-    String comments,
-
     @NotNull(message = "Budget version is required")
     Integer budgetVersion,
 

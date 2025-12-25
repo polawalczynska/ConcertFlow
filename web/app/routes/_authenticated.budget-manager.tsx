@@ -32,7 +32,6 @@ export default function BudgetManagerDashboard() {
   const [sortBy, setSortBy] = useState("concertDate");
   const [approveModal, setApproveModal] = useState(false);
   const [revisionModal, setRevisionModal] = useState(false);
-  const [approvalComments, setApprovalComments] = useState("");
 
   const filteredBudgets = useMemo(() => {
     return filterAndSortBudgets(budgets, searchQuery, statusFilter, priorityFilter, sortBy);
@@ -59,10 +58,8 @@ export default function BudgetManagerDashboard() {
       approveMutation.mutate({
         concertId: selectedBudgetId,
         budgetVersion: budgetDetails.budgetVersion ?? 1,
-        comments: approvalComments,
       });
       setApproveModal(false);
-      setApprovalComments("");
     }
   };
 
@@ -138,17 +135,15 @@ export default function BudgetManagerDashboard() {
 
       {selectedBudgetId && (
         <>
-          <ApproveBudgetDialog
-            isOpen={approveModal}
-            onOpenChange={setApproveModal}
-            concertId={selectedBudgetId}
-            concertName={selectedBudget?.concertName ?? ""}
-            budgetVersion={budgetDetails?.budgetVersion ?? 1}
-            comments={approvalComments}
-            onCommentsChange={setApprovalComments}
-            onApprove={handleApprove}
-            isLoading={approveMutation.isPending}
-          />
+                  <ApproveBudgetDialog
+                    isOpen={approveModal}
+                    onOpenChange={setApproveModal}
+                    concertId={selectedBudgetId}
+                    concertName={selectedBudget?.concertName ?? ""}
+                    budgetVersion={budgetDetails?.budgetVersion ?? 1}
+                    onApprove={handleApprove}
+                    isLoading={approveMutation.isPending}
+                  />
           <RequestRevisionDialog
             isOpen={revisionModal}
             onOpenChange={setRevisionModal}

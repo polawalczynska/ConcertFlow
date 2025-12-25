@@ -70,12 +70,19 @@ export function useRequestRevisionForm({ isOpen, budgetItemsCount }: UseRequestR
       .map((itemId) => {
         const reason = changeReasons[itemId]?.trim();
         if (!reason) return null;
-        return {
+        const suggestedAmount = suggestedAmounts[itemId]?.trim();
+        const notes = itemNotes[itemId]?.trim();
+        const result: RevisionItem = {
           itemId,
           changeReason: reason,
-          suggestedAmount: suggestedAmounts[itemId]?.trim() || undefined,
-          notes: itemNotes[itemId]?.trim() || undefined,
         };
+        if (suggestedAmount) {
+          result.suggestedAmount = suggestedAmount;
+        }
+        if (notes) {
+          result.notes = notes;
+        }
+        return result;
       })
       .filter((item): item is RevisionItem => item !== null);
   };

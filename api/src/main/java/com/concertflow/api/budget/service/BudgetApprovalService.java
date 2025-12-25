@@ -94,17 +94,15 @@ public class BudgetApprovalService {
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(approver.getId());
 
-        BigDecimal budgetToApprove = concert.getSubmittedBudget() != null && 
-            concert.getSubmittedBudget().compareTo(BigDecimal.ZERO) > 0
-            ? concert.getSubmittedBudget()
-            : (concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
-        concert.setApprovedBudget(budgetToApprove);
+        BigDecimal approvedBudget = request.approvedBudget();
+        concert.setApprovedBudget(approvedBudget);
+        concert.setBudget(approvedBudget);
 
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
             concert,
             approver,
             ApprovalDecision.APPROVED,
-            request.comments()
+            null
         );
         concert.getBudgetApprovals().add(approval);
 
