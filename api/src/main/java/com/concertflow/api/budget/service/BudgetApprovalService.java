@@ -32,6 +32,7 @@ public class BudgetApprovalService {
     private final BudgetAccessValidator accessValidator;
     private final BudgetApprovalRecordService approvalRecordService;
     private final BudgetItemService budgetItemService;
+    private final BudgetRevisionNoteBuilder revisionNoteBuilder;
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
@@ -94,7 +95,6 @@ public class BudgetApprovalService {
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(approver.getId());
 
-        // Set the approved budget as the concert's budget
         BigDecimal approvedBudget = request.approvedBudget();
         concert.setBudget(approvedBudget);
 
@@ -128,28 +128,12 @@ public class BudgetApprovalService {
                 .orElse(null);
             
             if (item != null) {
-                StringBuilder revisionNote = new StringBuilder();
-                revisionNote.append("REVISION REQUESTED:\n");
-                revisionNote.append("Reason: ").append(revisionItem.changeReason()).append("\n");
-                
-                if (revisionItem.suggestedAmount() != null && !revisionItem.suggestedAmount().isBlank()) {
-                    revisionNote.append("Suggested Amount: $").append(revisionItem.suggestedAmount()).append("\n");
-                }
-                
-                if (revisionItem.notes() != null && !revisionItem.notes().isBlank()) {
-                    revisionNote.append("Notes: ").append(revisionItem.notes()).append("\n");
-                }
-                
-                String existingNotes = item.getNotes() != null ? item.getNotes() : "";
-                if (!existingNotes.isEmpty() && !existingNotes.contains("REVISION REQUESTED")) {
-                    item.setNotes(existingNotes + "\n\n" + revisionNote.toString());
-                } else {
-                    item.setNotes(revisionNote.toString());
-                }
+                String revisionNote = revisionNoteBuilder.buildItemRevisionNote(revisionItem);
+                revisionNoteBuilder.applyRevisionNoteToItem(item, revisionNote);
             }
         }
 
-        String comments = request.revisionReason() + "\nDeadline: " + request.deadline().toString();
+        String comments = revisionNoteBuilder.buildRevisionComments(request);
         BudgetApproval revisionRequest = approvalRecordService.createApprovalRecord(
             concert,
             requester,
@@ -159,7 +143,7 @@ public class BudgetApprovalService {
         revisionRequest.setRequiresRevision(true);
         concert.getBudgetApprovals().add(revisionRequest);
 
-        String revisionNotes = buildRevisionNotes(request);
+        String revisionNotes = revisionNoteBuilder.buildRevisionSummaryNotes(request);
         concert.setBudgetRejectionReason(revisionNotes);
 
         concertRepository.save(concert);
@@ -208,16 +192,5 @@ public class BudgetApprovalService {
             .orElseThrow(() -> new ConcertNotFoundException("Concert not found with ID: " + concertId));
     }
 
-    private String buildRevisionNotes(RequestBudgetRevisionRequest request) {
-        StringBuilder notes = new StringBuilder();
-        notes.append("Required revisions:\n");
-        for (RevisionItem item : request.requiredChanges()) {
-            notes.append("- Item ID: ").append(item.itemId())
-                .append(", Reason: ").append(item.changeReason())
-                .append("\n");
-        }
-        notes.append("Revision deadline: ").append(request.deadline());
-        return notes.toString();
-    }
 }
 

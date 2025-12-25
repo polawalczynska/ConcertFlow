@@ -13,6 +13,7 @@ import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
+import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.ConcertMapper;
@@ -47,6 +48,7 @@ public class ConcertService {
     private final ConcertAuthorizationService authorizationService;
     private final ApprovalWorkflowService approvalWorkflowService;
     private final ConcertBuilder concertBuilder;
+    private final BudgetManagerChangeHandler budgetManagerChangeHandler;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -106,19 +108,7 @@ public class ConcertService {
             ? findBudgetManagerById(request.budgetManagerId())
             : null;
         
-        // If budget manager is being changed and budget was already approved/submitted,
-        // reset budget status to PENDING so new manager can review
-        boolean budgetManagerChanged = (concert.getBudgetManager() == null && budgetManager != null) ||
-            (concert.getBudgetManager() != null && budgetManager == null) ||
-            (concert.getBudgetManager() != null && budgetManager != null &&
-                !concert.getBudgetManager().getId().equals(budgetManager.getId()));
-        
-        if (budgetManagerChanged && 
-            (concert.getBudgetStatus() == BudgetStatus.APPROVED || 
-             concert.getBudgetStatus() == BudgetStatus.SUBMITTED ||
-             concert.getBudgetStatus() == BudgetStatus.UNDER_REVIEW)) {
-            concert.setBudgetStatus(BudgetStatus.PENDING);
-        }
+        budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
         
         concertBuilder.updateFields(concert, request, artist, budgetManager);
         concertRepository.save(concert);
@@ -150,32 +140,6 @@ public class ConcertService {
             .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
     }
 
-    @CacheEvict(value = "dashboardStats", allEntries = true)
-    public void completePastConcerts() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Concert> concertsToComplete = concertRepository.findConcertsToComplete(now);
-        
-        if (!concertsToComplete.isEmpty()) {
-            for (Concert concert : concertsToComplete) {
-                concert.setStatus(ConcertStatus.COMPLETED);
-            }
-            concertRepository.saveAll(concertsToComplete);
-        }
-    }
-
-    @CacheEvict(value = "dashboardStats", allEntries = true)
-    public void cancelUnapprovedPastConcerts() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);
-        
-        if (!concertsToCancel.isEmpty()) {
-            for (Concert concert : concertsToCancel) {
-                concert.setStatus(ConcertStatus.CANCELLED);
-                concert.setCancellationReason("Automatycznie anulowany - koncert nie został zatwierdzony przed terminem");
-            }
-            concertRepository.saveAll(concertsToCancel);
-        }
-    }
 
     private Artist findArtistById(Long id) {
         return artistRepository.findById(id)
