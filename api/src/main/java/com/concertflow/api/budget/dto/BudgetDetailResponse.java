@@ -29,6 +29,7 @@ public record BudgetDetailResponse(
     String coordinatorEmail,
     String coordinatorPhone,
     List<BudgetValidation> validations,
-    Boolean isEligibleForApproval
+    Boolean isEligibleForApproval,
+    Integer budgetVersion
 ) {}
 

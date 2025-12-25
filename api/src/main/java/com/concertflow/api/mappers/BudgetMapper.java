@@ -77,6 +77,7 @@ public class BudgetMapper {
             .coordinatorPhone(null)
             .validations(validations != null ? validations : new ArrayList<>())
             .isEligibleForApproval(isEligible)
+            .budgetVersion(concert.getBudgetVersion())
             .build();
     }
 

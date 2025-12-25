@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class BudgetApprovalService {
         concert.setBudgetStatus(BudgetStatus.APPROVED);
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(approver.getId());
-        concert.setApprovedBudget(budgetItemService.calculateTotalApprovedBudget(concert));
+        concert.setApprovedBudget(concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
 
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
             concert,
@@ -119,7 +120,7 @@ public class BudgetApprovalService {
         concert.setBudgetStatus(BudgetStatus.REJECTED);
         concert.setBudgetRejectionReason(request.rejectionReason());
 
-        String comments = request.rejectionReason() + 
+        String comments = request.rejectionReason() +
             (request.suggestions() != null ? "\nSuggestions: " + request.suggestions() : "");
         BudgetApproval rejection = approvalRecordService.createApprovalRecord(
             concert,
@@ -184,7 +185,7 @@ public class BudgetApprovalService {
         log.debug("Fetching budget details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 
         Concert concert = findConcertById(concertId);
-        
+
         if (!concert.getCoordinator().getId().equals(coordinator.getId())) {
             throw new com.concertflow.api.exceptions.types.UnauthorizedAccessException(
                 "You can only view budget details for your own concerts");
