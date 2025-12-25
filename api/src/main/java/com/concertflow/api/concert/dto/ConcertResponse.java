@@ -13,6 +13,7 @@ public record ConcertResponse(
     String name,
     LocalDateTime date,
     String venue,
+    String city,
     ConcertStatus status,
     BigDecimal budget,
     String description,

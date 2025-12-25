@@ -263,9 +263,6 @@ public class BudgetMapper {
         return 1;
     }
 
-    private String extractCity(String venue) {
-        return venue != null && venue.contains(",") ? venue.split(",")[1].trim() : venue;
-    }
 
     private BigDecimal calculateBudgetDifference(Concert concert) {
         BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);

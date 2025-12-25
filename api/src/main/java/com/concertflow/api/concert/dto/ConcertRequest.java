@@ -12,6 +12,7 @@ public record ConcertRequest(
     @NotBlank String name,
     @NotNull @Future LocalDateTime date,
     @NotBlank String venue,
+    @NotBlank String city,
     @NotNull @Positive BigDecimal budget,
     String description,
     @NotNull Long artistId,

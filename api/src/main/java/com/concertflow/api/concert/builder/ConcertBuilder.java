@@ -13,6 +13,7 @@ public class ConcertBuilder {
             .name(request.name())
             .date(request.date())
             .venue(request.venue())
+            .city(request.city())
             .budget(request.budget())
             .description(request.description())
             .artist(artist)
@@ -25,6 +26,7 @@ public class ConcertBuilder {
         concert.setName(request.name());
         concert.setDate(request.date());
         concert.setVenue(request.venue());
+        concert.setCity(request.city());
         concert.setBudget(request.budget());
         concert.setDescription(request.description());
         concert.setArtist(artist);

@@ -41,7 +41,7 @@ public class ConcertScheduledTaskService {
         if (!concertsToCancel.isEmpty()) {
             for (Concert concert : concertsToCancel) {
                 concert.setStatus(ConcertStatus.CANCELLED);
-                concert.setCancellationReason("Automatycznie anulowany - koncert nie został zatwierdzony przed terminem");
+                concert.setCancellationReason("Automatically cancelled - concert was not approved before the scheduled date");
             }
             concertRepository.saveAll(concertsToCancel);
             log.info("Cancelled {} unapproved past concerts", concertsToCancel.size());

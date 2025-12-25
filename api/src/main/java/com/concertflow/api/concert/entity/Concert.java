@@ -36,6 +36,9 @@ public class Concert {
     @Column(nullable = false)
     private String venue;
 
+    @Column(nullable = false)
+    private String city;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default

@@ -15,6 +15,7 @@ public class ConcertMapper {
             concert.getName(),
             concert.getDate(),
             concert.getVenue(),
+            concert.getCity(),
             concert.getStatus(),
             concert.getBudget(),
             concert.getDescription(),
