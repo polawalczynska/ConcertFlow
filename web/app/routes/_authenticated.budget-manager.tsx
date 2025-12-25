@@ -6,7 +6,7 @@ import { useBudgetApprovals } from "./_authenticated.budget-manager/hooks/useBud
 import { BudgetListPanel } from "./_authenticated.budget-manager/components/BudgetListPanel";
 import { BudgetDetailView } from "./_authenticated.budget-manager/components/budget-detail/BudgetDetailView";
 import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
-import { RejectBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/RejectBudgetDialog";
+import { RequestRevisionDialog } from "./_authenticated.budget-manager/components/approve-dialog/RequestRevisionDialog";
 import { BudgetFilters } from "./_authenticated.budget-manager/components/BudgetFilters";
 import { BudgetStats } from "./_authenticated.budget-manager/components/BudgetStats";
 
@@ -21,7 +21,7 @@ export default function BudgetManagerDashboard() {
     budgetDetails,
     budgetsLoading,
     approveMutation,
-    rejectMutation,
+    requestRevisionMutation,
     stats,
   } = useBudgetApprovals();
 
@@ -31,10 +31,8 @@ export default function BudgetManagerDashboard() {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("concertDate");
   const [approveModal, setApproveModal] = useState(false);
-  const [rejectModal, setRejectModal] = useState(false);
+  const [revisionModal, setRevisionModal] = useState(false);
   const [approvalComments, setApprovalComments] = useState("");
-  const [rejectionReason, setRejectionReason] = useState("");
-  const [rejectionComments, setRejectionComments] = useState("");
 
   const filteredBudgets = useMemo(() => {
     return filterAndSortBudgets(budgets, searchQuery, statusFilter, priorityFilter, sortBy);
@@ -68,16 +66,20 @@ export default function BudgetManagerDashboard() {
     }
   };
 
-  const handleReject = () => {
+  const handleRequestRevision = (request: {
+    concertId: number;
+    revisionReason: string;
+    requiredChanges: Array<{ itemId: number; changeReason: string }>;
+    deadline: string;
+  }) => {
     if (selectedBudgetId && budgetDetails) {
-      rejectMutation.mutate({
-        concertId: selectedBudgetId,
-        budgetVersion: budgetDetails.budgetVersion ?? 1,
-        rejectionReason: rejectionComments || rejectionReason,
+      requestRevisionMutation.mutate({
+        concertId: request.concertId,
+        revisionReason: request.revisionReason,
+        requiredChanges: request.requiredChanges,
+        deadline: request.deadline,
       });
-      setRejectModal(false);
-      setRejectionReason("");
-      setRejectionComments("");
+      setRevisionModal(false);
     }
   };
 
@@ -122,8 +124,7 @@ export default function BudgetManagerDashboard() {
                 <BudgetDetailView
                   budget={budgetDetails}
                   onApprove={() => setApproveModal(true)}
-                  onReject={() => setRejectModal(true)}
-                  onRequestRevision={() => {}}
+                  onRequestRevision={() => setRevisionModal(true)}
                 />
               ) : (
                 <div className="flex h-full items-center justify-center p-6">
@@ -148,18 +149,15 @@ export default function BudgetManagerDashboard() {
             onApprove={handleApprove}
             isLoading={approveMutation.isPending}
           />
-          <RejectBudgetDialog
-            isOpen={rejectModal}
-            onOpenChange={setRejectModal}
+          <RequestRevisionDialog
+            isOpen={revisionModal}
+            onOpenChange={setRevisionModal}
             concertId={selectedBudgetId}
             concertName={selectedBudget?.concertName ?? ""}
             budgetVersion={budgetDetails?.budgetVersion ?? 1}
-            rejectionReason={rejectionReason}
-            onRejectionReasonChange={setRejectionReason}
-            comments={rejectionComments}
-            onCommentsChange={setRejectionComments}
-            onReject={handleReject}
-            isLoading={rejectMutation.isPending}
+            budgetDetails={budgetDetails}
+            onRequestRevision={handleRequestRevision}
+            isLoading={requestRevisionMutation.isPending}
           />
         </>
       )}

@@ -53,18 +53,6 @@ public class BudgetAccessValidator {
             throw new com.concertflow.api.exceptions.types.BudgetValidationException(
                 "Budget must be greater than 0");
         }
-
-        if (concert.getEstimatedBudget().compareTo(BudgetApprovalConfig.MIN_BUDGET) < 0) {
-            throw new com.concertflow.api.exceptions.types.BudgetValidationException(
-                "Minimum budget is " + BudgetApprovalConfig.MIN_BUDGET);
-        }
-    }
-
-    public void validateBudgetForRejection(Concert concert) {
-        if (concert.getBudgetStatus() != BudgetStatus.SUBMITTED &&
-            concert.getBudgetStatus() != BudgetStatus.UNDER_REVIEW) {
-            throw new InvalidBudgetStatusException("Budget is not in rejectable state");
-        }
     }
 
     public void validateBudgetForSubmission(Concert concert) {

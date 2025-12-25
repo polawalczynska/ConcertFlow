@@ -55,16 +55,6 @@ public class BudgetApprovalController {
         budgetApprovalService.approveBudget(concertId, request, approver);
     }
 
-    @PostMapping("/concert/{concertId}/reject")
-    @RequireBudgetManager
-    public void rejectBudget(
-        @PathVariable Long concertId,
-        @Valid @RequestBody RejectBudgetRequest request,
-        @AuthenticationPrincipal User rejector
-    ) {
-        budgetApprovalService.rejectBudget(concertId, request, rejector);
-    }
-
     @PostMapping("/concert/{concertId}/request-revision")
     @RequireBudgetManager
     public void requestBudgetRevision(
