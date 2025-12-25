@@ -18,6 +18,14 @@ interface RejectBudgetDialogProps {
   isLoading?: boolean;
 }
 
+const REJECTION_REASONS = [
+  { value: "exceeds_limits", label: "Budget exceeds limits" },
+  { value: "insufficient_justification", label: "Insufficient justification" },
+  { value: "incorrect_calculations", label: "Incorrect calculations" },
+  { value: "missing_documentation", label: "Missing documentation" },
+  { value: "other", label: "Other" },
+] as const;
+
 export function RejectBudgetDialog({
   isOpen,
   onOpenChange,
@@ -29,6 +37,8 @@ export function RejectBudgetDialog({
   onReject,
   isLoading,
 }: RejectBudgetDialogProps) {
+  const selectedReasonLabel = REJECTION_REASONS.find((r) => r.value === rejectionReason)?.label || "";
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -42,28 +52,29 @@ export function RejectBudgetDialog({
             <Label>Rejection Reason</Label>
             <Select value={rejectionReason} onValueChange={onRejectionReasonChange}>
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder="Select a reason" />
+                <SelectValue placeholder="Select a reason">
+                  {selectedReasonLabel}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="exceeds_limits">Budget exceeds limits</SelectItem>
-                <SelectItem value="insufficient_justification">Insufficient justification</SelectItem>
-                <SelectItem value="incorrect_calculations">Incorrect calculations</SelectItem>
-                <SelectItem value="missing_documentation">Missing documentation</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {REJECTION_REASONS.map((reason) => (
+                  <SelectItem key={reason.value} value={reason.value}>
+                    {reason.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
           <div>
-            <Label>Detailed Comments (Required, min 10 characters)</Label>
+            <Label>Comments (Optional)</Label>
             <Textarea
               value={comments}
               onChange={(e) => onCommentsChange(e.target.value)}
-              placeholder="Provide detailed feedback about why this budget is being rejected..."
+              placeholder="Add any additional comments or feedback..."
               className="mt-1"
               rows={5}
             />
-            <p className="mt-1 text-xs text-text-secondary">{comments.length} / 10 characters</p>
           </div>
         </div>
 
@@ -71,7 +82,7 @@ export function RejectBudgetDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
-          <Button onClick={onReject} variant="destructive" disabled={comments.length < 10 || isLoading}>
+          <Button onClick={onReject} variant="destructive" disabled={isLoading}>
             {isLoading ? "Rejecting..." : "Reject Budget"}
           </Button>
         </DialogFooter>
