@@ -72,7 +72,7 @@ public class BudgetMapper {
             .budgetStatus(concert.getBudgetStatus())
             .estimatedBudget(estimatedBudget)
             .requestedBudget(requestedBudget)
-            .approvedBudget(concert.getApprovedBudget())
+            .approvedBudget(concert.getBudget())
             .budgetDifference(calculateBudgetDifference(concert))
             .budgetItems(budgetItems)
             .approvalHistory(approvalHistory)
@@ -264,10 +264,10 @@ public class BudgetMapper {
 
     private BigDecimal calculateBudgetDifference(Concert concert) {
         BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
-        if (estimatedBudget == null || concert.getApprovedBudget() == null) {
+        if (estimatedBudget == null || concert.getBudget() == null) {
             return BigDecimal.ZERO;
         }
-        return concert.getApprovedBudget().subtract(estimatedBudget);
+        return concert.getBudget().subtract(estimatedBudget);
     }
 
     private BigDecimal calculateEstimatedBudgetFromItems(Concert concert) {

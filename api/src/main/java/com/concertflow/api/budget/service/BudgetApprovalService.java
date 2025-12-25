@@ -94,8 +94,8 @@ public class BudgetApprovalService {
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(approver.getId());
 
+        // Set the approved budget as the concert's budget
         BigDecimal approvedBudget = request.approvedBudget();
-        concert.setApprovedBudget(approvedBudget);
         concert.setBudget(approvedBudget);
 
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
