@@ -4,9 +4,9 @@ import { Filter } from "lucide-react";
 import { useBudgetManagerAccess } from "./_authenticated.budget-manager/hooks/useBudgetManagerAccess";
 import { useBudgetApprovals } from "./_authenticated.budget-manager/hooks/useBudgetApprovals";
 import { BudgetListPanel } from "./_authenticated.budget-manager/components/BudgetListPanel";
-import { BudgetDetailView } from "./_authenticated.budget-manager/components/BudgetDetailView";
-import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/ApproveBudgetDialog";
-import { RejectBudgetDialog } from "./_authenticated.budget-manager/components/RejectBudgetDialog";
+import { BudgetDetailView } from "./_authenticated.budget-manager/components/budget-detail/BudgetDetailView";
+import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
+import { RejectBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/RejectBudgetDialog";
 import { BudgetFilters } from "./_authenticated.budget-manager/components/BudgetFilters";
 import { BudgetStats } from "./_authenticated.budget-manager/components/BudgetStats";
 

@@ -17,11 +17,11 @@ export function useBudgetApprovals() {
       }
      
       const response = await budgetApprovalApi.getPendingBudgets(
-        0, 
-        100, 
-        "date", 
-        "asc",
-        { params: { budgetManagerId: currentUser.id } }
+        currentUser.id, 
+        0,            
+        100,           
+        "date",        
+        "asc"         
       );
       return response.data;
     },
@@ -35,7 +35,7 @@ export function useBudgetApprovals() {
       
       const response = await budgetApprovalApi.getBudgetDetails(
         selectedBudgetId,
-        { params: { budgetManagerId: currentUser.id } }
+        currentUser.id // budgetManagerId (second parameter, required)
       );
       return response.data;
     },
@@ -123,4 +123,3 @@ export function useBudgetApprovals() {
     stats,
   };
 }
-

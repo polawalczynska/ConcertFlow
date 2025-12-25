@@ -1,9 +1,9 @@
 import type { BudgetDetailResponse } from "~/api";
-import { BudgetHeader } from "./budget-detail/BudgetHeader";
-import { BudgetSummaryCards } from "./budget-detail/BudgetSummaryCards";
-import { BudgetLineItems } from "./budget-detail/BudgetLineItems";
-import { ValidationResults } from "./budget-detail/ValidationResults";
-import { BudgetActionButtons } from "./budget-detail/BudgetActionButtons";
+import { BudgetHeader } from "./BudgetHeader";
+import { BudgetSummaryCards } from "./BudgetSummaryCards";
+import { BudgetLineItems } from "./BudgetLineItems";
+import { ValidationResults } from "./ValidationResults";
+import { BudgetActionButtons } from "./BudgetActionButtons";
 
 interface BudgetDetailViewProps {
   budget: BudgetDetailResponse;

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
-import { ApprovalLevelSelect } from "./approve-dialog/ApprovalLevelSelect";
-import { ApprovalCommentsField } from "./approve-dialog/ApprovalCommentsField";
+import { ApprovalLevelSelect } from "./ApprovalLevelSelect";
+import { ApprovalCommentsField } from "./ApprovalCommentsField";
 
 interface ApproveBudgetDialogProps {
   isOpen: boolean;
