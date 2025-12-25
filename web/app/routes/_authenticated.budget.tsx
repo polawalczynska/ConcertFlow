@@ -9,7 +9,7 @@ import { BudgetFilters } from "./_authenticated.budget-manager/components/Budget
 import type { BudgetItemApproval } from "~/api";
 
 export default function ConcertsPage() {
-  const { user, userLoading, isBudgetManager } = useBudgetManagerAccess();
+  const { user, userLoading, isBudgetManager, error: userError } = useBudgetManagerAccess();
   const {
     budgets,
     filterAndSortBudgets,
@@ -32,13 +32,6 @@ export default function ConcertsPage() {
   const filteredBudgets = useMemo(() => {
     return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
   }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
-
-  const { error: userError } = useBudgetManagerAccess();
-
-  // Debug logging
-  if (typeof window !== "undefined") {
-    console.log("ConcertsBudgetPage state:", { userLoading, budgetsLoading, userError, user, isBudgetManager, budgetsError });
-  }
 
   if (userLoading || budgetsLoading) {
     return (
