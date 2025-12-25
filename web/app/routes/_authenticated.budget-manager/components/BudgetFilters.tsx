@@ -26,7 +26,7 @@ export function BudgetFilters({
   onSortByChange,
 }: BudgetFiltersProps) {
   return (
-    <div className="mt-4 grid gap-4 rounded-lg border border-border bg-bg-main p-4 md:grid-cols-2">
+    <div className="grid gap-4 rounded-lg border border-border bg-bg-main p-4 md:grid-cols-2">
       <div>
         <Label className="text-xs">Status</Label>
         <Select value={statusFilter} onValueChange={onStatusFilterChange}>
