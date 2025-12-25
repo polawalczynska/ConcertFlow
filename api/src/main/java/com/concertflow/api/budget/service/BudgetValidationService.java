@@ -32,7 +32,7 @@ public class BudgetValidationService {
 
     private void validateBudgetAmount(Concert concert, List<BudgetValidation> validations) {
         BigDecimal requestedBudget = concert.getBudget();
-        
+
         if (requestedBudget == null || requestedBudget.compareTo(BigDecimal.ZERO) <= 0) {
             validations.add(BudgetValidation.builder()
                 .code("BUDGET_ZERO_OR_NEGATIVE")
@@ -102,7 +102,7 @@ public class BudgetValidationService {
             .filter(amount -> amount != null && amount.compareTo(BigDecimal.ZERO) > 0)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        
+
         BigDecimal budget = concert.getBudget();
         if (budget != null && totalItemsAmount.compareTo(budget) > 0) {
             validations.add(BudgetValidation.builder()
@@ -146,9 +146,6 @@ public class BudgetValidationService {
     }
 
     private void validateBudgetCompleteness(Concert concert, List<BudgetValidation> validations) {
-        // Estimated budget is automatically calculated from budget items
-        // No validation needed for estimated budget as it's always calculated
-        
         if (concert.getBudgetItems() == null || concert.getBudgetItems().isEmpty()) {
             return;
         }
