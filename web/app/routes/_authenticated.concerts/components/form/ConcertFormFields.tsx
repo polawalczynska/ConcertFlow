@@ -4,13 +4,16 @@ import { ArtistSelectField } from "./fields/ArtistSelectField";
 import { DateTimeField } from "./fields/DateTimeField";
 import { BudgetField } from "./fields/BudgetField";
 import { VenueField } from "./fields/VenueField";
+import { CityField } from "./fields/CityField";
 import { DescriptionField } from "./fields/DescriptionField";
+import { BudgetManagerSelectField } from "./fields/BudgetManagerSelectField";
 
 interface ConcertFormFieldsProps {
   formData: ConcertRequest;
   formErrors: Record<string, string>;
-  onFieldChange: (field: keyof ConcertRequest, value: string | number) => void;
+  onFieldChange: (field: keyof ConcertRequest, value: string | number | null) => void;
   artists: Array<{ id?: number; name?: string }>;
+  budgetManagers: Array<{ id?: number; firstName?: string; lastName?: string }>;
 }
 
 export function ConcertFormFields({
@@ -18,6 +21,7 @@ export function ConcertFormFields({
   formErrors,
   onFieldChange,
   artists,
+  budgetManagers,
 }: ConcertFormFieldsProps) {
   return (
     <div className="grid gap-4 py-4 sm:grid-cols-3">
@@ -46,6 +50,17 @@ export function ConcertFormFields({
         value={formData.venue}
         onChange={(value) => onFieldChange("venue", value)}
         error={formErrors.venue}
+      />
+      <CityField
+        value={formData.city}
+        onChange={(value) => onFieldChange("city", value)}
+        error={formErrors.city}
+      />
+      <BudgetManagerSelectField
+        value={formData.budgetManagerId}
+        onChange={(value) => onFieldChange("budgetManagerId", value)}
+        error={formErrors.budgetManagerId}
+        budgetManagers={budgetManagers}
       />
       <DescriptionField
         value={formData.description || ""}

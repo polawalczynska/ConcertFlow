@@ -18,7 +18,7 @@ export function QuickActions({ onCreateConcert, pendingApprovals = 0 }: QuickAct
           <Plus className="mr-2 h-4 w-4" />
           Create New Concert
         </Button>
-        <a href="/concerts">
+        <a href="/manage">
           <Button variant="outline" className="w-full bg-transparent">
             <CheckCircle2 className="mr-2 h-4 w-4" />
             Manage Concerts
@@ -44,7 +44,7 @@ export function QuickActions({ onCreateConcert, pendingApprovals = 0 }: QuickAct
                   <p className="text-xs text-orange-700">{pendingApprovals} concerts require action</p>
                 </div>
               </div>
-              <a href="/concerts?status=PLANNING">
+              <a href="/manage?status=PLANNING">
                 <Button size="sm" variant="outline" className="border-orange-300 bg-white">
                   View
                 </Button>

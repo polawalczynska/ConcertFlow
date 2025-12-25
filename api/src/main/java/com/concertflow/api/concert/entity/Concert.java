@@ -36,6 +36,9 @@ public class Concert {
     @Column(nullable = false)
     private String venue;
 
+    @Column(nullable = false)
+    private String city;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
@@ -56,6 +59,10 @@ public class Concert {
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
+    @ManyToOne
+    @JoinColumn(name = "budget_manager_id")
+    private User budgetManager;
+
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Approval> approvals = new ArrayList<>();
@@ -65,4 +72,36 @@ public class Concert {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private BudgetStatus budgetStatus = BudgetStatus.PENDING;
+
+    private BigDecimal estimatedBudget;
+
+    private BigDecimal approvedBudget;
+
+    private BigDecimal submittedBudget;
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<BudgetItem> budgetItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<BudgetApproval> budgetApprovals = new ArrayList<>();
+
+    private BigDecimal actualExpenses;
+
+    @Column(length = 1000)
+    private String budgetRejectionReason;
+
+    private LocalDateTime budgetApprovedAt;
+
+    private Long budgetApprovedById;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Integer budgetVersion = 1;
 }

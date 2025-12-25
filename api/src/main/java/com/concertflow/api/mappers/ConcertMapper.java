@@ -15,6 +15,7 @@ public class ConcertMapper {
             concert.getName(),
             concert.getDate(),
             concert.getVenue(),
+            concert.getCity(),
             concert.getStatus(),
             concert.getBudget(),
             concert.getDescription(),
@@ -25,6 +26,11 @@ public class ConcertMapper {
                 : null,
             concert.getArtist() != null ? concert.getArtist().getId() : null,
             concert.getArtist() != null ? concert.getArtist().getName() : null,
+            concert.getBudgetManager() != null ? concert.getBudgetManager().getId() : null,
+            concert.getBudgetManager() != null
+                ? concert.getBudgetManager().getFirstName() + " " + concert.getBudgetManager().getLastName()
+                : null,
+            concert.getBudgetStatus(),
             mapApprovals(concert),
             concert.getCreatedAt()
         );

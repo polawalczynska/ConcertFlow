@@ -50,6 +50,12 @@ export const ApprovalResponseStatusEnum = {
 
 export type ApprovalResponseStatusEnum = typeof ApprovalResponseStatusEnum[keyof typeof ApprovalResponseStatusEnum];
 
+export interface ApproveBudgetRequest {
+    'concertId': number;
+    'budgetVersion': number;
+    'approvedBudget': number;
+    'itemApprovals'?: Array<BudgetItemApproval>;
+}
 export interface ArtistRequest {
     'name': string;
     'email': string;
@@ -88,22 +94,166 @@ export const AuthResponseRoleEnum = {
 
 export type AuthResponseRoleEnum = typeof AuthResponseRoleEnum[keyof typeof AuthResponseRoleEnum];
 
+export interface BudgetApprovalDashboardResponse {
+    'concertId'?: number;
+    'concertName'?: string;
+    'artistName'?: string;
+    'concertDate'?: string;
+    'estimatedBudget'?: number;
+    'submittedBudget'?: number;
+    'approvedBudget'?: number;
+    'budgetStatus'?: BudgetApprovalDashboardResponseBudgetStatusEnum;
+    'coordinatorName'?: string;
+    'submittedAt'?: string;
+    'daysUntilConcert'?: number;
+    'hasComments'?: boolean;
+    'approvalLevel'?: number;
+    'flags'?: Array<string>;
+    'priority'?: string;
+}
+
+export const BudgetApprovalDashboardResponseBudgetStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    UnderReview: 'UNDER_REVIEW',
+    Approved: 'APPROVED',
+    Rejected: 'REJECTED',
+    RevisionRequested: 'REVISION_REQUESTED',
+    Archived: 'ARCHIVED'
+} as const;
+
+export type BudgetApprovalDashboardResponseBudgetStatusEnum = typeof BudgetApprovalDashboardResponseBudgetStatusEnum[keyof typeof BudgetApprovalDashboardResponseBudgetStatusEnum];
+
+export interface BudgetApprovalResponse {
+    'id'?: number;
+    'approverName'?: string;
+    'approverRole'?: string;
+    'decision'?: string;
+    'comments'?: string;
+    'decisionDate'?: string;
+    'approvalLevel'?: number;
+    'requiresRevision'?: boolean;
+}
+export interface BudgetDetailResponse {
+    'concertId'?: number;
+    'concertName'?: string;
+    'artistName'?: string;
+    'concertDate'?: string;
+    'venue'?: string;
+    'city'?: string;
+    'concertStatus'?: string;
+    'budgetStatus'?: BudgetDetailResponseBudgetStatusEnum;
+    'estimatedBudget'?: number;
+    'requestedBudget'?: number;
+    'approvedBudget'?: number;
+    'budgetDifference'?: number;
+    'budgetItems'?: Array<BudgetItemResponse>;
+    'approvalHistory'?: Array<BudgetApprovalResponse>;
+    'statistics'?: BudgetStatistics;
+    'createdAt'?: string;
+    'lastUpdated'?: string;
+    'coordinatorEmail'?: string;
+    'coordinatorPhone'?: string;
+    'validations'?: Array<BudgetValidation>;
+    'isEligibleForApproval'?: boolean;
+    'budgetVersion'?: number;
+}
+
+export const BudgetDetailResponseBudgetStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    UnderReview: 'UNDER_REVIEW',
+    Approved: 'APPROVED',
+    Rejected: 'REJECTED',
+    RevisionRequested: 'REVISION_REQUESTED',
+    Archived: 'ARCHIVED'
+} as const;
+
+export type BudgetDetailResponseBudgetStatusEnum = typeof BudgetDetailResponseBudgetStatusEnum[keyof typeof BudgetDetailResponseBudgetStatusEnum];
+
+export interface BudgetItemApproval {
+    'itemId': number;
+    'decision': BudgetItemApprovalDecisionEnum;
+    'approvedAmount'?: number;
+    'comments'?: string;
+}
+
+export const BudgetItemApprovalDecisionEnum = {
+    Approved: 'APPROVED',
+    Rejected: 'REJECTED',
+    ReturnedForRevision: 'RETURNED_FOR_REVISION',
+    Pending: 'PENDING'
+} as const;
+
+export type BudgetItemApprovalDecisionEnum = typeof BudgetItemApprovalDecisionEnum[keyof typeof BudgetItemApprovalDecisionEnum];
+
+export interface BudgetItemApprovalResponse {
+    'id'?: number;
+    'approverName'?: string;
+    'decision'?: string;
+    'approvedAmount'?: number;
+    'comments'?: string;
+    'decisionDate'?: string;
+}
+export interface BudgetItemResponse {
+    'id'?: number;
+    'category'?: string;
+    'name'?: string;
+    'description'?: string;
+    'estimatedAmount'?: number;
+    'requestedAmount'?: number;
+    'approvedAmount'?: number;
+    'status'?: string;
+    'isMandatory'?: boolean;
+    'notes'?: string;
+    'requiresAttention'?: boolean;
+    'approvals'?: Array<BudgetItemApprovalResponse>;
+}
+export interface BudgetStatistics {
+    'totalItems'?: number;
+    'approvedItems'?: number;
+    'pendingItems'?: number;
+    'rejectedItems'?: number;
+    'totalEstimated'?: number;
+    'totalRequested'?: number;
+    'totalApproved'?: number;
+    'approvalRate'?: number;
+    'variance'?: number;
+    'categoryBreakdown'?: Array<CategoryBreakdown>;
+}
+export interface BudgetValidation {
+    'code'?: string;
+    'message'?: string;
+    'severity'?: string;
+    'passed'?: boolean;
+    'details'?: string;
+}
 export interface CancelConcertRequest {
     'cancellationReason': string;
+}
+export interface CategoryBreakdown {
+    'category'?: string;
+    'itemCount'?: number;
+    'estimatedAmount'?: number;
+    'approvedAmount'?: number;
+    'percentageOfTotal'?: number;
 }
 export interface ConcertRequest {
     'name': string;
     'date': string;
     'venue': string;
+    'city': string;
     'budget': number;
     'description'?: string;
     'artistId': number;
+    'budgetManagerId'?: number;
 }
 export interface ConcertResponse {
     'id'?: number;
     'name'?: string;
     'date'?: string;
     'venue'?: string;
+    'city'?: string;
     'status'?: ConcertResponseStatusEnum;
     'budget'?: number;
     'description'?: string;
@@ -112,6 +262,9 @@ export interface ConcertResponse {
     'coordinatorName'?: string;
     'artistId'?: number;
     'artistName'?: string;
+    'budgetManagerId'?: number;
+    'budgetManagerName'?: string;
+    'budgetStatus'?: ConcertResponseBudgetStatusEnum;
     'approvals'?: Array<ApprovalResponse>;
     'createdAt'?: string;
 }
@@ -124,6 +277,17 @@ export const ConcertResponseStatusEnum = {
 } as const;
 
 export type ConcertResponseStatusEnum = typeof ConcertResponseStatusEnum[keyof typeof ConcertResponseStatusEnum];
+export const ConcertResponseBudgetStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    UnderReview: 'UNDER_REVIEW',
+    Approved: 'APPROVED',
+    Rejected: 'REJECTED',
+    RevisionRequested: 'REVISION_REQUESTED',
+    Archived: 'ARCHIVED'
+} as const;
+
+export type ConcertResponseBudgetStatusEnum = typeof ConcertResponseBudgetStatusEnum[keyof typeof ConcertResponseBudgetStatusEnum];
 
 export interface ConcertsByMonth {
     'month'?: ConcertsByMonthMonth;
@@ -190,7 +354,6 @@ export interface CoordinatorStatsResponse {
     'approvedConcerts'?: number;
     'completedConcerts'?: number;
     'cancelledConcerts'?: number;
-    'totalRevenue'?: number;
     'upcomingConcertsCount'?: number;
     'concertsNeedingAttention'?: number;
     'genreStats'?: Array<GenreStats>;
@@ -202,6 +365,14 @@ export interface CoordinatorStatsResponse {
     'genreChartData'?: Array<GenreChartData>;
     'concertsByMonthChartData'?: Array<ConcertsByMonthChartData>;
     'lastUpdated'?: string;
+}
+export interface CreateBudgetItemRequest {
+    'category': string;
+    'name': string;
+    'description'?: string;
+    'estimatedAmount': number;
+    'isMandatory'?: boolean;
+    'notes'?: string;
 }
 export interface GenreChartData {
     'name'?: string;
@@ -216,6 +387,27 @@ export interface LoginRequest {
     'email': string;
     'password': string;
     'rememberMe'?: boolean;
+}
+export interface PageBudgetApprovalDashboardResponse {
+    'totalElements'?: number;
+    'totalPages'?: number;
+    'size'?: number;
+    'content'?: Array<BudgetApprovalDashboardResponse>;
+    'number'?: number;
+    'sort'?: SortObject;
+    'numberOfElements'?: number;
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
+    'empty'?: boolean;
+}
+export interface PageableObject {
+    'offset'?: number;
+    'sort'?: SortObject;
+    'pageSize'?: number;
+    'pageNumber'?: number;
+    'unpaged'?: boolean;
+    'paged'?: boolean;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -250,10 +442,32 @@ export const RegisterRequestRoleEnum = {
 
 export type RegisterRequestRoleEnum = typeof RegisterRequestRoleEnum[keyof typeof RegisterRequestRoleEnum];
 
+export interface RequestBudgetRevisionRequest {
+    'concertId': number;
+    'revisionReason': string;
+    'requiredChanges': Array<RevisionItem>;
+    'deadline': string;
+}
+export interface RevisionItem {
+    'itemId': number;
+    'changeReason': string;
+    'suggestedAmount'?: string;
+    'notes'?: string;
+}
+export interface SortObject {
+    'empty'?: boolean;
+    'unsorted'?: boolean;
+    'sorted'?: boolean;
+}
 export interface StatusDistribution {
     'status'?: string;
     'count'?: number;
     'color'?: string;
+}
+export interface SubmitBudgetForApprovalRequest {
+    'concertId': number;
+    'notes'?: string;
+    'termsAccepted': boolean;
 }
 export interface UpcomingEvent {
     'id'?: number;
@@ -261,6 +475,14 @@ export interface UpcomingEvent {
     'date'?: string;
     'daysUntil'?: number;
     'status'?: string;
+}
+export interface UpdateBudgetItemRequest {
+    'category': string;
+    'name': string;
+    'description'?: string;
+    'estimatedAmount': number;
+    'isMandatory'?: boolean;
+    'notes'?: string;
 }
 export interface UserResponse {
     'id'?: number;
@@ -1082,6 +1304,752 @@ export class AuthControllerApi extends BaseAPI {
 
 
 /**
+ * BudgetApprovalControllerApi - axios parameter creator
+ */
+export const BudgetApprovalControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveBudgetRequest} approveBudgetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        approveBudget: async (concertId: number, approveBudgetRequest: ApproveBudgetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('approveBudget', 'concertId', concertId)
+            // verify required parameter 'approveBudgetRequest' is not null or undefined
+            assertParamExists('approveBudget', 'approveBudgetRequest', approveBudgetRequest)
+            const localVarPath = `/api/budget/approval/concert/{concertId}/approve`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(approveBudgetRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} budgetManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBudgetDetails: async (concertId: number, budgetManagerId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('getBudgetDetails', 'concertId', concertId)
+            // verify required parameter 'budgetManagerId' is not null or undefined
+            assertParamExists('getBudgetDetails', 'budgetManagerId', budgetManagerId)
+            const localVarPath = `/api/budget/approval/concert/{concertId}`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (budgetManagerId !== undefined) {
+                localVarQueryParameter['budgetManagerId'] = budgetManagerId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBudgetDetailsForCoordinator: async (concertId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('getBudgetDetailsForCoordinator', 'concertId', concertId)
+            const localVarPath = `/api/budget/approval/concert/{concertId}/details`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} budgetManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPendingBudgets: async (budgetManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'budgetManagerId' is not null or undefined
+            assertParamExists('getPendingBudgets', 'budgetManagerId', budgetManagerId)
+            const localVarPath = `/api/budget/approval/pending`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (sortBy !== undefined) {
+                localVarQueryParameter['sortBy'] = sortBy;
+            }
+
+            if (direction !== undefined) {
+                localVarQueryParameter['direction'] = direction;
+            }
+
+            if (budgetManagerId !== undefined) {
+                localVarQueryParameter['budgetManagerId'] = budgetManagerId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestBudgetRevisionRequest} requestBudgetRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestBudgetRevision: async (concertId: number, requestBudgetRevisionRequest: RequestBudgetRevisionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('requestBudgetRevision', 'concertId', concertId)
+            // verify required parameter 'requestBudgetRevisionRequest' is not null or undefined
+            assertParamExists('requestBudgetRevision', 'requestBudgetRevisionRequest', requestBudgetRevisionRequest)
+            const localVarPath = `/api/budget/approval/concert/{concertId}/request-revision`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestBudgetRevisionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitBudgetForApprovalRequest} submitBudgetForApprovalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitBudgetForApproval: async (concertId: number, submitBudgetForApprovalRequest: SubmitBudgetForApprovalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('submitBudgetForApproval', 'concertId', concertId)
+            // verify required parameter 'submitBudgetForApprovalRequest' is not null or undefined
+            assertParamExists('submitBudgetForApproval', 'submitBudgetForApprovalRequest', submitBudgetForApprovalRequest)
+            const localVarPath = `/api/budget/approval/concert/{concertId}/submit`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(submitBudgetForApprovalRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * BudgetApprovalControllerApi - functional programming interface
+ */
+export const BudgetApprovalControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BudgetApprovalControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveBudgetRequest} approveBudgetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async approveBudget(concertId: number, approveBudgetRequest: ApproveBudgetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveBudget(concertId, approveBudgetRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.approveBudget']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} budgetManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBudgetDetails(concertId: number, budgetManagerId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BudgetDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBudgetDetails(concertId, budgetManagerId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.getBudgetDetails']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBudgetDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BudgetDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBudgetDetailsForCoordinator(concertId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.getBudgetDetailsForCoordinator']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} budgetManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPendingBudgets(budgetManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageBudgetApprovalDashboardResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPendingBudgets(budgetManagerId, page, size, sortBy, direction, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.getPendingBudgets']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestBudgetRevisionRequest} requestBudgetRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async requestBudgetRevision(concertId: number, requestBudgetRevisionRequest: RequestBudgetRevisionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.requestBudgetRevision(concertId, requestBudgetRevisionRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.requestBudgetRevision']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitBudgetForApprovalRequest} submitBudgetForApprovalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async submitBudgetForApproval(concertId: number, submitBudgetForApprovalRequest: SubmitBudgetForApprovalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitBudgetForApproval(concertId, submitBudgetForApprovalRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetApprovalControllerApi.submitBudgetForApproval']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * BudgetApprovalControllerApi - factory interface
+ */
+export const BudgetApprovalControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BudgetApprovalControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveBudgetRequest} approveBudgetRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        approveBudget(concertId: number, approveBudgetRequest: ApproveBudgetRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.approveBudget(concertId, approveBudgetRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} budgetManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBudgetDetails(concertId: number, budgetManagerId: number, options?: RawAxiosRequestConfig): AxiosPromise<BudgetDetailResponse> {
+            return localVarFp.getBudgetDetails(concertId, budgetManagerId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBudgetDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig): AxiosPromise<BudgetDetailResponse> {
+            return localVarFp.getBudgetDetailsForCoordinator(concertId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} budgetManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPendingBudgets(budgetManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig): AxiosPromise<PageBudgetApprovalDashboardResponse> {
+            return localVarFp.getPendingBudgets(budgetManagerId, page, size, sortBy, direction, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestBudgetRevisionRequest} requestBudgetRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestBudgetRevision(concertId: number, requestBudgetRevisionRequest: RequestBudgetRevisionRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.requestBudgetRevision(concertId, requestBudgetRevisionRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitBudgetForApprovalRequest} submitBudgetForApprovalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitBudgetForApproval(concertId: number, submitBudgetForApprovalRequest: SubmitBudgetForApprovalRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.submitBudgetForApproval(concertId, submitBudgetForApprovalRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * BudgetApprovalControllerApi - object-oriented interface
+ */
+export class BudgetApprovalControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {ApproveBudgetRequest} approveBudgetRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public approveBudget(concertId: number, approveBudgetRequest: ApproveBudgetRequest, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).approveBudget(concertId, approveBudgetRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {number} budgetManagerId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getBudgetDetails(concertId: number, budgetManagerId: number, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).getBudgetDetails(concertId, budgetManagerId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getBudgetDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).getBudgetDetailsForCoordinator(concertId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} budgetManagerId 
+     * @param {number} [page] 
+     * @param {number} [size] 
+     * @param {string} [sortBy] 
+     * @param {string} [direction] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getPendingBudgets(budgetManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).getPendingBudgets(budgetManagerId, page, size, sortBy, direction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {RequestBudgetRevisionRequest} requestBudgetRevisionRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public requestBudgetRevision(concertId: number, requestBudgetRevisionRequest: RequestBudgetRevisionRequest, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).requestBudgetRevision(concertId, requestBudgetRevisionRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {SubmitBudgetForApprovalRequest} submitBudgetForApprovalRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public submitBudgetForApproval(concertId: number, submitBudgetForApprovalRequest: SubmitBudgetForApprovalRequest, options?: RawAxiosRequestConfig) {
+        return BudgetApprovalControllerApiFp(this.configuration).submitBudgetForApproval(concertId, submitBudgetForApprovalRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * BudgetItemControllerApi - axios parameter creator
+ */
+export const BudgetItemControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {CreateBudgetItemRequest} createBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBudgetItem: async (concertId: number, createBudgetItemRequest: CreateBudgetItemRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('createBudgetItem', 'concertId', concertId)
+            // verify required parameter 'createBudgetItemRequest' is not null or undefined
+            assertParamExists('createBudgetItem', 'createBudgetItemRequest', createBudgetItemRequest)
+            const localVarPath = `/api/concerts/{concertId}/budget-items`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createBudgetItemRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteBudgetItem: async (concertId: number, itemId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('deleteBudgetItem', 'concertId', concertId)
+            // verify required parameter 'itemId' is not null or undefined
+            assertParamExists('deleteBudgetItem', 'itemId', itemId)
+            const localVarPath = `/api/concerts/{concertId}/budget-items/{itemId}`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)))
+                .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {UpdateBudgetItemRequest} updateBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateBudgetItem: async (concertId: number, itemId: number, updateBudgetItemRequest: UpdateBudgetItemRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('updateBudgetItem', 'concertId', concertId)
+            // verify required parameter 'itemId' is not null or undefined
+            assertParamExists('updateBudgetItem', 'itemId', itemId)
+            // verify required parameter 'updateBudgetItemRequest' is not null or undefined
+            assertParamExists('updateBudgetItem', 'updateBudgetItemRequest', updateBudgetItemRequest)
+            const localVarPath = `/api/concerts/{concertId}/budget-items/{itemId}`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)))
+                .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateBudgetItemRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * BudgetItemControllerApi - functional programming interface
+ */
+export const BudgetItemControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = BudgetItemControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {CreateBudgetItemRequest} createBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createBudgetItem(concertId: number, createBudgetItemRequest: CreateBudgetItemRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BudgetItemResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBudgetItem(concertId, createBudgetItemRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetItemControllerApi.createBudgetItem']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteBudgetItem(concertId: number, itemId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteBudgetItem(concertId, itemId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetItemControllerApi.deleteBudgetItem']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {UpdateBudgetItemRequest} updateBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateBudgetItem(concertId: number, itemId: number, updateBudgetItemRequest: UpdateBudgetItemRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BudgetItemResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateBudgetItem(concertId, itemId, updateBudgetItemRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['BudgetItemControllerApi.updateBudgetItem']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * BudgetItemControllerApi - factory interface
+ */
+export const BudgetItemControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = BudgetItemControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {CreateBudgetItemRequest} createBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBudgetItem(concertId: number, createBudgetItemRequest: CreateBudgetItemRequest, options?: RawAxiosRequestConfig): AxiosPromise<BudgetItemResponse> {
+            return localVarFp.createBudgetItem(concertId, createBudgetItemRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteBudgetItem(concertId: number, itemId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteBudgetItem(concertId, itemId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} itemId 
+         * @param {UpdateBudgetItemRequest} updateBudgetItemRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateBudgetItem(concertId: number, itemId: number, updateBudgetItemRequest: UpdateBudgetItemRequest, options?: RawAxiosRequestConfig): AxiosPromise<BudgetItemResponse> {
+            return localVarFp.updateBudgetItem(concertId, itemId, updateBudgetItemRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * BudgetItemControllerApi - object-oriented interface
+ */
+export class BudgetItemControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {CreateBudgetItemRequest} createBudgetItemRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public createBudgetItem(concertId: number, createBudgetItemRequest: CreateBudgetItemRequest, options?: RawAxiosRequestConfig) {
+        return BudgetItemControllerApiFp(this.configuration).createBudgetItem(concertId, createBudgetItemRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {number} itemId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public deleteBudgetItem(concertId: number, itemId: number, options?: RawAxiosRequestConfig) {
+        return BudgetItemControllerApiFp(this.configuration).deleteBudgetItem(concertId, itemId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {number} itemId 
+     * @param {UpdateBudgetItemRequest} updateBudgetItemRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public updateBudgetItem(concertId: number, itemId: number, updateBudgetItemRequest: UpdateBudgetItemRequest, options?: RawAxiosRequestConfig) {
+        return BudgetItemControllerApiFp(this.configuration).updateBudgetItem(concertId, itemId, updateBudgetItemRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * ConcertControllerApi - axios parameter creator
  */
 export const ConcertControllerApiAxiosParamCreator = function (configuration?: Configuration) {
@@ -1666,6 +2634,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user/budget-managers`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCurrentUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1704,6 +2701,17 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getBudgetManagers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBudgetManagers(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.getBudgetManagers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getCurrentUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentUser(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -1724,6 +2732,14 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagers(options?: RawAxiosRequestConfig): AxiosPromise<Array<UserResponse>> {
+            return localVarFp.getBudgetManagers(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
             return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
         },
@@ -1734,6 +2750,15 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
  * UserControllerApi - object-oriented interface
  */
 export class UserControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getBudgetManagers(options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getBudgetManagers(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.

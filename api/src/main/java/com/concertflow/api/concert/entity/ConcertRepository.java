@@ -49,4 +49,20 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     List<Concert> findUnapprovedPastConcerts(@Param("currentDate") LocalDateTime currentDate);
 
     Optional<Concert> findById(Long id);
+
+    Page<Concert> findByBudgetStatusAndStatus(BudgetStatus budgetStatus, ConcertStatus status, Pageable pageable);
+
+    Page<Concert> findByBudgetStatusAndStatusAndBudgetManagerId(
+        BudgetStatus budgetStatus, 
+        ConcertStatus status, 
+        Long budgetManagerId,
+        Pageable pageable
+    );
+
+    @Query("SELECT c FROM Concert c WHERE c.status = :status AND c.budgetManager.id = :budgetManagerId")
+    Page<Concert> findByStatusAndBudgetManagerId(
+        @Param("status") ConcertStatus status,
+        @Param("budgetManagerId") Long budgetManagerId,
+        Pageable pageable
+    );
 }

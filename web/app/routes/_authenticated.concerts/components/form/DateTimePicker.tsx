@@ -7,6 +7,7 @@ interface DateTimePickerProps {
   value: string;
   onChange: (value: string) => void;
   error?: string;
+  label?: string;
 }
 
 const parseISOString = (isoString: string): { date: Date; time: string } | null => {
@@ -38,7 +39,7 @@ const formatToISOString = (date: Date, time: string): string => {
   return `${year}-${month}-${day}T${hours}:${minutes}:00`;
 };
 
-export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) {
+export function DateTimePicker({ value, onChange, error, label }: DateTimePickerProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -91,7 +92,7 @@ export function DateTimePicker({ value, onChange, error }: DateTimePickerProps) 
   return (
     <div className="space-y-2">
       <Label>
-        Date & Time <span className="text-red-500">*</span>
+        {label || "Date & Time"} <span className="text-red-500">*</span>
       </Label>
       <div className="border border-border-light rounded-lg bg-bg-main p-4">
         <CalendarGrid

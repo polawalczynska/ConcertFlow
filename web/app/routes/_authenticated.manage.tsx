@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useConcerts } from "~/hooks/useConcerts";
 import { useArtists } from "~/hooks/useArtists";
+import { useBudgetManagers } from "~/hooks/useBudgetManagers";
 import type { GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/components/AuthGuard";
 import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";
@@ -11,10 +12,13 @@ import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/f
 import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
 import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
 import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/ViewConcertDialog";
+import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
+import { useCoordinatorAccess } from "~/routes/_authenticated.dashboard/hooks/useCoordinatorAccess";
 
-export default function ConcertsPage() {
+export default function ConcertsManagePage() {
+  const { user, userLoading, isCoordinator, error: userError } = useCoordinatorAccess();
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [artistIdFilter, setArtistIdFilter] = useState<string>("all");
@@ -23,7 +27,7 @@ export default function ConcertsPage() {
     statusFilter === "all" ? undefined : (statusFilter as GetAllConcertsStatusEnum);
   const artistIdNum = artistIdFilter === "all" ? undefined : Number.parseInt(artistIdFilter);
 
-  const { data: concerts = [], isLoading } = useConcerts(
+  const { data: concerts = [], isLoading, error: concertsError } = useConcerts(
     statusEnum,
     artistIdNum,
     undefined,
@@ -31,10 +35,53 @@ export default function ConcertsPage() {
     0,
     100
   );
-  const { data: artists = [] } = useArtists();
+  const { data: artists = [], error: artistsError } = useArtists();
+  const { data: budgetManagers = [], error: budgetManagersError } = useBudgetManagers();
+
+  if (budgetManagersError) {
+    console.error("Error loading budget managers:", budgetManagersError);
+  }
 
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();
+
+  // Debug logging
+  if (typeof window !== "undefined") {
+    console.log("ConcertsManagePage state:", { userLoading, userError, user, isCoordinator });
+  }
+
+  if (userLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-text-secondary">Loading...</p>
+      </div>
+    );
+  }
+
+  if (userError || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <p className="text-text-secondary mb-2">Unable to load user information</p>
+          <p className="text-sm text-text-secondary mb-4">
+            {userError ? "Authentication error. Please try logging out and back in." : "Please try refreshing the page."}
+          </p>
+          <button
+            onClick={() => window.location.href = "/login"}
+            className="px-4 py-2 bg-purple-main text-white rounded-lg hover:bg-purple-main/90"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isCoordinator) {
+    // This should not be reached due to useCoordinatorAccess redirect,
+    // but keeping as a safety check
+    return null;
+  }
 
   return (
     <AuthGuard>
@@ -61,7 +108,10 @@ export default function ConcertsPage() {
         ) : (
           <ConcertsTable
             concerts={concerts}
-            onEdit={concertForm.openEditModal}
+            onEdit={(concert) => {
+              const updatedConcert = concerts.find((c) => c.id === concert.id) || concert;
+              concertForm.openEditModal(updatedConcert);
+            }}
             onDelete={concertActions.handleDelete}
             onView={concertActions.handleView}
             onCancel={concertActions.handleCancel}
@@ -82,6 +132,7 @@ export default function ConcertsPage() {
           onFormDataChange={concertForm.setFormData}
           onSubmit={concertForm.handleSubmit}
           artists={artists}
+          budgetManagers={budgetManagers}
         />
         <DeleteConcertDialog
           isOpen={concertActions.isDeleteDialogOpen}
@@ -101,6 +152,18 @@ export default function ConcertsPage() {
           isOpen={concertActions.isViewDialogOpen}
           onOpenChange={concertActions.closeViewDialog}
           concert={concertActions.selectedConcert}
+          onSubmitBudget={() => {
+            if (concertActions.selectedConcert) {
+              concertActions.handleSubmitBudget(concertActions.selectedConcert);
+            }
+          }}
+        />
+        <SubmitBudgetDialog
+          isOpen={concertActions.isSubmitBudgetDialogOpen}
+          onOpenChange={concertActions.closeSubmitBudgetDialog}
+          concertName={concertActions.selectedConcert?.name || ""}
+          onSubmit={concertActions.confirmSubmitBudget}
+          isLoading={concertActions.isSubmittingBudget}
         />
       </div>
     </AuthGuard>

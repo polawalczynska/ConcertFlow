@@ -7,15 +7,19 @@ import com.concertflow.api.concert.builder.ConcertBuilder;
 import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
+import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
+import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.ConcertMapper;
 import com.concertflow.api.user.entity.User;
+import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,11 +42,13 @@ import static com.concertflow.api.exceptions.ErrorMessage.CONCERT_NOT_FOUND;
 public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ArtistRepository artistRepository;
+    private final UserRepository userRepository;
     private final ConcertMapper concertMapper;
     private final ConcertValidator concertValidator;
     private final ConcertAuthorizationService authorizationService;
     private final ApprovalWorkflowService approvalWorkflowService;
     private final ConcertBuilder concertBuilder;
+    private final BudgetManagerChangeHandler budgetManagerChangeHandler;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -80,7 +86,10 @@ public class ConcertService {
         concertValidator.validate(request);
 
         Artist artist = findArtistById(request.artistId());
-        Concert concert = concertBuilder.build(request, artist, coordinator);
+        User budgetManager = request.budgetManagerId() != null 
+            ? findBudgetManagerById(request.budgetManagerId())
+            : null;
+        Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager);
 
         concert = concertRepository.save(concert);
         approvalWorkflowService.createApprovalWorkflow(concert);
@@ -95,7 +104,13 @@ public class ConcertService {
         authorizationService.validateCoordinatorAccess(concert, coordinator);
 
         Artist artist = findArtistById(request.artistId());
-        concertBuilder.updateFields(concert, request, artist);
+        User budgetManager = request.budgetManagerId() != null 
+            ? findBudgetManagerById(request.budgetManagerId())
+            : null;
+        
+        budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
+        
+        concertBuilder.updateFields(concert, request, artist, budgetManager);
         concertRepository.save(concert);
     }
 
@@ -125,35 +140,15 @@ public class ConcertService {
             .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
     }
 
-    @CacheEvict(value = "dashboardStats", allEntries = true)
-    public void completePastConcerts() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Concert> concertsToComplete = concertRepository.findConcertsToComplete(now);
-        
-        if (!concertsToComplete.isEmpty()) {
-            for (Concert concert : concertsToComplete) {
-                concert.setStatus(ConcertStatus.COMPLETED);
-            }
-            concertRepository.saveAll(concertsToComplete);
-        }
-    }
-
-    @CacheEvict(value = "dashboardStats", allEntries = true)
-    public void cancelUnapprovedPastConcerts() {
-        LocalDateTime now = LocalDateTime.now();
-        List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);
-        
-        if (!concertsToCancel.isEmpty()) {
-            for (Concert concert : concertsToCancel) {
-                concert.setStatus(ConcertStatus.CANCELLED);
-                concert.setCancellationReason("Automatycznie anulowany - koncert nie został zatwierdzony przed terminem");
-            }
-            concertRepository.saveAll(concertsToCancel);
-        }
-    }
 
     private Artist findArtistById(Long id) {
         return artistRepository.findById(id)
             .orElseThrow(() -> new ArtistNotFoundException(ARTIST_NOT_FOUND.message()));
+    }
+
+    private User findBudgetManagerById(Long id) {
+        return userRepository.findById(id)
+            .filter(user -> user.getRole() == Role.BUDGET_MANAGER && user.getActive())
+            .orElseThrow(() -> new IllegalArgumentException("Budget manager not found or inactive"));
     }
 }

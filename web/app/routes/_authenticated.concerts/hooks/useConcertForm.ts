@@ -9,6 +9,7 @@ const initialFormData: ConcertRequest = {
   name: "",
   date: "",
   venue: "",
+  city: "",
   budget: 0,
   description: "",
   artistId: 0,
@@ -37,9 +38,11 @@ export function useConcertForm() {
       name: concert.name || "",
       date: formatDateForInput(concert.date),
       venue: concert.venue || "",
+      city: concert.city || "",
       budget: typeof concert.budget === "number" ? concert.budget : Number(concert.budget) || 0,
       description: concert.description || "",
       artistId: concert.artistId || 0,
+      budgetManagerId: concert.budgetManagerId ?? undefined,
     });
     setIsFormOpen(true);
   };
@@ -74,6 +77,7 @@ export function useConcertForm() {
       }
     } else if (createConcert.isSuccess) {
       closeForm();
+      setSelectedConcert(null);
     }
   }, [createConcert.error, createConcert.isSuccess, closeForm]);
 
@@ -97,6 +101,7 @@ export function useConcertForm() {
       }
     } else if (updateConcert.isSuccess) {
       closeForm();
+      setSelectedConcert(null);
     }
   }, [updateConcert.error, updateConcert.isSuccess, closeForm]);
 

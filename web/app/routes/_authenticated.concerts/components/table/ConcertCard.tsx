@@ -35,6 +35,10 @@ export function ConcertCard({ concert, onEdit, onDelete, onView, onCancel }: Con
           <span className="text-text-primary font-medium break-words text-right">{concert.venue}</span>
         </div>
         <div className="flex items-center justify-between">
+          <span className="text-text-secondary">City:</span>
+          <span className="text-text-primary font-medium break-words text-right">{concert.city || "N/A"}</span>
+        </div>
+        <div className="flex items-center justify-between">
           <span className="text-text-secondary">Budget:</span>
           <span className="text-text-primary font-medium">${concert.budget?.toLocaleString() || "0"}</span>
         </div>
