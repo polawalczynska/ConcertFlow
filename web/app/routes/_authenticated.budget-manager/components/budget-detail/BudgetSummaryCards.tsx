@@ -6,8 +6,12 @@ interface BudgetSummaryCardsProps {
 }
 
 export function BudgetSummaryCards({ budget }: BudgetSummaryCardsProps) {
+  const isApproved = budget.budgetStatus === "APPROVED";
+  const isSubmitted = budget.budgetStatus === "SUBMITTED";
+  const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
+
   return (
-    <div className="mb-6 grid grid-cols-3 gap-4">
+    <div className={`mb-6 grid gap-4 ${isApproved ? "grid-cols-3" : "grid-cols-2"}`}>
       <Card className="border-0 bg-bg-main shadow-sm">
         <CardContent className="p-4">
           <p className="text-xs text-text-secondary">Estimated Budget</p>
@@ -24,14 +28,16 @@ export function BudgetSummaryCards({ budget }: BudgetSummaryCardsProps) {
           </p>
         </CardContent>
       </Card>
-      <Card className="border-0 bg-green-50 shadow-sm">
-        <CardContent className="p-4">
-          <p className="text-xs text-green-700">Approved Budget</p>
-          <p className="mt-1 text-2xl font-bold text-green-700">
-            ${budget.approvedBudget?.toLocaleString() ?? "0"}
-          </p>
-        </CardContent>
-      </Card>
+      {isApproved && budget.approvedBudget && (
+        <Card className="border-0 bg-green-50 shadow-sm">
+          <CardContent className="p-4">
+            <p className="text-xs text-green-700">Approved Budget</p>
+            <p className="mt-1 text-2xl font-bold text-green-700">
+              ${budget.approvedBudget.toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

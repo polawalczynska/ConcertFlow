@@ -18,6 +18,10 @@ public class BudgetMapper {
         String priority = determinePriority(concert, daysUntilConcert);
         BigDecimal submittedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
         BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
+        
+        BigDecimal approvedBudget = (concert.getBudgetStatus() == BudgetStatus.APPROVED && concert.getBudget() != null)
+            ? concert.getBudget()
+            : null;
 
         return BudgetApprovalDashboardResponse.builder()
             .concertId(concert.getId())
@@ -26,6 +30,7 @@ public class BudgetMapper {
             .concertDate(concert.getDate())
             .estimatedBudget(estimatedBudget)
             .submittedBudget(submittedBudget)
+            .approvedBudget(approvedBudget)
             .budgetStatus(concert.getBudgetStatus())
             .coordinatorName(concert.getCoordinator() != null
                 ? concert.getCoordinator().getFirstName() + " " + concert.getCoordinator().getLastName()
@@ -67,7 +72,7 @@ public class BudgetMapper {
             .artistName(concert.getArtist() != null ? concert.getArtist().getName() : "Unknown")
             .concertDate(concert.getDate())
             .venue(concert.getVenue())
-            .city(extractCity(concert.getVenue()))
+            .city(concert.getCity())
             .concertStatus(concert.getStatus().name())
             .budgetStatus(concert.getBudgetStatus())
             .estimatedBudget(estimatedBudget)

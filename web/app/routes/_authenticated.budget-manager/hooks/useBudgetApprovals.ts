@@ -51,11 +51,8 @@ export function useBudgetApprovals() {
       await budgetApprovalApi.approveBudget(selectedBudgetId, request);
     },
     onSuccess: () => {
-      const budgetIdToRemove = selectedBudgetId;
-      setSelectedBudgetId(null);
-      if (budgetIdToRemove) {
-        queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
-        queryClient.invalidateQueries({ queryKey: ["budget-details", budgetIdToRemove] });
+      if (selectedBudgetId) {
+        queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
       }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
@@ -68,10 +65,8 @@ export function useBudgetApprovals() {
       await budgetApprovalApi.requestBudgetRevision(selectedBudgetId, request);
     },
     onSuccess: () => {
-      const budgetIdToRemove = selectedBudgetId;
-      setSelectedBudgetId(null);
-      if (budgetIdToRemove) {
-        queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
+      if (selectedBudgetId) {
+        queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
       }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
@@ -105,13 +100,6 @@ export function useBudgetApprovals() {
     return filtered;
   };
 
-  const stats = useMemo(() => ({
-    pending: budgets.filter((b) => b.budgetStatus === "SUBMITTED").length,
-    urgent: budgets.filter((b) => (b.daysUntilConcert ?? 0) <= 7).length,
-    total: budgets.length,
-    underReview: budgets.filter((b) => b.budgetStatus === "UNDER_REVIEW").length,
-  }), [budgets]);
-
   return {
     budgets,
     filterAndSortBudgets,
@@ -125,6 +113,5 @@ export function useBudgetApprovals() {
     detailsError,
     approveMutation,
     requestRevisionMutation,
-    stats,
   };
 }

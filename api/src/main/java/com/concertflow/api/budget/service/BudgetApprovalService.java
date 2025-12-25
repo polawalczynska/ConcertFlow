@@ -36,12 +36,11 @@ public class BudgetApprovalService {
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
-        log.debug("Fetching pending budgets for approval, budget manager ID: {}", budgetManagerId);
+        log.debug("Fetching budgets for budget manager ID: {}", budgetManagerId);
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
-        Page<Concert> concerts = concertRepository.findByBudgetStatusAndStatusAndBudgetManagerId(
-            BudgetStatus.SUBMITTED,
+        Page<Concert> concerts = concertRepository.findByStatusAndBudgetManagerId(
             ConcertStatus.PLANNING,
             budgetManagerId,
             pageable
@@ -62,11 +61,6 @@ public class BudgetApprovalService {
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetManagerAccessById(concert, budgetManagerId);
 
-        if (concert.getBudgetStatus() != BudgetStatus.SUBMITTED &&
-            concert.getBudgetStatus() != BudgetStatus.UNDER_REVIEW) {
-            throw new com.concertflow.api.exceptions.types.InvalidBudgetStatusException(
-                "Budget is not submitted for approval");
-        }
 
         List<BudgetValidation> validations = validationService.validateBudget(concert);
         boolean isEligible = validations.stream()

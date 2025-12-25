@@ -16,7 +16,12 @@ export function BudgetHeader({ budget }: BudgetHeaderProps) {
             {budget.concertDate ? new Date(budget.concertDate).toLocaleDateString() : "N/A"} • {budget.city}
           </p>
         </div>
-        <Badge>{budget.budgetStatus?.replace("_", " ") ?? "PENDING"}</Badge>
+        <Badge>
+          {budget.budgetStatus === "SUBMITTED" && "Submitted"}
+          {budget.budgetStatus === "REVISION_REQUESTED" && "Revision Requested"}
+          {budget.budgetStatus === "APPROVED" && "Approved"}
+          {!budget.budgetStatus && "Unknown"}
+        </Badge>
       </div>
     </div>
   );

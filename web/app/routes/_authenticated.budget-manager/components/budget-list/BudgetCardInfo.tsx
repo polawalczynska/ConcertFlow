@@ -5,6 +5,9 @@ interface BudgetCardInfoProps {
 }
 
 export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
+  const isApproved = budget.budgetStatus === "APPROVED";
+  const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
+
   return (
     <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
       <div>
@@ -15,12 +18,27 @@ export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
         {(budget.daysUntilConcert ?? 0) < 7 && (
           <p className="text-red-600">{budget.daysUntilConcert} days left</p>
         )}
+        {isRevisionRequested && budget.submittedAt && (
+          <p className="text-orange-600 mt-1">
+            Submitted: {new Date(budget.submittedAt).toLocaleDateString()}
+          </p>
+        )}
       </div>
       <div>
         <p className="text-text-secondary">Requested</p>
         <p className="font-semibold text-text-primary">
           ${budget.submittedBudget?.toLocaleString() ?? "0"}
         </p>
+        {isApproved && (budget as any).approvedBudget && (
+          <p className="text-green-700 font-semibold mt-1">
+            Approved: ${(budget as any).approvedBudget.toLocaleString()}
+          </p>
+        )}
+        {isRevisionRequested && budget.estimatedBudget && (
+          <p className="text-text-secondary mt-1">
+            Estimated: ${budget.estimatedBudget.toLocaleString()}
+          </p>
+        )}
       </div>
     </div>
   );
