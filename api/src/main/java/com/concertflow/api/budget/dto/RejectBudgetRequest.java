@@ -11,7 +11,7 @@ public record RejectBudgetRequest(
     Long concertId,
 
     @NotBlank(message = "Rejection reason is required")
-    @Size(min = 10, max = 1000, message = "Rejection reason must be 10-1000 characters")
+    @Size(max = 1000, message = "Rejection reason must not exceed 1000 characters")
     String rejectionReason,
 
     @NotNull(message = "Budget version is required")
