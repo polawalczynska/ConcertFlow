@@ -38,7 +38,11 @@ export function BudgetManagement({ concertId }: BudgetManagementProps) {
   return (
     <div className="mt-6 space-y-6">
       <BudgetStatusSection budgetDetails={budgetDetails} />
-      <BudgetItemsTable concertId={concertId} budgetItems={budgetDetails.budgetItems || []} />
+      <BudgetItemsTable 
+        concertId={concertId} 
+        budgetItems={budgetDetails.budgetItems || []}
+        budgetStatus={budgetDetails.budgetStatus}
+      />
       <BudgetQuickActions concertId={concertId} budgetDetails={budgetDetails} />
     </div>
   );

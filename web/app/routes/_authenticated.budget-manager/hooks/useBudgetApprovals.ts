@@ -51,8 +51,12 @@ export function useBudgetApprovals() {
       await budgetApprovalApi.approveBudget(selectedBudgetId, request);
     },
     onSuccess: () => {
+      const budgetIdToRemove = selectedBudgetId;
+      setSelectedBudgetId(null);
+      if (budgetIdToRemove) {
+        queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
+      }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
-      queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
     },
   });
 
@@ -62,8 +66,16 @@ export function useBudgetApprovals() {
       await budgetApprovalApi.rejectBudget(selectedBudgetId, request);
     },
     onSuccess: () => {
+      // Save the budget ID before clearing it
+      const budgetIdToRemove = selectedBudgetId;
+      // Clear selected budget first to prevent refetching details
+      setSelectedBudgetId(null);
+      // Remove the budget details query to prevent refetch attempts
+      if (budgetIdToRemove) {
+        queryClient.removeQueries({ queryKey: ["budget-details", budgetIdToRemove] });
+      }
+      // Invalidate budget approvals list to refresh it
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
-      queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
     },
   });
 

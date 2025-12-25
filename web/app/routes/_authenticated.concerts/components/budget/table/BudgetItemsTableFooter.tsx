@@ -1,8 +1,9 @@
 interface BudgetItemsTableFooterProps {
   totalAmount: number;
+  canEdit: boolean;
 }
 
-export function BudgetItemsTableFooter({ totalAmount }: BudgetItemsTableFooterProps) {
+export function BudgetItemsTableFooter({ totalAmount, canEdit }: BudgetItemsTableFooterProps) {
   return (
     <tfoot>
       <tr className="border-t-2 border-border font-semibold">
@@ -10,7 +11,7 @@ export function BudgetItemsTableFooter({ totalAmount }: BudgetItemsTableFooterPr
           Total
         </td>
         <td className="p-2 text-sm text-right">${totalAmount.toLocaleString()}</td>
-        <td colSpan={2}></td>
+        <td colSpan={canEdit ? 2 : 1}></td>
       </tr>
     </tfoot>
   );

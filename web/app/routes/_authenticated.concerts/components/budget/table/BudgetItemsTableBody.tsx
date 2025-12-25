@@ -5,12 +5,14 @@ interface BudgetItemsTableBodyProps {
   items: BudgetItemResponse[];
   onEdit: (item: BudgetItemResponse) => void;
   onDelete: (item: BudgetItemResponse) => void;
+  canEdit: boolean;
 }
 
 export function BudgetItemsTableBody({
   items,
   onEdit,
   onDelete,
+  canEdit,
 }: BudgetItemsTableBodyProps) {
   return (
     <tbody>
@@ -20,6 +22,7 @@ export function BudgetItemsTableBody({
           item={item}
           onEdit={onEdit}
           onDelete={onDelete}
+          canEdit={canEdit}
         />
       ))}
     </tbody>
