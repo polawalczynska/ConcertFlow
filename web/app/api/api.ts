@@ -101,6 +101,7 @@ export interface BudgetApprovalDashboardResponse {
     'concertDate'?: string;
     'estimatedBudget'?: number;
     'submittedBudget'?: number;
+    'approvedBudget'?: number;
     'budgetStatus'?: BudgetApprovalDashboardResponseBudgetStatusEnum;
     'coordinatorName'?: string;
     'submittedAt'?: string;
@@ -241,6 +242,7 @@ export interface ConcertRequest {
     'name': string;
     'date': string;
     'venue': string;
+    'city': string;
     'budget': number;
     'description'?: string;
     'artistId': number;
@@ -251,6 +253,7 @@ export interface ConcertResponse {
     'name'?: string;
     'date'?: string;
     'venue'?: string;
+    'city'?: string;
     'status'?: ConcertResponseStatusEnum;
     'budget'?: number;
     'description'?: string;
@@ -392,8 +395,8 @@ export interface PageBudgetApprovalDashboardResponse {
     'content'?: Array<BudgetApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'pageable'?: PageableObject;
     'numberOfElements'?: number;
+    'pageable'?: PageableObject;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -401,10 +404,10 @@ export interface PageBudgetApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
+    'pageSize'?: number;
+    'pageNumber'?: number;
     'unpaged'?: boolean;
     'paged'?: boolean;
-    'pageNumber'?: number;
-    'pageSize'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
