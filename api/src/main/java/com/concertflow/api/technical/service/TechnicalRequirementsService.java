@@ -33,9 +33,8 @@ public class TechnicalRequirementsService {
 
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, coordinator);
-        validateBudgetApproved(concert);
-
         TechnicalRequirements requirements = getOrCreateTechnicalRequirements(concert);
+        accessValidator.validateTechnicalForEdit(concert);
         updateTechnicalRequirements(requirements, request);
         technicalRequirementsRepository.save(requirements);
 

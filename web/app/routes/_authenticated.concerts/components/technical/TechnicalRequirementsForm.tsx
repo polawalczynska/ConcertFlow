@@ -30,23 +30,6 @@ export function TechnicalRequirementsForm({
     }
   };
 
-  if (!isBudgetApproved) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Technical Requirements</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-            <p className="text-sm text-amber-800">
-              <strong>Note:</strong> Technical requirements can only be added after the budget has been approved by the budget manager.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   if (isLoading) {
     return (
       <Card>
@@ -62,10 +45,10 @@ export function TechnicalRequirementsForm({
 
   return (
     <div className="space-y-6">
-      {technicalStatus === "SUBMITTED" && !isApproved && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
-          <p className="text-sm text-blue-800">
-            <strong>Submitted:</strong> These requirements have been submitted for approval and cannot be edited until the technical manager reviews them.
+      {!isBudgetApproved && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <p className="text-sm text-amber-800">
+            <strong>Note:</strong> You can edit technical requirements, but they cannot be submitted until the budget has been approved by the budget manager.
           </p>
         </div>
       )}

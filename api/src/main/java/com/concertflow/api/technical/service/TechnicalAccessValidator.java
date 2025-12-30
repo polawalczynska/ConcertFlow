@@ -49,5 +49,14 @@ public class TechnicalAccessValidator {
             throw new IllegalStateException("At least one technical requirement must be filled before submission");
         }
     }
+
+    public void validateTechnicalForEdit(Concert concert) {
+        if (concert.getTechnicalStatus() == TechnicalStatus.APPROVED) {
+            throw new IllegalStateException("Technical requirements cannot be edited after approval");
+        }
+        if (concert.getTechnicalStatus() == TechnicalStatus.SUBMITTED) {
+            throw new IllegalStateException("Technical requirements cannot be edited while submitted. Wait for technical manager review or revision request.");
+        }
+    }
 }
 
