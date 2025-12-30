@@ -58,7 +58,7 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
               <span className="font-semibold">${budgetDetails.requestedBudget.toLocaleString()}</span>
             </div>
           )}
-          {budgetDetails.approvedBudget && (
+          {budgetDetails.budgetStatus === "APPROVED" && budgetDetails.approvedBudget && (
             <div>
               <span className="text-sm text-text-secondary">Approved: </span>
               <span className="font-semibold text-green-700">
