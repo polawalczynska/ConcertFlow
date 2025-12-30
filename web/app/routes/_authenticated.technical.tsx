@@ -99,14 +99,14 @@ export default function TechnicalPage() {
         </main>
       </div>
 
-      {selectedApproval && (
+      {selectedApproval && user?.id && (
         <>
           <ApproveTechnicalDialog
             isOpen={approveModal}
             onOpenChange={setApproveModal}
             concertId={selectedApproval.concertId}
             concertName={selectedApproval.concertName}
-            technicalVersion={1} // TODO: Get from technical details
+            technicalManagerId={user.id}
           />
           <RequestTechnicalRevisionDialog
             isOpen={revisionModal}
