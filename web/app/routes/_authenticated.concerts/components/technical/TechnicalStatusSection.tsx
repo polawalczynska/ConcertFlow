@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
 import { technicalApi } from "~/lib/api-client";
 import { parseLocalDateTime } from "~/lib/date-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
 
 interface TechnicalStatusSectionProps {
   concertId: number;
@@ -28,35 +29,6 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
   const technicalStatus = technicalDetails?.technicalStatus || "PENDING";
   const isApproved = technicalStatus === "APPROVED";
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "bg-green-600";
-      case "SUBMITTED":
-        return "bg-blue-500";
-      case "PENDING":
-        return "bg-yellow-500";
-      case "REVISION_REQUESTED":
-        return "bg-orange-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "Approved";
-      case "SUBMITTED":
-        return "Submitted";
-      case "PENDING":
-        return "Pending";
-      case "REVISION_REQUESTED":
-        return "Revision Requested";
-      default:
-        return status;
-    }
-  };
 
   const latestApproval = (technicalDetails as any)?.approvalHistory?.[((technicalDetails as any)?.approvalHistory?.length ?? 1) - 1];
 
@@ -69,8 +41,8 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
         <div className="flex items-center gap-4">
           <div>
             <p className="text-sm text-text-secondary mb-1">Status</p>
-            <Badge className={getStatusColor(technicalStatus)}>
-              {getStatusLabel(technicalStatus)}
+            <Badge className={getStatusBadgeClasses(technicalStatus)}>
+              {formatStatusLabel(technicalStatus)}
             </Badge>
           </div>
           {isApproved && technicalDetails?.approvedAt && (() => {

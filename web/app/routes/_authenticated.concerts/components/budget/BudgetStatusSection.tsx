@@ -2,44 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
 import type { BudgetDetailResponse } from "~/api";
 import { parseLocalDateTime } from "~/lib/date-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
 
 interface BudgetStatusSectionProps {
   budgetDetails: BudgetDetailResponse;
 }
 
 export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps) {
-  const getStatusColor = (status?: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "SUBMITTED":
-      case "UNDER_REVIEW":
-        return "bg-blue-100 text-blue-800";
-      case "REVISION_REQUESTED":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusLabel = (status?: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "Approved";
-      case "REJECTED":
-        return "Rejected";
-      case "SUBMITTED":
-        return "Submitted";
-      case "UNDER_REVIEW":
-        return "Under Review";
-      case "REVISION_REQUESTED":
-        return "Revision Requested";
-      default:
-        return "Pending";
-    }
-  };
 
   const latestApproval = budgetDetails.approvalHistory?.[budgetDetails.approvalHistory.length - 1];
 
@@ -50,8 +19,8 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center gap-4">
-          <Badge className={getStatusColor(budgetDetails.budgetStatus)}>
-            {getStatusLabel(budgetDetails.budgetStatus)}
+          <Badge className={getStatusBadgeClasses(budgetDetails.budgetStatus)}>
+            {formatStatusLabel(budgetDetails.budgetStatus)}
           </Badge>
           {budgetDetails.requestedBudget && (
             <div>

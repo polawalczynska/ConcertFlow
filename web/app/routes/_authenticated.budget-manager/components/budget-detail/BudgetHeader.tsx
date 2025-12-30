@@ -1,6 +1,7 @@
 import type { BudgetDetailResponse } from "~/api";
 import { Badge } from "~/components/ui/Badge";
 import { parseLocalDateTime } from "~/lib/date-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
 
 interface BudgetHeaderProps {
   budget: BudgetDetailResponse;
@@ -22,11 +23,8 @@ export function BudgetHeader({ budget }: BudgetHeaderProps) {
               : "N/A"} • {budget.city}
           </p>
         </div>
-        <Badge>
-          {budget.budgetStatus === "SUBMITTED" && "Submitted"}
-          {budget.budgetStatus === "REVISION_REQUESTED" && "Revision Requested"}
-          {budget.budgetStatus === "APPROVED" && "Approved"}
-          {!budget.budgetStatus && "Unknown"}
+        <Badge className={getStatusBadgeClasses(budget.budgetStatus)}>
+          {formatStatusLabel(budget.budgetStatus)}
         </Badge>
       </div>
     </div>
