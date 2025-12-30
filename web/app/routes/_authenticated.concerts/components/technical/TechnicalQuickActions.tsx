@@ -15,13 +15,14 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { buildSubmitRequest, isSubmitted, isApproved } = useTechnicalRequirementsContext();
+  const { buildSubmitRequest, saveData, isSubmitted, isApproved } = useTechnicalRequirementsContext();
 
   const canSubmit = !isSubmitted && !isApproved;
 
   const handleSubmit = async (notes: string, termsAccepted: boolean) => {
     setIsSubmitting(true);
     try {
+      await saveData();
       const request = buildSubmitRequest(notes, termsAccepted);
       await technicalApi.submitTechnicalRequirements(concertId, request);
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
