@@ -30,6 +30,10 @@ public class ConcertMapper {
             concert.getBudgetManager() != null
                 ? concert.getBudgetManager().getFirstName() + " " + concert.getBudgetManager().getLastName()
                 : null,
+            concert.getTechnicalManager() != null ? concert.getTechnicalManager().getId() : null,
+            concert.getTechnicalManager() != null
+                ? concert.getTechnicalManager().getFirstName() + " " + concert.getTechnicalManager().getLastName()
+                : null,
             concert.getBudgetStatus(),
             mapApprovals(concert),
             concert.getCreatedAt()

@@ -65,4 +65,26 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
         @Param("budgetManagerId") Long budgetManagerId,
         Pageable pageable
     );
+
+    @Query("SELECT c FROM Concert c WHERE c.status = :status AND c.technicalManager.id = :technicalManagerId")
+    Page<Concert> findByStatusAndTechnicalManagerId(
+        @Param("status") ConcertStatus status,
+        @Param("technicalManagerId") Long technicalManagerId,
+        Pageable pageable
+    );
+
+    @Query("SELECT c FROM Concert c WHERE c.technicalStatus = :technicalStatus AND c.status = :status")
+    Page<Concert> findByTechnicalStatusAndStatus(
+        @Param("technicalStatus") TechnicalStatus technicalStatus,
+        @Param("status") ConcertStatus status,
+        Pageable pageable
+    );
+
+    @Query("SELECT c FROM Concert c WHERE c.technicalStatus = :technicalStatus AND c.status = :status AND c.technicalManager.id = :technicalManagerId")
+    Page<Concert> findByTechnicalStatusAndStatusAndTechnicalManagerId(
+        @Param("technicalStatus") TechnicalStatus technicalStatus,
+        @Param("status") ConcertStatus status,
+        @Param("technicalManagerId") Long technicalManagerId,
+        Pageable pageable
+    );
 }

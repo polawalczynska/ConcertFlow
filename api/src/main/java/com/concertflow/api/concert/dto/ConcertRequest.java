@@ -16,6 +16,7 @@ public record ConcertRequest(
     @NotNull @Positive BigDecimal budget,
     String description,
     @NotNull Long artistId,
-    Long budgetManagerId
+    Long budgetManagerId,
+    Long technicalManagerId
 ) {
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConcertBuilder {
-    public Concert build(ConcertRequest request, Artist artist, User coordinator, User budgetManager) {
+    public Concert build(ConcertRequest request, Artist artist, User coordinator, User budgetManager, User technicalManager) {
         return Concert.builder()
             .name(request.name())
             .date(request.date())
@@ -19,10 +19,11 @@ public class ConcertBuilder {
             .artist(artist)
             .coordinator(coordinator)
             .budgetManager(budgetManager)
+            .technicalManager(technicalManager)
             .build();
     }
 
-    public void updateFields(Concert concert, ConcertRequest request, Artist artist, User budgetManager) {
+    public void updateFields(Concert concert, ConcertRequest request, Artist artist, User budgetManager, User technicalManager) {
         concert.setName(request.name());
         concert.setDate(request.date());
         concert.setVenue(request.venue());
@@ -31,6 +32,7 @@ public class ConcertBuilder {
         concert.setDescription(request.description());
         concert.setArtist(artist);
         concert.setBudgetManager(budgetManager);
+        concert.setTechnicalManager(technicalManager);
     }
 }
 

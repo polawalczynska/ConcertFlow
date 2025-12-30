@@ -24,6 +24,8 @@ public record ConcertResponse(
     String artistName,
     Long budgetManagerId,
     String budgetManagerName,
+    Long technicalManagerId,
+    String technicalManagerName,
     BudgetStatus budgetStatus,
     List<ApprovalResponse> approvals,
     LocalDateTime createdAt
