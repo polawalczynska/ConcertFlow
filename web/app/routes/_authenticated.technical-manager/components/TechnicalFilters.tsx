@@ -9,7 +9,7 @@ interface TechnicalFiltersProps {
 }
 
 const statusLabels: Record<string, string> = {
-  PENDING: "Pending",
+  SUBMITTED: "Submitted",
   APPROVED: "Approved",
   REVISION_REQUESTED: "Revision Requested",
 };
@@ -38,7 +38,7 @@ export function TechnicalFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="PENDING">{statusLabels.PENDING}</SelectItem>
+            <SelectItem value="SUBMITTED">{statusLabels.SUBMITTED}</SelectItem>
             <SelectItem value="REVISION_REQUESTED">{statusLabels.REVISION_REQUESTED}</SelectItem>
             <SelectItem value="APPROVED">{statusLabels.APPROVED}</SelectItem>
           </SelectContent>

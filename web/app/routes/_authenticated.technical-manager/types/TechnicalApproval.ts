@@ -10,7 +10,7 @@ export interface TechnicalApproval {
   capacity: number;
   technicalFlags: string[];
   powerRequirements: number;
-  status: "PENDING" | "APPROVED" | "REVISION_REQUESTED";
+  status: "SUBMITTED" | "APPROVED" | "REVISION_REQUESTED";
   urgency: "CRITICAL" | "HIGH" | "NORMAL";
   daysUntil: number;
   technicalRequirements: string;
