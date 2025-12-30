@@ -23,9 +23,11 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
           <BudgetLatestResponse latestApproval={latestApproval} />
         )}
 
-        {budgetDetails.validations && budgetDetails.validations.length > 0 && (
-          <BudgetValidations validations={budgetDetails.validations} />
-        )}
+        {budgetDetails.budgetStatus !== "APPROVED" &&
+          budgetDetails.validations &&
+          budgetDetails.validations.length > 0 && (
+            <BudgetValidations validations={budgetDetails.validations} />
+          )}
       </CardContent>
     </Card>
   );
