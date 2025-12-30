@@ -155,14 +155,29 @@ export function useTechnicalRequirements(concertId: number) {
       setIsSubmitted(status === "SUBMITTED" || status === "APPROVED");
       setIsApproved(status === "APPROVED");
       setVersion(technicalDetails.version || 1);
-    } else {
-      setData(initialData);
-      setTechnicalStatus("PENDING");
-      setIsSubmitted(false);
-      setIsApproved(false);
-      setVersion(1);
+    } else if (!isLoading) {
+      const cachedData = queryClient.getQueryData<TechnicalDetailResponse | null>([
+        "technical-requirements",
+        concertId,
+      ]);
+      
+      if (cachedData) {
+        const mappedData = mapFromApiResponse(cachedData);
+        setData(mappedData);
+        const status = cachedData.technicalStatus || "PENDING";
+        setTechnicalStatus(status);
+        setIsSubmitted(status === "SUBMITTED" || status === "APPROVED");
+        setIsApproved(status === "APPROVED");
+        setVersion(cachedData.version || 1);
+      } else {
+        setData(initialData);
+        setTechnicalStatus("PENDING");
+        setIsSubmitted(false);
+        setIsApproved(false);
+        setVersion(1);
+      }
     }
-  }, [technicalDetails]);
+  }, [technicalDetails, isLoading, queryClient, concertId]);
 
   const updateData = useCallback((updates: Partial<TechnicalRequirementsData>) => {
     setData((prev) => ({ ...prev, ...updates }));
@@ -219,7 +234,8 @@ export function useTechnicalRequirements(concertId: number) {
       };
 
       await technicalApi.saveTechnicalRequirements(concertId, request);
-      await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
+      
+      await queryClient.refetchQueries({ queryKey: ["technical-requirements", concertId] });
     } catch (error) {
       console.error("Error saving technical requirements:", error);
       throw error;

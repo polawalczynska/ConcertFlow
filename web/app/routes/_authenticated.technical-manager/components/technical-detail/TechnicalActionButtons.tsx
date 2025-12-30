@@ -15,7 +15,8 @@ export function TechnicalActionButtons({
 }: TechnicalActionButtonsProps) {
   const isApproved = approval.status === "APPROVED";
   const isRevisionRequested = approval.status === "REVISION_REQUESTED";
-  const isPending = approval.status === "PENDING";
+  const isSubmitted = approval.status === "SUBMITTED";
+  const canTakeAction = isSubmitted || isRevisionRequested;
 
   if (isApproved) {
     return null;
@@ -38,7 +39,7 @@ export function TechnicalActionButtons({
     );
   }
 
-  if (isPending) {
+  if (isSubmitted) {
     return (
       <div className="mt-6 flex gap-3">
         <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">

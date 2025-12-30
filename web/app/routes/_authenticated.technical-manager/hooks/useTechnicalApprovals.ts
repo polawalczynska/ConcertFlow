@@ -18,11 +18,13 @@ function mapToTechnicalApproval(response: TechnicalApprovalDashboardResponse): T
     urgency = "HIGH";
   }
 
-  let status: "PENDING" | "APPROVED" | "REVISION_REQUESTED";
+  let status: "PENDING" | "SUBMITTED" | "APPROVED" | "REVISION_REQUESTED";
   if (response.technicalStatus === "APPROVED") {
     status = "APPROVED";
   } else if (response.technicalStatus === "REVISION_REQUESTED") {
     status = "REVISION_REQUESTED";
+  } else if (response.technicalStatus === "SUBMITTED") {
+    status = "SUBMITTED";
   } else {
     status = "PENDING";
   }

@@ -16,6 +16,8 @@ export function BudgetActionButtons({
   const isApproved = budget.budgetStatus === "APPROVED";
   const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
   const isSubmitted = budget.budgetStatus === "SUBMITTED";
+  const isUnderReview = budget.budgetStatus === "UNDER_REVIEW";
+  const canTakeAction = isSubmitted || isUnderReview;
 
   if (isApproved) {
     return null;
@@ -38,7 +40,7 @@ export function BudgetActionButtons({
     );
   }
 
-  if (isSubmitted) {
+  if (canTakeAction) {
     return (
       <div className="flex gap-3">
         <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">
