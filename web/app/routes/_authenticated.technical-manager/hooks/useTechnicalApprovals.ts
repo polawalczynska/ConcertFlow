@@ -37,7 +37,6 @@ function mapToTechnicalApproval(response: TechnicalApprovalDashboardResponse): T
     venue: response.venue || "",
     city: response.city || "",
     capacity: 0, 
-    complianceScore: 0, 
     technicalFlags: response.technicalFlags || [],
     powerRequirements: response.powerRequirements || 0,
     status,

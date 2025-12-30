@@ -1,6 +1,7 @@
 package com.concertflow.api.mappers;
 
 import com.concertflow.api.concert.entity.Concert;
+import com.concertflow.api.concert.entity.TechnicalApproval;
 import com.concertflow.api.concert.entity.TechnicalRequirements;
 import com.concertflow.api.technical.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -69,6 +71,12 @@ public class TechnicalMapper {
             }
         }
 
+        List<TechnicalApprovalResponse> approvalHistory = concert.getTechnicalApprovals() != null
+            ? concert.getTechnicalApprovals().stream()
+                .map(this::toApprovalResponse)
+                .collect(Collectors.toList())
+            : new ArrayList<>();
+
         return TechnicalDetailResponse.builder()
             .concertId(concert.getId())
             .concertName(concert.getName())
@@ -87,6 +95,20 @@ public class TechnicalMapper {
             .approvedAt(requirements != null ? requirements.getApprovedAt() : null)
             .approvedById(requirements != null ? requirements.getApprovedById() : null)
             .version(requirements != null ? requirements.getVersion() : 1)
+            .approvalHistory(approvalHistory)
+            .build();
+    }
+
+    private TechnicalApprovalResponse toApprovalResponse(TechnicalApproval approval) {
+        return TechnicalApprovalResponse.builder()
+            .id(approval.getId())
+            .approverName(approval.getApproverName())
+            .approverRole(approval.getApproverRole())
+            .decision(approval.getDecision() != null ? approval.getDecision().getDisplayName() : null)
+            .comments(approval.getComments())
+            .decisionDate(approval.getDecisionDate())
+            .approvalLevel(approval.getApprovalLevel())
+            .requiresRevision(approval.getRequiresRevision())
             .build();
     }
 

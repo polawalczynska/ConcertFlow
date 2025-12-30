@@ -25,6 +25,7 @@ public record TechnicalDetailResponse(
     LocalDateTime submittedAt,
     LocalDateTime approvedAt,
     Long approvedById,
-    Integer version
+    Integer version,
+    List<TechnicalApprovalResponse> approvalHistory
 ) {}
 
