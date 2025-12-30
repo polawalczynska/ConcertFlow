@@ -62,7 +62,7 @@ export function RequestRevisionDialog({
       return;
     }
 
-    
+    onRequestRevision({
       concertId: budgetDetails?.concertId ?? 0,
       revisionReason: revisionReason.trim(),
       requiredChanges,

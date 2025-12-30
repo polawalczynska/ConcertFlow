@@ -85,6 +85,7 @@ export function BudgetItemsTable({ concertId, budgetItems, budgetStatus }: Budge
                   onEdit={handleEdit}
                   onDelete={handleDeleteClick}
                   canEdit={canEdit}
+                  budgetStatus={budgetStatus}
                 />
                 <BudgetItemsTableFooter totalAmount={totalAmount} canEdit={canEdit} />
               </table>

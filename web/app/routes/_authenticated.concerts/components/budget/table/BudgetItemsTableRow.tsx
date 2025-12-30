@@ -1,4 +1,4 @@
-import type { BudgetItemResponse } from "~/api";
+import type { BudgetItemResponse, BudgetDetailResponseBudgetStatusEnum } from "~/api";
 import { Badge } from "~/components/ui/Badge";
 import { Trash2, Edit, AlertCircle } from "lucide-react";
 
@@ -7,6 +7,7 @@ interface BudgetItemsTableRowProps {
   onEdit: (item: BudgetItemResponse) => void;
   onDelete: (item: BudgetItemResponse) => void;
   canEdit: boolean;
+  budgetStatus?: BudgetDetailResponseBudgetStatusEnum;
 }
 
 interface RevisionDetails {
@@ -43,9 +44,11 @@ function parseRevisionNotes(notes: string | null | undefined): RevisionDetails |
   return Object.keys(details).length > 0 ? details : null;
 }
 
-export function BudgetItemsTableRow({ item, onEdit, onDelete, canEdit }: BudgetItemsTableRowProps) {
+export function BudgetItemsTableRow({ item, onEdit, onDelete, canEdit, budgetStatus }: BudgetItemsTableRowProps) {
   const revisionDetails = parseRevisionNotes(item.notes);
-  const hasRevision = revisionDetails !== null;
+  // Only show revision info if budget is in REVISION_REQUESTED status
+  // Once approved, revision notes for specific items should not be displayed
+  const hasRevision = budgetStatus !== "APPROVED" && revisionDetails !== null;
 
   return (
     <tr className={`border-b border-border hover:bg-bg-secondary ${hasRevision ? 'bg-yellow-50' : ''}`}>

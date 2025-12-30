@@ -60,8 +60,6 @@ export function useRevisionNotes(budget: BudgetDetailResponse) {
     return details;
   };
 
-  // Only show revision notes if the budget is currently in REVISION_REQUESTED status
-  // Once coordinator resubmits, status changes to SUBMITTED and revision notes should not be shown
   const shouldShow = budget.budgetStatus === "REVISION_REQUESTED";
 
   return {
