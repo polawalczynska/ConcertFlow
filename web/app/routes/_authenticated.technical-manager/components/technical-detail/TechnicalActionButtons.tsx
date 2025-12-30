@@ -13,8 +13,6 @@ export function TechnicalActionButtons({
   onApprove,
   onRequestRevision,
 }: TechnicalActionButtonsProps) {
-  // Show buttons for PENDING and REVISION_REQUESTED status
-  // Hide buttons only for APPROVED status
   if (approval.status === "APPROVED") {
     return null;
   }

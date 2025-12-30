@@ -18,7 +18,7 @@ export function TechnicalHeader({ approval }: TechnicalHeaderProps) {
       <Badge>
         {approval.status === "PENDING" && "Pending"}
         {approval.status === "APPROVED" && "Approved"}
-        {approval.status === "REJECTED" && "Rejected"}
+        {approval.status === "REVISION_REQUESTED" && "Revision Requested"}
       </Badge>
     </div>
   );

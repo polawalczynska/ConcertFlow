@@ -49,14 +49,6 @@ export function TechnicalRequirementsForm({
 
   return (
     <div className="space-y-6">
-      {isApproved && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-          <p className="text-sm text-green-800">
-            <strong>Approved:</strong> These requirements have been approved and cannot be edited.
-          </p>
-        </div>
-      )}
-
       {technicalStatus === "SUBMITTED" && !isApproved && (
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
           <p className="text-sm text-blue-800">

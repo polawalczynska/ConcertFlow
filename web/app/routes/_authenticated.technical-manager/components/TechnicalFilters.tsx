@@ -11,7 +11,7 @@ interface TechnicalFiltersProps {
 const statusLabels: Record<string, string> = {
   PENDING: "Pending",
   APPROVED: "Approved",
-  REJECTED: "Rejected",
+  REVISION_REQUESTED: "Revision Requested",
 };
 
 const sortByLabels: Record<string, string> = {
@@ -39,8 +39,8 @@ export function TechnicalFilters({
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="PENDING">{statusLabels.PENDING}</SelectItem>
+            <SelectItem value="REVISION_REQUESTED">{statusLabels.REVISION_REQUESTED}</SelectItem>
             <SelectItem value="APPROVED">{statusLabels.APPROVED}</SelectItem>
-            <SelectItem value="REJECTED">{statusLabels.REJECTED}</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -57,13 +57,15 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
     }
   };
 
+  const latestApproval = technicalDetails?.approvalHistory?.[technicalDetails.approvalHistory.length - 1];
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Technical Requirements Status</CardTitle>
+        <CardTitle className="text-lg">Technical Requirements Status</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between">
+      <CardContent className="space-y-4">
+        <div className="flex items-center gap-4">
           <div>
             <p className="text-sm text-text-secondary mb-1">Status</p>
             <Badge className={getStatusColor(technicalStatus)}>
@@ -87,6 +89,95 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
             </div>
           )}
         </div>
+
+        {latestApproval && (
+          <div className="border-t pt-4">
+            <p className="text-sm font-medium text-text-secondary mb-2">Latest Response</p>
+            <div className="space-y-2">
+              <p className="text-sm">
+                <span className="font-medium">Decision: </span>
+                {latestApproval.decision}
+              </p>
+              {latestApproval.comments && (
+                <div className="space-y-2">
+                  {latestApproval.decision === "Returned for Revision" && (
+                    <>
+                      {(() => {
+                        const comments = latestApproval.comments;
+                        const deadlineMatch = comments.match(/Deadline:\s*(.+)/);
+                        const reasonMatch = comments.split('\n')[0];
+                        const deadline = deadlineMatch ? deadlineMatch[1].trim() : null;
+                        const reason = reasonMatch && !reasonMatch.includes('Deadline:') && reasonMatch.includes('Revision Reason:') 
+                          ? reasonMatch.replace('Revision Reason: ', '').trim() 
+                          : null;
+                        
+                        // Extract required changes
+                        const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
+                        const requiredChanges = requiredChangesMatch 
+                          ? requiredChangesMatch[1].split('\n').filter(line => line.trim().startsWith('-')).map(line => line.replace(/^-\s*/, '').trim())
+                          : [];
+                        
+                        return (
+                          <>
+                            {reason && (
+                              <div>
+                                <p className="text-sm font-medium text-text-primary mb-1">Revision Reason:</p>
+                                <p className="text-sm text-text-secondary pl-2 border-l-2 border-orange-300">
+                                  {reason}
+                                </p>
+                              </div>
+                            )}
+                            {requiredChanges.length > 0 && (
+                              <div>
+                                <p className="text-sm font-medium text-text-primary mb-1">Required Changes:</p>
+                                <ul className="text-sm text-text-secondary pl-2 border-l-2 border-orange-300 space-y-1">
+                                  {requiredChanges.map((change, index) => (
+                                    <li key={index} className="pl-2">• {change}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            {deadline && (
+                              <div>
+                                <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
+                                <p className="text-sm font-semibold text-orange-700">
+                                  {new Date(deadline).toLocaleString(undefined, {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </>
+                  )}
+                  {latestApproval.decision !== "Returned for Revision" && latestApproval.comments && (
+                    <div>
+                      <p className="text-sm font-medium">Comments:</p>
+                      <p className="text-sm text-text-secondary">{latestApproval.comments}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              {latestApproval.decisionDate && (
+                <p className="text-xs text-text-secondary">
+                  {new Date(latestApproval.decisionDate).toLocaleString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
