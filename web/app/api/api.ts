@@ -64,7 +64,6 @@ export interface ArtistRequest {
     'name': string;
     'email': string;
     'phone'?: string;
-    'technicalRequirements'?: string;
     'genre'?: string;
     'website'?: string;
     'contactPerson'?: string;
@@ -74,7 +73,6 @@ export interface ArtistResponse {
     'name'?: string;
     'email'?: string;
     'phone'?: string;
-    'technicalRequirements'?: string;
     'genre'?: string;
     'website'?: string;
     'contactPerson'?: string;
@@ -445,10 +443,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageNumber'?: number;
-    'pageSize'?: number;
     'paged'?: boolean;
     'unpaged'?: boolean;
+    'pageNumber'?: number;
+    'pageSize'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
