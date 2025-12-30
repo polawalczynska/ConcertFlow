@@ -1,4 +1,4 @@
-import type { TechnicalApproval } from "../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../types/TechnicalApproval";
 import { TechnicalSearch } from "./technical-list/TechnicalSearch";
 import { TechnicalApprovalCard } from "./technical-list/TechnicalApprovalCard";
 import { TechnicalApprovalsEmptyState } from "./technical-list/TechnicalApprovalsEmptyState";

@@ -1,6 +1,6 @@
 import { Check, Clock, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
-import type { TechnicalApproval } from "../../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../../types/TechnicalApproval";
 
 interface OverviewTabProps {
   approval: TechnicalApproval;

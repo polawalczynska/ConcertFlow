@@ -4,7 +4,7 @@ import { technicalApi } from "~/lib/api-client";
 import { useUser } from "~/hooks/useUser";
 import type { TechnicalApprovalDashboardResponse } from "~/api";
 import { filterAndSortApprovals } from "../utils/filterAndSortApprovals";
-import type { TechnicalApproval } from "../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../types/TechnicalApproval";
 
 function mapToTechnicalApproval(response: TechnicalApprovalDashboardResponse): TechnicalApproval {
   const concertDate = response.concertDate ? new Date(response.concertDate) : new Date();

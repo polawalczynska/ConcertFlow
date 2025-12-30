@@ -57,13 +57,6 @@ export function TechnicalRequirementsForm({
         </div>
       )}
 
-      {technicalStatus === "REVISION_REQUESTED" && (
-        <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
-          <p className="text-sm text-orange-800">
-            <strong>Revision Requested:</strong> The technical manager has requested changes. You can now edit the requirements.
-          </p>
-        </div>
-      )}
 
       <Card>
         <CardHeader>

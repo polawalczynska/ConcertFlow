@@ -1,6 +1,6 @@
 import { Clock, Zap, Volume2, Flame } from "lucide-react";
 import { Badge } from "~/components/ui/Badge";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 
 interface TechnicalApprovalCardFooterProps {
   approval: TechnicalApproval;

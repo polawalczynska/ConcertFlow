@@ -1,6 +1,6 @@
 import { Card, CardContent } from "~/components/ui/Card";
 import { cn } from "~/lib/utils";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { TechnicalApprovalCardHeader } from "./TechnicalApprovalCardHeader";
 import { TechnicalApprovalCardInfo } from "./TechnicalApprovalCardInfo";
 import { TechnicalApprovalCardFooter } from "./TechnicalApprovalCardFooter";

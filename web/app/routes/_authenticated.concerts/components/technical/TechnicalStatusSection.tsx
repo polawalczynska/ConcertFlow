@@ -57,7 +57,7 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
     }
   };
 
-  const latestApproval = technicalDetails?.approvalHistory?.[technicalDetails.approvalHistory.length - 1];
+  const latestApproval = (technicalDetails as any)?.approvalHistory?.[((technicalDetails as any)?.approvalHistory?.length ?? 1) - 1];
 
   return (
     <Card>
@@ -114,7 +114,7 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
                         // Extract required changes
                         const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
                         const requiredChanges = requiredChangesMatch 
-                          ? requiredChangesMatch[1].split('\n').filter(line => line.trim().startsWith('-')).map(line => line.replace(/^-\s*/, '').trim())
+                          ? requiredChangesMatch[1].split('\n').filter((line: string) => line.trim().startsWith('-')).map((line: string) => line.replace(/^-\s*/, '').trim())
                           : [];
                         
                         return (
@@ -131,7 +131,7 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
                               <div>
                                 <p className="text-sm font-medium text-text-primary mb-1">Required Changes:</p>
                                 <ul className="text-sm text-text-secondary pl-2 border-l-2 border-orange-300 space-y-1">
-                                  {requiredChanges.map((change, index) => (
+                                  {requiredChanges.map((change: string, index: number) => (
                                     <li key={index} className="pl-2">• {change}</li>
                                   ))}
                                 </ul>

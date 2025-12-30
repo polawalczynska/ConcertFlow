@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/Tabs";
 import { useUser } from "~/hooks/useUser";
 import { technicalApi } from "~/lib/api-client";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { OverviewTab } from "./tabs/OverviewTab";
 import { AudioTab } from "./tabs/AudioTab";
 import { LightingTab } from "./tabs/LightingTab";

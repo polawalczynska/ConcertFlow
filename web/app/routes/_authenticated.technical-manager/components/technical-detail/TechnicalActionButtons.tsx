@@ -1,6 +1,6 @@
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock } from "lucide-react";
 import { Button } from "~/components/ui/Button";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 
 interface TechnicalActionButtonsProps {
   approval: TechnicalApproval;
@@ -13,21 +13,46 @@ export function TechnicalActionButtons({
   onApprove,
   onRequestRevision,
 }: TechnicalActionButtonsProps) {
-  if (approval.status === "APPROVED") {
+  const isApproved = approval.status === "APPROVED";
+  const isRevisionRequested = approval.status === "REVISION_REQUESTED";
+  const isPending = approval.status === "PENDING";
+
+  if (isApproved) {
     return null;
   }
 
-  return (
-    <div className="mt-6 flex gap-3">
-      <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">
-        <CheckCircle2 className="mr-2 h-4 w-4" />
-        Approve Technically
-      </Button>
-      <Button onClick={onRequestRevision} variant="outline" className="flex-1">
-        <AlertCircle className="mr-2 h-4 w-4" />
-        Request Revision
-      </Button>
-    </div>
-  );
+  if (isRevisionRequested) {
+    return (
+      <div className="mt-6 space-y-3">
+        <Button onClick={onApprove} className="w-full bg-purple-main hover:bg-purple-main/90">
+          <CheckCircle2 className="mr-2 h-4 w-4" />
+          Approve Technically
+        </Button>
+        <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+          <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
+          <p className="text-sm font-medium text-amber-900">
+            Revision requested - awaiting coordinator response
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <div className="mt-6 flex gap-3">
+        <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">
+          <CheckCircle2 className="mr-2 h-4 w-4" />
+          Approve Technically
+        </Button>
+        <Button onClick={onRequestRevision} variant="outline" className="flex-1">
+          <AlertCircle className="mr-2 h-4 w-4" />
+          Request Revision
+        </Button>
+      </div>
+    );
+  }
+
+  return null;
 }
 

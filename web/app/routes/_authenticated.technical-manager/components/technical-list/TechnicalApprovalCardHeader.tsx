@@ -1,4 +1,4 @@
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { StatusBadge } from "./StatusBadge";
 
 interface TechnicalApprovalCardHeaderProps {

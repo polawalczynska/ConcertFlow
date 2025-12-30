@@ -2,7 +2,7 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "~/hooks/useUser";
 import { technicalApi } from "~/lib/api-client";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 
 interface TechnicalSummaryCardsProps {
   approval: TechnicalApproval;

@@ -1,5 +1,5 @@
 import { Calendar, MapPin } from "lucide-react";
-import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
+import type { TechnicalApproval } from "../../types/TechnicalApproval";
 
 interface TechnicalApprovalCardInfoProps {
   approval: TechnicalApproval;
