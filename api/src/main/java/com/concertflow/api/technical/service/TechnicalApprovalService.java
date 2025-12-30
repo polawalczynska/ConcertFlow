@@ -40,8 +40,7 @@ public class TechnicalApprovalService {
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
-        Page<Concert> concerts = concertRepository.findByStatusAndTechnicalManagerId(
-            ConcertStatus.PLANNING,
+        Page<Concert> concerts = concertRepository.findByTechnicalManagerId(
             technicalManagerId,
             pageable
         );

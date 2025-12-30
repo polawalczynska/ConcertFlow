@@ -80,8 +80,8 @@ export function useTechnicalApprovals() {
   }, [approvals, searchQuery, statusFilter, sortBy]);
 
   const selectedApproval = useMemo(() => {
-    return selectedApprovalId ? approvals.find((a) => a.id === selectedApprovalId) ?? null : null;
-  }, [selectedApprovalId, approvals]);
+    return selectedApprovalId ? filteredApprovals.find((a) => a.id === selectedApprovalId) ?? null : null;
+  }, [selectedApprovalId, filteredApprovals]);
 
   useMemo(() => {
     if (!selectedApprovalId && filteredApprovals.length > 0) {
