@@ -20,7 +20,7 @@ export function TechnicalRequirementsForm({
   concertId, 
   isBudgetApproved 
 }: TechnicalRequirementsFormProps) {
-  const { data, updateData, saveData, isSaving, isApproved, technicalStatus } = useTechnicalRequirementsContext();
+  const { data, updateData, saveData, isSaving, isApproved, technicalStatus, isLoading } = useTechnicalRequirementsContext();
   const canEdit = !isApproved && (technicalStatus === "PENDING" || technicalStatus === "REVISION_REQUESTED" || !technicalStatus);
 
   const handleSave = async () => {
@@ -47,12 +47,33 @@ export function TechnicalRequirementsForm({
     );
   }
 
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Technical Requirements</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-text-secondary">Loading technical requirements...</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {technicalStatus === "SUBMITTED" && !isApproved && (
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
           <p className="text-sm text-blue-800">
             <strong>Submitted:</strong> These requirements have been submitted for approval and cannot be edited until the technical manager reviews them.
+          </p>
+        </div>
+      )}
+
+      {technicalStatus === "REVISION_REQUESTED" && (
+        <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+          <p className="text-sm text-orange-800">
+            <strong>Revision Requested:</strong> The technical manager has requested changes. You can edit the existing requirements below and resubmit when ready.
           </p>
         </div>
       )}

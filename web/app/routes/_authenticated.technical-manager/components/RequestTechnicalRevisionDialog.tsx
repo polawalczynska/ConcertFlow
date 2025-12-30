@@ -55,7 +55,7 @@ export function RequestTechnicalRevisionDialog({
       return;
     }
 
-    const deadlineISO = deadline.includes("Z") ? deadline : new Date(deadline).toISOString();
+    const deadlineISO = deadline;
 
     setIsLoading(true);
     try {
@@ -67,6 +67,7 @@ export function RequestTechnicalRevisionDialog({
       });
       await queryClient.invalidateQueries({ queryKey: ["technical-approvals", user.id] });
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
+      await queryClient.invalidateQueries({ queryKey: ["technical-details", concertId, user.id] });
       onOpenChange(false);
     } catch (error) {
       console.error("Error requesting technical revision:", error);

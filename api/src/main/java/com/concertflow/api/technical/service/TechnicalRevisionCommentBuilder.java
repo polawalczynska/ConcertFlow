@@ -16,7 +16,7 @@ public class TechnicalRevisionCommentBuilder {
             }
             comments.append("\n");
         }
-        comments.append("\nDeadline: ").append(request.deadline());
+        comments.append("\nDeadline: ").append(request.deadline().toString());
         return comments.toString();
     }
 }

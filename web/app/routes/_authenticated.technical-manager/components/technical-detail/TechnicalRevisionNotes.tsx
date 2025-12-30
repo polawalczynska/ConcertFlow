@@ -13,20 +13,27 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
     return null;
   }
 
-  const revisionRequest = (technicalDetails as any)?.approvalHistory
-    ?.filter((approval: any) => approval.requiresRevision || approval.decision === "Returned for Revision")
+  const approvalHistory = (technicalDetails as any)?.approvalHistory as any[] | undefined;
+  
+  if (!approvalHistory || approvalHistory.length === 0) {
+    return null;
+  }
+
+  const revisionRequest = approvalHistory
+    .filter((approval: any) => approval.requiresRevision || approval.decision === "Returned for Revision")
     .sort((a: any, b: any) => {
       if (!a.decisionDate || !b.decisionDate) return 0;
       return new Date(b.decisionDate).getTime() - new Date(a.decisionDate).getTime();
     })[0];
+  
+  if (!revisionRequest) {
+    return null;
+  }
 
   const parseRevisionComments = (comments?: string) => {
     if (!comments) return null;
     const deadlineMatch = comments.match(/Deadline:\s*(.+)/);
-    const reasonMatch = comments.split('\n')[0];
-    const reason = reasonMatch && reasonMatch.includes('Revision Reason:') 
-      ? reasonMatch.replace('Revision Reason: ', '').trim() 
-      : reasonMatch && !reasonMatch.includes('Deadline:') ? reasonMatch : null;
+    const reason = comments.split('\n')[0];
     
     const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
     const requiredChanges = requiredChangesMatch 
@@ -34,7 +41,9 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
       : [];
     
     return {
-      reason,
+      reason: reason && reason.includes('Revision Reason:') 
+        ? reason.replace('Revision Reason: ', '').trim() 
+        : reason && !reason.includes('Deadline:') ? reason : null,
       deadline: deadlineMatch ? deadlineMatch[1].trim() : null,
       requiredChanges,
     };
@@ -44,7 +53,7 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
     ? parseRevisionComments(revisionRequest.comments)
     : null;
 
-  if (!revisionInfo && !revisionRequest) {
+  if (!revisionRequest) {
     return null;
   }
 
@@ -77,20 +86,33 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
           </div>
         )}
 
-        {revisionInfo?.deadline && (
-          <div>
-            <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
-            <p className="text-sm font-medium text-orange-800">
-              {new Date(revisionInfo.deadline).toLocaleString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </p>
-          </div>
-        )}
+        {revisionInfo?.deadline && (() => {
+          // Parse LocalDateTime as local time, not UTC
+          // Format: "2024-02-06T00:00:00" or "2024-02-06T00:00:00.000"
+          const parseLocalDateTime = (dateTimeString: string): Date => {
+            const cleanString = dateTimeString.replace("Z", "").split(".")[0];
+            const [datePart, timePart] = cleanString.split("T");
+            const [year, month, day] = datePart.split("-").map(Number);
+            const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+            return new Date(year, month - 1, day, hours, minutes, seconds || 0);
+          };
+
+          const deadlineDate = parseLocalDateTime(revisionInfo.deadline);
+          return (
+            <div>
+              <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
+              <p className="text-sm font-medium text-orange-800">
+                {deadlineDate.toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
+          );
+        })()}
 
         {revisionRequest?.decisionDate && (
           <div className="pt-2 border-t border-orange-200">

@@ -87,20 +87,31 @@ export function RevisionNotes({ budget }: RevisionNotesProps) {
           </div>
         )}
 
-        {revisionInfo?.deadline && (
-          <div>
-            <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
-            <p className="text-sm font-medium text-orange-800">
-              {new Date(revisionInfo.deadline).toLocaleString(undefined, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </p>
-          </div>
-        )}
+        {revisionInfo?.deadline && (() => {
+          const parseLocalDateTime = (dateTimeString: string): Date => {
+            const cleanString = dateTimeString.replace("Z", "").split(".")[0];
+            const [datePart, timePart] = cleanString.split("T");
+            const [year, month, day] = datePart.split("-").map(Number);
+            const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
+            return new Date(year, month - 1, day, hours, minutes, seconds || 0);
+          };
+
+          const deadlineDate = parseLocalDateTime(revisionInfo.deadline);
+          return (
+            <div>
+              <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
+              <p className="text-sm font-medium text-orange-800">
+                {deadlineDate.toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
+          );
+        })()}
 
         {itemsWithRevisions.length > 0 && (
           <div>
