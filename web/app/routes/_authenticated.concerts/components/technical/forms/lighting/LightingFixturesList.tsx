@@ -36,6 +36,10 @@ export function LightingFixturesList({
     );
   };
 
+  if (disabled && fixtures.length === 0) {
+    return null;
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
