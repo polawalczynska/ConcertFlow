@@ -1,5 +1,4 @@
 import { Calendar, MapPin } from "lucide-react";
-import { Progress } from "~/components/ui/Progress";
 import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
 
 interface TechnicalApprovalCardInfoProps {
@@ -22,10 +21,9 @@ export function TechnicalApprovalCardInfo({ approval }: TechnicalApprovalCardInf
 
       <div className="mb-3">
         <div className="flex items-center justify-between text-xs mb-1">
-          <span className="text-text-secondary">Compliance</span>
-          <span className="font-semibold">{approval.complianceScore}%</span>
+          <span className="text-text-secondary">Power Requirements</span>
+          <span className="font-semibold">{approval.powerRequirements} kW</span>
         </div>
-        <Progress value={approval.complianceScore} className="h-1.5" />
       </div>
     </>
   );

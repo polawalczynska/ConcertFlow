@@ -1,11 +1,45 @@
 import { Card, CardContent } from "~/components/ui/Card";
+import { useQuery } from "@tanstack/react-query";
+import { useUser } from "~/hooks/useUser";
+import { technicalApi } from "~/lib/api-client";
 import type { TechnicalApproval } from "../../data/mockTechnicalApprovals";
 
 interface TechnicalSummaryCardsProps {
   approval: TechnicalApproval;
 }
 
+function calculateSafetyItemsCount(safety: any): number {
+  if (!safety) return 0;
+  let count = 0;
+  if (safety.fireSafetyPermit) count++;
+  if (safety.electricalInspection) count++;
+  if (safety.loadInSafetyPlan) count++;
+  if (safety.emergencyEvacuationPlan) count++;
+  if (safety.medicalStaffOnsite) count++;
+  if (safety.pyrotechnicsLicense) count++;
+  if (safety.riggingCertification) count++;
+  return count;
+}
+
 export function TechnicalSummaryCards({ approval }: TechnicalSummaryCardsProps) {
+  const { data: user } = useUser();
+  
+  const { data: technicalDetails } = useQuery({
+    queryKey: ["technical-details", approval.concertId, user?.id],
+    queryFn: async () => {
+      if (!user?.id || !approval.concertId) return null;
+      const response = await technicalApi.getTechnicalDetails(
+        approval.concertId,
+        user.id
+      );
+      return response.data;
+    },
+    enabled: !!user?.id && !!approval.concertId,
+  });
+
+  const safetyItemsCount = calculateSafetyItemsCount(technicalDetails?.safety);
+  const totalSafetyItems = 7;
+
   return (
     <div className="grid gap-4 mb-6 grid-cols-3">
       <Card className="border-0 bg-bg-main shadow-sm">
@@ -18,9 +52,9 @@ export function TechnicalSummaryCards({ approval }: TechnicalSummaryCardsProps) 
       </Card>
       <Card className="border-0 bg-blue-50 shadow-sm">
         <CardContent className="p-4">
-          <p className="text-xs text-blue-700">Compliance Score</p>
+          <p className="text-xs text-blue-700">Safety Items</p>
           <p className="mt-1 text-2xl font-bold text-blue-700">
-            {approval.complianceScore}%
+            {safetyItemsCount}/{totalSafetyItems}
           </p>
         </CardContent>
       </Card>

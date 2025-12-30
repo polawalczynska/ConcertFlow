@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
 import { Checkbox } from "~/components/ui/Checkbox";
@@ -11,7 +11,7 @@ interface ApproveTechnicalDialogProps {
   onOpenChange: (open: boolean) => void;
   concertId: number;
   concertName: string;
-  technicalVersion?: number;
+  technicalManagerId: number;
 }
 
 export function ApproveTechnicalDialog({
@@ -19,12 +19,23 @@ export function ApproveTechnicalDialog({
   onOpenChange,
   concertId,
   concertName,
-  technicalVersion = 1,
+  technicalManagerId,
 }: ApproveTechnicalDialogProps) {
   const queryClient = useQueryClient();
   const { data: user } = useUser();
   const [certified, setCertified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data: technicalDetails } = useQuery({
+    queryKey: ["technical-details", concertId, technicalManagerId],
+    queryFn: async () => {
+      const response = await technicalApi.getTechnicalDetails(concertId, technicalManagerId);
+      return response.data;
+    },
+    enabled: isOpen && !!technicalManagerId,
+  });
+
+  const technicalVersion = technicalDetails?.version || 1;
 
   const handleApprove = async () => {
     if (!user?.id) return;
