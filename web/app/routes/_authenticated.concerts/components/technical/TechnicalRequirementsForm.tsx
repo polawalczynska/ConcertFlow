@@ -20,10 +20,8 @@ export function TechnicalRequirementsForm({
   concertId, 
   isBudgetApproved 
 }: TechnicalRequirementsFormProps) {
-  const { data, updateData, saveData, isSaving } = useTechnicalRequirementsContext();
-  const [isApproved, setIsApproved] = useState(false); // TODO: Get from API
-
-  const canEdit = !isApproved;
+  const { data, updateData, saveData, isSaving, isApproved, technicalStatus } = useTechnicalRequirementsContext();
+  const canEdit = !isApproved && (technicalStatus === "PENDING" || technicalStatus === "REVISION_REQUESTED" || !technicalStatus);
 
   const handleSave = async () => {
     try {
@@ -55,6 +53,22 @@ export function TechnicalRequirementsForm({
         <div className="rounded-lg border border-green-200 bg-green-50 p-3">
           <p className="text-sm text-green-800">
             <strong>Approved:</strong> These requirements have been approved and cannot be edited.
+          </p>
+        </div>
+      )}
+
+      {technicalStatus === "SUBMITTED" && !isApproved && (
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+          <p className="text-sm text-blue-800">
+            <strong>Submitted:</strong> These requirements have been submitted for approval and cannot be edited until the technical manager reviews them.
+          </p>
+        </div>
+      )}
+
+      {technicalStatus === "REVISION_REQUESTED" && (
+        <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
+          <p className="text-sm text-orange-800">
+            <strong>Revision Requested:</strong> The technical manager has requested changes. You can now edit the requirements.
           </p>
         </div>
       )}

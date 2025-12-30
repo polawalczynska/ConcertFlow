@@ -1,59 +1,70 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Label } from "~/components/ui/Label";
+import type { TechnicalDetailResponse } from "~/api";
 
-export function LightingTab() {
+interface LightingTabProps {
+  technicalDetails?: TechnicalDetailResponse | null;
+}
+
+export function LightingTab({ technicalDetails }: LightingTabProps) {
+  const lighting = technicalDetails?.lighting;
+  const fixtures = lighting?.fixtures || [];
+
   return (
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Lighting Design</CardTitle>
+          <CardTitle>Lighting Requirements</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
-              <Label>Total Fixtures</Label>
-              <p className="text-2xl font-bold mt-1">120</p>
+              <Label className="text-sm font-medium text-text-secondary">Total Fixtures</Label>
+              <p className="text-2xl font-bold mt-1">
+                {lighting?.totalFixtures ?? "N/A"}
+              </p>
             </div>
             <div>
-              <Label>DMX Universes</Label>
-              <p className="text-2xl font-bold mt-1">8</p>
+              <Label className="text-sm font-medium text-text-secondary">DMX Universes</Label>
+              <p className="text-2xl font-bold mt-1">
+                {lighting?.dmxUniverses ?? "N/A"}
+              </p>
             </div>
             <div>
-              <Label>Power Draw</Label>
-              <p className="text-2xl font-bold mt-1">45 kW</p>
+              <Label className="text-sm font-medium text-text-secondary">Power Draw</Label>
+              <p className="text-2xl font-bold mt-1">
+                {lighting?.lightingPowerDraw ? `${lighting.lightingPowerDraw} kW` : "N/A"}
+              </p>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <p className="font-medium">LED Moving Heads</p>
-                <p className="text-sm text-text-secondary">36x Units • Universe 1-3</p>
+          {fixtures.length > 0 && (
+            <div className="mt-6">
+              <Label className="text-sm font-semibold mb-3 block">Fixture Details</Label>
+              <div className="space-y-2">
+                {fixtures.map((fixture, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{fixture.type || "Unspecified Type"}</p>
+                      <p className="text-sm text-text-secondary">
+                        {fixture.quantity ? `${fixture.quantity}x Units` : "Quantity not specified"}
+                        {fixture.universe && ` • Universe ${fixture.universe}`}
+                      </p>
+                    </div>
+                    {fixture.powerDraw && (
+                      <span className="text-sm font-semibold">{fixture.powerDraw} kW</span>
+                    )}
+                  </div>
+                ))}
               </div>
-              <span className="text-sm font-semibold">18 kW</span>
             </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <p className="font-medium">PAR LED RGBW</p>
-                <p className="text-sm text-text-secondary">48x Units • Universe 4-6</p>
-              </div>
-              <span className="text-sm font-semibold">12 kW</span>
-            </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <p className="font-medium">Wash Lights</p>
-                <p className="text-sm text-text-secondary">24x Units • Universe 7</p>
-              </div>
-              <span className="text-sm font-semibold">8 kW</span>
-            </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg">
-              <div>
-                <p className="font-medium">Strobes & Effects</p>
-                <p className="text-sm text-text-secondary">12x Units • Universe 8</p>
-              </div>
-              <span className="text-sm font-semibold">7 kW</span>
-            </div>
-          </div>
+          )}
+
+          {!lighting?.totalFixtures && !lighting?.dmxUniverses && !lighting?.lightingPowerDraw && fixtures.length === 0 && (
+            <p className="text-sm text-text-secondary py-4 text-center">
+              No lighting requirements provided.
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

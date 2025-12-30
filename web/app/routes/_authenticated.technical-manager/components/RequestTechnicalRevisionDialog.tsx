@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
 import { RevisionReasonField } from "./revision/RevisionReasonField";
@@ -5,13 +7,14 @@ import { RevisionDeadlineField } from "./revision/RevisionDeadlineField";
 import { TechnicalAreaSelector } from "./revision/TechnicalAreaSelector";
 import { useRequestTechnicalRevisionForm } from "./revision/useRequestTechnicalRevisionForm";
 import { technicalAreas } from "../data/technicalAreas";
+import { technicalApi } from "~/lib/api-client";
+import { useUser } from "~/hooks/useUser";
 
 interface RequestTechnicalRevisionDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   concertId: number;
   concertName: string;
-  isLoading?: boolean;
 }
 
 export function RequestTechnicalRevisionDialog({
@@ -19,8 +22,11 @@ export function RequestTechnicalRevisionDialog({
   onOpenChange,
   concertId,
   concertName,
-  isLoading,
 }: RequestTechnicalRevisionDialogProps) {
+  const queryClient = useQueryClient();
+  const { data: user } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  
   const {
     revisionReason,
     setRevisionReason,
@@ -39,8 +45,8 @@ export function RequestTechnicalRevisionDialog({
     areas: technicalAreas,
   });
 
-  const handleRequestRevision = () => {
-    if (!canSubmit) {
+  const handleRequestRevision = async () => {
+    if (!canSubmit || !user?.id) {
       return;
     }
 
@@ -51,13 +57,23 @@ export function RequestTechnicalRevisionDialog({
 
     const deadlineISO = deadline.includes("Z") ? deadline : new Date(deadline).toISOString();
 
-    console.log("Requesting technical revision", {
-      concertId,
-      revisionReason: revisionReason.trim(),
-      requiredChanges,
-      deadline: deadlineISO,
-    });
-    onOpenChange(false);
+    setIsLoading(true);
+    try {
+      await technicalApi.requestTechnicalRevision(concertId, {
+        concertId,
+        revisionReason: revisionReason.trim(),
+        requiredChanges,
+        deadline: deadlineISO,
+      });
+      await queryClient.invalidateQueries({ queryKey: ["technical-approvals", user.id] });
+      await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error requesting technical revision:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

@@ -7,8 +7,8 @@ export function useTechnicalManagers() {
     queryKey: ["technical-managers"],
     queryFn: async (): Promise<UserResponse[]> => {
       try {
-        const response = await userApi.getBudgetManagers(); // Temporary - will need backend endpoint
-        return [];
+        const response = await userApi.getTechnicalManagers();
+        return response.data || [];
       } catch (error) {
         console.error("Error fetching technical managers:", error);
         return [];

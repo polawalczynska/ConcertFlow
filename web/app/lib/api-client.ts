@@ -1,4 +1,4 @@
-import { AuthControllerApi, ArtistControllerApi, UserControllerApi, ConcertControllerApi, DashboardControllerApi, BudgetApprovalControllerApi, BudgetItemControllerApi, Configuration } from "~/api";
+import { AuthControllerApi, ArtistControllerApi, UserControllerApi, ConcertControllerApi, DashboardControllerApi, BudgetApprovalControllerApi, BudgetItemControllerApi, TechnicalApprovalControllerApi, Configuration } from "~/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "./token-storage";
 
@@ -141,3 +141,4 @@ export const concertApi = new ConcertControllerApi(configuration, basePath, axio
 export const dashboardApi = new DashboardControllerApi(configuration, basePath, axiosInstance);
 export const budgetApprovalApi = new BudgetApprovalControllerApi(configuration, basePath, axiosInstance);
 export const budgetItemApi = new BudgetItemControllerApi(configuration, basePath, axiosInstance);
+export const technicalApi = new TechnicalApprovalControllerApi(configuration, basePath, axiosInstance);

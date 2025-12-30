@@ -106,6 +106,7 @@ export default function TechnicalPage() {
             onOpenChange={setApproveModal}
             concertId={selectedApproval.concertId}
             concertName={selectedApproval.concertName}
+            technicalVersion={1} // TODO: Get from technical details
           />
           <RequestTechnicalRevisionDialog
             isOpen={revisionModal}

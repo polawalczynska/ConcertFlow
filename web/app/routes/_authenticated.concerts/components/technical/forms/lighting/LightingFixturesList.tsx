@@ -54,9 +54,11 @@ export function LightingFixturesList({
       </div>
       <div className="space-y-2">
         {fixtures.length === 0 ? (
-          <p className="text-sm text-text-secondary py-4 text-center">
-            No fixtures added. Click &quot;Add Fixture&quot; to add lighting fixtures.
-          </p>
+          !disabled && (
+            <p className="text-sm text-text-secondary py-4 text-center">
+              No fixtures added. Click &quot;Add Fixture&quot; to add lighting fixtures.
+            </p>
+          )
         ) : (
           fixtures.map((fixture) => (
             <LightingFixtureRow

@@ -5,9 +5,13 @@ interface TechnicalRequirementsContextValue {
   data: TechnicalRequirementsData;
   updateData: (updates: Partial<TechnicalRequirementsData>) => void;
   saveData: () => Promise<void>;
-  buildSubmitRequest: (notes?: string) => any;
+  buildSubmitRequest: (notes: string, termsAccepted: boolean) => any;
   isLoading: boolean;
   isSaving: boolean;
+  isSubmitted: boolean;
+  isApproved: boolean;
+  technicalStatus: string | null;
+  version: number;
 }
 
 const TechnicalRequirementsContext = createContext<TechnicalRequirementsContextValue | null>(null);

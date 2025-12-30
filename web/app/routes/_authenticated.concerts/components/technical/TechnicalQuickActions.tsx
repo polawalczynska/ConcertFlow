@@ -1,35 +1,34 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { Send } from "lucide-react";
 import { SubmitTechnicalDialog } from "../dialogs/SubmitTechnicalDialog";
 import { useTechnicalRequirementsContext } from "./context/TechnicalRequirementsContext";
+import { technicalApi } from "~/lib/api-client";
 
 interface TechnicalQuickActionsProps {
   concertId: number;
 }
 
 export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps) {
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { buildSubmitRequest } = useTechnicalRequirementsContext();
+  const { buildSubmitRequest, isSubmitted, isApproved } = useTechnicalRequirementsContext();
 
-  // TODO: Check if technical requirements are already submitted
-  const canSubmit = true; // This will be based on actual status
+  const canSubmit = !isSubmitted && !isApproved;
 
   const handleSubmit = async (notes: string, termsAccepted: boolean) => {
     setIsSubmitting(true);
     try {
-      const request = buildSubmitRequest(notes);
-      // TODO: Implement API call to submit technical requirements
-      console.log("Submitting technical requirements:", {
-        ...request,
-        termsAccepted,
-      });
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const request = buildSubmitRequest(notes, termsAccepted);
+      await technicalApi.submitTechnicalRequirements(concertId, request);
+      await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error submitting technical requirements:", error);
+      throw error;
     } finally {
       setIsSubmitting(false);
     }

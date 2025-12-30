@@ -1,29 +1,50 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "~/components/ui/Dialog";
 import { Button } from "~/components/ui/Button";
 import { Checkbox } from "~/components/ui/Checkbox";
+import { technicalApi } from "~/lib/api-client";
+import { useUser } from "~/hooks/useUser";
 
 interface ApproveTechnicalDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   concertId: number;
   concertName: string;
-  isLoading?: boolean;
+  technicalVersion?: number;
 }
 
 export function ApproveTechnicalDialog({
   isOpen,
   onOpenChange,
+  concertId,
   concertName,
-  isLoading,
+  technicalVersion = 1,
 }: ApproveTechnicalDialogProps) {
+  const queryClient = useQueryClient();
+  const { data: user } = useUser();
   const [certified, setCertified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleApprove = () => {
-    console.log("Approving technical request", {
-      certified,
-    });
-    onOpenChange(false);
+  const handleApprove = async () => {
+    if (!user?.id) return;
+    
+    setIsLoading(true);
+    try {
+      await technicalApi.approveTechnical(concertId, {
+        concertId,
+        technicalVersion,
+      });
+      await queryClient.invalidateQueries({ queryKey: ["technical-approvals", user.id] });
+      await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
+      setCertified(false);
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error approving technical requirements:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const canApprove = certified;

@@ -1,7 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Label } from "~/components/ui/Label";
+import type { TechnicalDetailResponse } from "~/api";
 
-export function AudioTab() {
+interface AudioTabProps {
+  technicalDetails?: TechnicalDetailResponse | null;
+}
+
+export function AudioTab({ technicalDetails }: AudioTabProps) {
+  const audio = technicalDetails?.audio;
+
   return (
     <div className="space-y-4">
       <Card>
@@ -12,20 +19,20 @@ export function AudioTab() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Main PA (L/R)</Label>
-                <p className="font-medium mt-1">Line Array - 12 boxes per side</p>
+                <Label className="text-sm font-medium text-text-secondary">Main PA (L/R)</Label>
+                <p className="font-medium mt-1">{audio?.mainPA || "N/A"}</p>
               </div>
               <div>
-                <Label>Subwoofers</Label>
-                <p className="font-medium mt-1">8x Dual 18" Subs</p>
+                <Label className="text-sm font-medium text-text-secondary">Subwoofers</Label>
+                <p className="font-medium mt-1">{audio?.subwoofers || "N/A"}</p>
               </div>
               <div>
-                <Label>Front Fill</Label>
-                <p className="font-medium mt-1">6x Point Source</p>
+                <Label className="text-sm font-medium text-text-secondary">Front Fill</Label>
+                <p className="font-medium mt-1">{audio?.frontFill || "N/A"}</p>
               </div>
               <div>
-                <Label>Monitor Wedges</Label>
-                <p className="font-medium mt-1">12x Stage Monitors</p>
+                <Label className="text-sm font-medium text-text-secondary">Monitor Wedges</Label>
+                <p className="font-medium mt-1">{audio?.monitorWedges || "N/A"}</p>
               </div>
             </div>
           </div>
@@ -39,16 +46,16 @@ export function AudioTab() {
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <Label>Console Type</Label>
-              <p className="font-medium mt-1">Digital - 96 Channel</p>
+              <Label className="text-sm font-medium text-text-secondary">Console Type</Label>
+              <p className="font-medium mt-1">{audio?.consoleType || "N/A"}</p>
             </div>
             <div>
-              <Label>Input Channels</Label>
-              <p className="font-medium mt-1">48 Active</p>
+              <Label className="text-sm font-medium text-text-secondary">Input Channels</Label>
+              <p className="font-medium mt-1">{audio?.inputChannels ?? "N/A"}</p>
             </div>
             <div>
-              <Label>Output Busses</Label>
-              <p className="font-medium mt-1">16 Mix + LR</p>
+              <Label className="text-sm font-medium text-text-secondary">Output Busses</Label>
+              <p className="font-medium mt-1">{audio?.outputBusses || "N/A"}</p>
             </div>
           </div>
         </CardContent>
