@@ -22,7 +22,6 @@ export default function ArtistsPage() {
     genre: "",
     website: "",
     contactPerson: "",
-    technicalRequirements: "",
   });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -90,7 +89,6 @@ export default function ArtistsPage() {
       genre: "",
       website: "",
       contactPerson: "",
-      technicalRequirements: "",
     });
     setFieldErrors({});
     setGeneralError(null);
@@ -106,7 +104,6 @@ export default function ArtistsPage() {
       genre: artist.genre || "",
       website: artist.website || "",
       contactPerson: artist.contactPerson || "",
-      technicalRequirements: artist.technicalRequirements || "",
     });
     setFieldErrors({});
     setGeneralError(null);
@@ -165,7 +162,6 @@ export default function ArtistsPage() {
       genre: result.data.genre || undefined,
       website: normalizeWebsite(result.data.website),
       contactPerson: result.data.contactPerson || undefined,
-      technicalRequirements: result.data.technicalRequirements || undefined,
     };
 
     if (selectedArtist?.id) {

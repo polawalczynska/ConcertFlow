@@ -69,17 +69,6 @@ export function ArtistFormFields({formData, formErrors, onFieldChange}: ArtistFo
         onChange={(value) => onFieldChange("contactPerson", value)}
         placeholder="Manager or booking agent name"
       />
-
-      <ArtistFormField
-        id="technicalRequirements"
-        label="Technical Requirements"
-        error={formErrors.technicalRequirements}
-        value={formData.technicalRequirements || ""}
-        onChange={(value) => onFieldChange("technicalRequirements", value)}
-        placeholder="Describe equipment, stage setup, and technical needs..."
-        rows={4}
-        spanFull
-      />
     </div>
   );
 }

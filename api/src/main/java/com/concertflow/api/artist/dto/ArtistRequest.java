@@ -8,7 +8,6 @@ public record ArtistRequest(
     @NotBlank String name,
     @NotBlank @Email String email,
     @Pattern(regexp = "^\\+?[\\d\\s-()]+$") String phone,
-    String technicalRequirements,
     String genre,
     String website,
     String contactPerson

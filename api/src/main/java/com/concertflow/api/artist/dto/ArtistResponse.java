@@ -5,7 +5,6 @@ public record ArtistResponse(
     String name,
     String email,
     String phone,
-    String technicalRequirements,
     String genre,
     String website,
     String contactPerson,

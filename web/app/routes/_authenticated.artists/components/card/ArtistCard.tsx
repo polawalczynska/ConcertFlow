@@ -1,7 +1,6 @@
 import type { ArtistResponse } from "~/api";
 import { ArtistCardHeader } from "~/routes/_authenticated.artists/components/card/ArtistCardHeader";
 import { ArtistCardContactInfo } from "~/routes/_authenticated.artists/components/card/ArtistCardContactInfo";
-import { ArtistCardTechnicalRequirements } from "~/routes/_authenticated.artists/components/card/ArtistCardTechnicalRequirements";
 import { ArtistCardFooter } from "~/routes/_authenticated.artists/components/card/ArtistCardFooter";
 
 interface ArtistCardProps {
@@ -16,7 +15,6 @@ export function ArtistCard({ artist, onEdit, onDelete }: ArtistCardProps) {
       <div className="p-6">
         <ArtistCardHeader artist={artist} onEdit={onEdit} onDelete={onDelete} />
         <ArtistCardContactInfo artist={artist} />
-        <ArtistCardTechnicalRequirements technicalRequirements={artist.technicalRequirements} />
         <ArtistCardFooter upcomingConcertsCount={artist.upcomingConcertsCount} />
       </div>
     </div>

@@ -29,8 +29,6 @@ public class Artist {
 
     private String phone;
 
-    private String technicalRequirements;
-
     private String genre;
     private String website;
     private String contactPerson;
