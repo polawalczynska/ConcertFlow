@@ -13,6 +13,8 @@ export function getStatusBadgeClasses(status?: string): string {
     
     case "PLANNING":
       return `${baseClasses} bg-yellow-100 text-yellow-800 border-yellow-200`;
+    case "APPROVED":
+      return `${baseClasses} bg-green-100 text-green-800 border-green-200`;
     case "COMPLETED":
       return `${baseClasses} bg-blue-100 text-blue-800 border-blue-200`;
     case "CANCELLED":
@@ -40,6 +42,8 @@ export function formatStatusLabel(status?: string): string {
     
     case "PLANNING":
       return "Planning";
+    case "APPROVED":
+      return "Approved";
     case "COMPLETED":
       return "Completed";
     case "CANCELLED":
