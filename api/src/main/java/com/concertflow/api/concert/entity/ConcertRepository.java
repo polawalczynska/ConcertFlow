@@ -87,4 +87,6 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
         @Param("technicalManagerId") Long technicalManagerId,
         Pageable pageable
     );
+
+    List<Concert> findByCoordinatorId(Long coordinatorId);
 }
