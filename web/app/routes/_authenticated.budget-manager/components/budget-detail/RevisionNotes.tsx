@@ -1,6 +1,7 @@
 import type { BudgetDetailResponse } from "~/api";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { AlertCircle } from "lucide-react";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface RevisionNotesProps {
   budget: BudgetDetailResponse;
@@ -88,15 +89,9 @@ export function RevisionNotes({ budget }: RevisionNotesProps) {
         )}
 
         {revisionInfo?.deadline && (() => {
-          const parseLocalDateTime = (dateTimeString: string): Date => {
-            const cleanString = dateTimeString.replace("Z", "").split(".")[0];
-            const [datePart, timePart] = cleanString.split("T");
-            const [year, month, day] = datePart.split("-").map(Number);
-            const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
-            return new Date(year, month - 1, day, hours, minutes, seconds || 0);
-          };
-
           const deadlineDate = parseLocalDateTime(revisionInfo.deadline);
+          if (!deadlineDate) return null;
+          
           return (
             <div>
               <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
@@ -147,19 +142,23 @@ export function RevisionNotes({ budget }: RevisionNotesProps) {
           </div>
         )}
 
-        {revisionRequest?.decisionDate && (
-          <div className="pt-2 border-t border-orange-200">
-            <p className="text-xs text-orange-700">
-              Requested on: {new Date(revisionRequest.decisionDate).toLocaleString(undefined, {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </p>
-          </div>
-        )}
+        {revisionRequest?.decisionDate && (() => {
+          const decisionDate = parseLocalDateTime(revisionRequest.decisionDate);
+          if (!decisionDate) return null;
+          return (
+            <div className="pt-2 border-t border-orange-200">
+              <p className="text-xs text-orange-700">
+                Requested on: {decisionDate.toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
+          );
+        })()}
       </CardContent>
     </Card>
   );

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
 import type { BudgetDetailResponse } from "~/api";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface BudgetStatusSectionProps {
   budgetDetails: BudgetDetailResponse;
@@ -97,20 +98,24 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
                                 </p>
                               </div>
                             )}
-                            {deadline && (
-                              <div>
-                                <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
-                                <p className="text-sm font-semibold text-yellow-700">
-                                  {new Date(deadline).toLocaleString(undefined, {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                            )}
+                            {deadline && (() => {
+                              const deadlineDate = parseLocalDateTime(deadline);
+                              if (!deadlineDate) return null;
+                              return (
+                                <div>
+                                  <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
+                                  <p className="text-sm font-semibold text-yellow-700">
+                                    {deadlineDate.toLocaleString(undefined, {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                              );
+                            })()}
                           </>
                         );
                       })()}
@@ -124,17 +129,21 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
                   )}
                 </div>
               )}
-              {latestApproval.decisionDate && (
-                <p className="text-xs text-text-secondary">
-                  {new Date(latestApproval.decisionDate).toLocaleString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
-              )}
+              {latestApproval.decisionDate && (() => {
+                const decisionDate = parseLocalDateTime(latestApproval.decisionDate);
+                if (!decisionDate) return null;
+                return (
+                  <p className="text-xs text-text-secondary">
+                    {decisionDate.toLocaleString(undefined, {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                );
+              })()}
             </div>
           </div>
         )}

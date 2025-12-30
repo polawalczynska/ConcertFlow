@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { AlertCircle } from "lucide-react";
 import type { TechnicalDetailResponse } from "~/api";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface TechnicalRevisionNotesProps {
   technicalDetails: TechnicalDetailResponse | null | undefined;
@@ -87,17 +88,9 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
         )}
 
         {revisionInfo?.deadline && (() => {
-          // Parse LocalDateTime as local time, not UTC
-          // Format: "2024-02-06T00:00:00" or "2024-02-06T00:00:00.000"
-          const parseLocalDateTime = (dateTimeString: string): Date => {
-            const cleanString = dateTimeString.replace("Z", "").split(".")[0];
-            const [datePart, timePart] = cleanString.split("T");
-            const [year, month, day] = datePart.split("-").map(Number);
-            const [hours, minutes, seconds] = (timePart || "00:00:00").split(":").map(Number);
-            return new Date(year, month - 1, day, hours, minutes, seconds || 0);
-          };
-
           const deadlineDate = parseLocalDateTime(revisionInfo.deadline);
+          if (!deadlineDate) return null;
+          
           return (
             <div>
               <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
@@ -114,19 +107,23 @@ export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNo
           );
         })()}
 
-        {revisionRequest?.decisionDate && (
-          <div className="pt-2 border-t border-orange-200">
-            <p className="text-xs text-orange-700">
-              Requested on: {new Date(revisionRequest.decisionDate).toLocaleString(undefined, {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </p>
-          </div>
-        )}
+        {revisionRequest?.decisionDate && (() => {
+          const decisionDate = parseLocalDateTime(revisionRequest.decisionDate);
+          if (!decisionDate) return null;
+          return (
+            <div className="pt-2 border-t border-orange-200">
+              <p className="text-xs text-orange-700">
+                Requested on: {decisionDate.toLocaleString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
+            </div>
+          );
+        })()}
       </CardContent>
     </Card>
   );

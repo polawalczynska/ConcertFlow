@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
 import { technicalApi } from "~/lib/api-client";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface TechnicalStatusSectionProps {
   concertId: number;
@@ -72,22 +73,30 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
               {getStatusLabel(technicalStatus)}
             </Badge>
           </div>
-          {isApproved && technicalDetails?.approvedAt && (
-            <div>
-              <p className="text-sm text-text-secondary mb-1">Approved At</p>
-              <p className="text-sm font-medium text-text-primary">
-                {new Date(technicalDetails.approvedAt).toLocaleDateString()}
-              </p>
-            </div>
-          )}
-          {technicalStatus === "SUBMITTED" && technicalDetails?.submittedAt && (
-            <div>
-              <p className="text-sm text-text-secondary mb-1">Submitted At</p>
-              <p className="text-sm font-medium text-text-primary">
-                {new Date(technicalDetails.submittedAt).toLocaleDateString()}
-              </p>
-            </div>
-          )}
+          {isApproved && technicalDetails?.approvedAt && (() => {
+            const approvedDate = parseLocalDateTime(technicalDetails.approvedAt);
+            if (!approvedDate) return null;
+            return (
+              <div>
+                <p className="text-sm text-text-secondary mb-1">Approved At</p>
+                <p className="text-sm font-medium text-text-primary">
+                  {approvedDate.toLocaleDateString()}
+                </p>
+              </div>
+            );
+          })()}
+          {technicalStatus === "SUBMITTED" && technicalDetails?.submittedAt && (() => {
+            const submittedDate = parseLocalDateTime(technicalDetails.submittedAt);
+            if (!submittedDate) return null;
+            return (
+              <div>
+                <p className="text-sm text-text-secondary mb-1">Submitted At</p>
+                <p className="text-sm font-medium text-text-primary">
+                  {submittedDate.toLocaleDateString()}
+                </p>
+              </div>
+            );
+          })()}
         </div>
 
         {latestApproval && (
@@ -110,8 +119,7 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
                         const reason = reasonMatch && !reasonMatch.includes('Deadline:') && reasonMatch.includes('Revision Reason:') 
                           ? reasonMatch.replace('Revision Reason: ', '').trim() 
                           : null;
-                        
-                        // Extract required changes
+
                         const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
                         const requiredChanges = requiredChangesMatch 
                           ? requiredChangesMatch[1].split('\n').filter((line: string) => line.trim().startsWith('-')).map((line: string) => line.replace(/^-\s*/, '').trim())
@@ -137,20 +145,25 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
                                 </ul>
                               </div>
                             )}
-                            {deadline && (
-                              <div>
-                                <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
-                                <p className="text-sm font-semibold text-orange-700">
-                                  {new Date(deadline).toLocaleString(undefined, {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                            )}
+                            {deadline && (() => {
+                              const deadlineDate = parseLocalDateTime(deadline);
+                              if (!deadlineDate) return null;
+                              
+                              return (
+                                <div>
+                                  <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
+                                  <p className="text-sm font-semibold text-orange-700">
+                                    {deadlineDate.toLocaleString(undefined, {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric',
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </p>
+                                </div>
+                              );
+                            })()}
                           </>
                         );
                       })()}
@@ -164,17 +177,21 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
                   )}
                 </div>
               )}
-              {latestApproval.decisionDate && (
-                <p className="text-xs text-text-secondary">
-                  {new Date(latestApproval.decisionDate).toLocaleString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
-              )}
+                      {latestApproval.decisionDate && (() => {
+                        const decisionDate = parseLocalDateTime(latestApproval.decisionDate);
+                        if (!decisionDate) return null;
+                        return (
+                          <p className="text-xs text-text-secondary">
+                            {decisionDate.toLocaleString(undefined, {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        );
+                      })()}
             </div>
           </div>
         )}

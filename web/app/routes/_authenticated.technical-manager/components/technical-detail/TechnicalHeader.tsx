@@ -1,5 +1,6 @@
 import { Badge } from "~/components/ui/Badge";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface TechnicalHeaderProps {
   approval: TechnicalApproval;
@@ -12,7 +13,12 @@ export function TechnicalHeader({ approval }: TechnicalHeaderProps) {
         <h2 className="text-2xl font-bold text-text-primary">{approval.concertName}</h2>
         <p className="text-text-secondary">{approval.artist} • {approval.venue}</p>
         <p className="text-sm text-text-secondary">
-          {approval.date ? new Date(approval.date).toLocaleDateString() : "N/A"} • {approval.city}
+          {approval.date 
+            ? (() => {
+                const date = parseLocalDateTime(approval.date);
+                return date ? date.toLocaleDateString() : "N/A";
+              })()
+            : "N/A"} • {approval.city}
         </p>
       </div>
       <Badge>

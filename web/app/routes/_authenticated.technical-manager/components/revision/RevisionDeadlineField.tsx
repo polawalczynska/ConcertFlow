@@ -1,11 +1,11 @@
-import { DateTimePicker } from "~/routes/_authenticated.concerts/components/form/DateTimePicker";
+import { DateTimePicker } from "~/components/DateTimePicker";
 
 interface RevisionDeadlineFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function RevisionDeadlineField({ value, onChange }: RevisionDeadlineFieldProps) {
+export function RevisionDeadlineField({value, onChange}: RevisionDeadlineFieldProps) {
   return (
     <div>
       <DateTimePicker
