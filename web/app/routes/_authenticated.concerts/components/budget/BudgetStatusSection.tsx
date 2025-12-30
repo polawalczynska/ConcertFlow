@@ -1,45 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
-import { Badge } from "~/components/ui/Badge";
 import type { BudgetDetailResponse } from "~/api";
+import { BudgetStatusHeader } from "./status/BudgetStatusHeader";
+import { BudgetLatestResponse } from "./status/BudgetLatestResponse";
+import { BudgetValidations } from "./status/BudgetValidations";
 
 interface BudgetStatusSectionProps {
   budgetDetails: BudgetDetailResponse;
 }
 
 export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps) {
-  const getStatusColor = (status?: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "SUBMITTED":
-      case "UNDER_REVIEW":
-        return "bg-blue-100 text-blue-800";
-      case "REVISION_REQUESTED":
-        return "bg-yellow-100 text-yellow-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusLabel = (status?: string) => {
-    switch (status) {
-      case "APPROVED":
-        return "Approved";
-      case "REJECTED":
-        return "Rejected";
-      case "SUBMITTED":
-        return "Submitted";
-      case "UNDER_REVIEW":
-        return "Under Review";
-      case "REVISION_REQUESTED":
-        return "Revision Requested";
-      default:
-        return "Pending";
-    }
-  };
-
   const latestApproval = budgetDetails.approvalHistory?.[budgetDetails.approvalHistory.length - 1];
 
   return (
@@ -48,120 +17,17 @@ export function BudgetStatusSection({ budgetDetails }: BudgetStatusSectionProps)
         <CardTitle className="text-lg">Budget Status</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center gap-4">
-          <Badge className={getStatusColor(budgetDetails.budgetStatus)}>
-            {getStatusLabel(budgetDetails.budgetStatus)}
-          </Badge>
-          {budgetDetails.requestedBudget && (
-            <div>
-              <span className="text-sm text-text-secondary">Requested: </span>
-              <span className="font-semibold">${budgetDetails.requestedBudget.toLocaleString()}</span>
-            </div>
-          )}
-          {budgetDetails.approvedBudget && (
-            <div>
-              <span className="text-sm text-text-secondary">Approved: </span>
-              <span className="font-semibold text-green-700">
-                ${budgetDetails.approvedBudget.toLocaleString()}
-              </span>
-            </div>
-          )}
-        </div>
+        <BudgetStatusHeader budgetDetails={budgetDetails} />
 
         {latestApproval && (
-          <div className="border-t pt-4">
-            <p className="text-sm font-medium text-text-secondary mb-2">Latest Response</p>
-            <div className="space-y-2">
-              <p className="text-sm">
-                <span className="font-medium">Decision: </span>
-                {latestApproval.decision}
-              </p>
-              {latestApproval.comments && (
-                <div className="space-y-2">
-                  {latestApproval.decision === "Returned for Revision" && (
-                    <>
-                      {(() => {
-                        const comments = latestApproval.comments;
-                        const deadlineMatch = comments.match(/Deadline:\s*(.+)/);
-                        const reasonMatch = comments.split('\n')[0];
-                        const deadline = deadlineMatch ? deadlineMatch[1].trim() : null;
-                        const reason = reasonMatch && !reasonMatch.includes('Deadline:') ? reasonMatch : null;
-                        
-                        return (
-                          <>
-                            {reason && (
-                              <div>
-                                <p className="text-sm font-medium text-text-primary mb-1">Revision Reason:</p>
-                                <p className="text-sm text-text-secondary pl-2 border-l-2 border-yellow-300">
-                                  {reason}
-                                </p>
-                              </div>
-                            )}
-                            {deadline && (
-                              <div>
-                                <p className="text-sm font-medium text-text-primary mb-1">Revision Deadline:</p>
-                                <p className="text-sm font-semibold text-yellow-700">
-                                  {new Date(deadline).toLocaleString(undefined, {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </p>
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </>
-                  )}
-                  {latestApproval.decision !== "Returned for Revision" && latestApproval.comments && (
-                    <div>
-                      <p className="text-sm font-medium">Comments:</p>
-                      <p className="text-sm text-text-secondary">{latestApproval.comments}</p>
-                    </div>
-                  )}
-                </div>
-              )}
-              {latestApproval.decisionDate && (
-                <p className="text-xs text-text-secondary">
-                  {new Date(latestApproval.decisionDate).toLocaleString(undefined, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </p>
-              )}
-            </div>
-          </div>
+          <BudgetLatestResponse latestApproval={latestApproval} />
         )}
 
-        {budgetDetails.validations && budgetDetails.validations.length > 0 && (
-          <div className="border-t pt-4">
-            <p className="text-sm font-medium text-text-secondary mb-2">Validations</p>
-            <div className="space-y-1">
-              {budgetDetails.validations.map((validation, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  <span
-                    className={`text-xs font-medium ${
-                      validation.severity === "ERROR"
-                        ? "text-red-600"
-                        : validation.severity === "WARNING"
-                        ? "text-yellow-600"
-                        : "text-blue-600"
-                    }`}
-                  >
-                    {validation.severity}:
-                  </span>
-                  <span className="text-sm">{validation.message}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {budgetDetails.budgetStatus !== "APPROVED" &&
+          budgetDetails.validations &&
+          budgetDetails.validations.length > 0 && (
+            <BudgetValidations validations={budgetDetails.validations} />
+          )}
       </CardContent>
     </Card>
   );

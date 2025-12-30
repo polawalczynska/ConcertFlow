@@ -1,32 +1,11 @@
+import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+
 export function getStatusColor(status?: string): string {
-  switch (status) {
-    case "PLANNING":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "APPROVED":
-      return "bg-green-100 text-green-800 border-green-200";
-    case "COMPLETED":
-      return "bg-blue-100 text-blue-800 border-blue-200";
-    case "CANCELLED":
-      return "bg-red-100 text-red-800 border-red-200";
-    default:
-      return "bg-bg-secondary text-text-secondary border-border-light";
-  }
+  return getStatusBadgeClasses(status);
 }
 
 export function formatStatus(status?: string): string {
-  if (!status) return "N/A";
-  switch (status) {
-    case "PLANNING":
-      return "Planning";
-    case "APPROVED":
-      return "Approved";
-    case "COMPLETED":
-      return "Completed";
-    case "CANCELLED":
-      return "Cancelled";
-    default:
-      return status;
-  }
+  return formatStatusLabel(status);
 }
 
 export function formatDate(dateString?: string): string {

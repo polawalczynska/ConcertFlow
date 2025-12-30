@@ -2,7 +2,7 @@ import { useBudgetDetails } from "~/hooks/useBudgetDetails";
 import { BudgetItemsTable } from "./BudgetItemsTable";
 import { BudgetStatusSection } from "./BudgetStatusSection";
 import { BudgetQuickActions } from "./BudgetQuickActions";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
+import { Card, CardContent } from "~/components/ui/Card";
 
 interface BudgetManagementProps {
   concertId: number;

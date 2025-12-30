@@ -102,7 +102,6 @@ public class ArtistService {
             .name(request.name())
             .email(request.email())
             .phone(request.phone())
-            .technicalRequirements(request.technicalRequirements())
             .genre(request.genre())
             .website(request.website())
             .contactPerson(request.contactPerson())
@@ -113,7 +112,6 @@ public class ArtistService {
         artist.setName(request.name());
         artist.setEmail(request.email());
         artist.setPhone(request.phone());
-        artist.setTechnicalRequirements(request.technicalRequirements());
         artist.setGenre(request.genre());
         artist.setWebsite(request.website());
         artist.setContactPerson(request.contactPerson());

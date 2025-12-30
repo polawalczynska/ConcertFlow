@@ -12,7 +12,6 @@ public class ArtistMapper {
             artist.getName(),
             artist.getEmail(),
             artist.getPhone(),
-            artist.getTechnicalRequirements(),
             artist.getGenre(),
             artist.getWebsite(),
             artist.getContactPerson(),

@@ -15,10 +15,16 @@ export function BudgetQuickActions({ concertId, budgetDetails }: BudgetQuickActi
   const submitBudget = useSubmitBudget();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const hasValidationErrors = budgetDetails.validations?.some(
+    (validation) => validation.severity === "ERROR"
+  ) || false;
+
   const canSubmit =
-    budgetDetails.budgetStatus === "PENDING" ||
+    (budgetDetails.budgetStatus === "PENDING" ||
     budgetDetails.budgetStatus === "REVISION_REQUESTED" ||
-    !budgetDetails.budgetStatus;
+    !budgetDetails.budgetStatus) &&
+    !hasValidationErrors &&
+    (budgetDetails.isEligibleForApproval !== false);
 
   const handleSubmit = (notes: string, termsAccepted: boolean) => {
     submitBudget.mutate({
@@ -31,6 +37,16 @@ export function BudgetQuickActions({ concertId, budgetDetails }: BudgetQuickActi
     });
     setIsDialogOpen(false);
   };
+
+  if (hasValidationErrors) {
+    return (
+      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+        <p className="text-sm text-amber-800">
+          <strong>Note:</strong> You cannot submit the budget until all validation errors are fixed.
+        </p>
+      </div>
+    );
+  }
 
   if (!canSubmit) {
     return null;

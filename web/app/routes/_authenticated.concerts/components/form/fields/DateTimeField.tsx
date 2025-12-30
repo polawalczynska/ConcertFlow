@@ -1,4 +1,4 @@
-import { DateTimePicker } from "../DateTimePicker";
+import { DateTimePicker } from "../../../../../components/DateTimePicker";
 
 interface DateTimeFieldProps {
   value: string;
@@ -6,10 +6,10 @@ interface DateTimeFieldProps {
   error?: string;
 }
 
-export function DateTimeField({ value, onChange, error }: DateTimeFieldProps) {
+export function DateTimeField({value, onChange, error}: DateTimeFieldProps) {
   return (
     <div className="sm:col-span-3">
-      <DateTimePicker value={value} onChange={onChange} error={error} />
+      <DateTimePicker value={value} onChange={onChange} error={error}/>
     </div>
   );
 }

@@ -28,8 +28,8 @@ public class DashboardStatsAggregator {
     private final GenreChartDataCalculator genreChartDataCalculator;
     private final ConcertsByMonthChartDataCalculator concertsByMonthChartDataCalculator;
 
-    public CoordinatorStatsResponse aggregateStats() {
-        List<Concert> allConcerts = concertRepository.findAll();
+    public CoordinatorStatsResponse aggregateStats(Long coordinatorId) {
+        List<Concert> allConcerts = concertRepository.findByCoordinatorId(coordinatorId);
         Map<ConcertStatus, Long> statusCounts = statusCountCalculator.calculate(allConcerts);
 
         return CoordinatorStatsResponse.builder()

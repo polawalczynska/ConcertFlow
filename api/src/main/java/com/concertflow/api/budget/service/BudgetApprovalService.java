@@ -92,6 +92,11 @@ public class BudgetApprovalService {
         BigDecimal approvedBudget = request.approvedBudget();
         concert.setBudget(approvedBudget);
 
+        if (concert.getTechnicalStatus() == TechnicalStatus.APPROVED) {
+            concert.setStatus(ConcertStatus.APPROVED);
+            log.info("Concert status set to APPROVED (both budget and technical requirements approved)");
+        }
+
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
             concert,
             approver,

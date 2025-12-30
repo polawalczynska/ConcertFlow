@@ -63,6 +63,10 @@ public class Concert {
     @JoinColumn(name = "budget_manager_id")
     private User budgetManager;
 
+    @ManyToOne
+    @JoinColumn(name = "technical_manager_id")
+    private User technicalManager;
+
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Approval> approvals = new ArrayList<>();
@@ -91,6 +95,18 @@ public class Concert {
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     @Builder.Default
     private List<BudgetApproval> budgetApprovals = new ArrayList<>();
+
+    @OneToOne(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TechnicalRequirements technicalRequirements;
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<TechnicalApproval> technicalApprovals = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "technical_status")
+    @Builder.Default
+    private TechnicalStatus technicalStatus = TechnicalStatus.PENDING;
 
     private BigDecimal actualExpenses;
 

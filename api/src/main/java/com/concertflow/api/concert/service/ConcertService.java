@@ -89,7 +89,10 @@ public class ConcertService {
         User budgetManager = request.budgetManagerId() != null 
             ? findBudgetManagerById(request.budgetManagerId())
             : null;
-        Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager);
+        User technicalManager = request.technicalManagerId() != null
+            ? findTechnicalManagerById(request.technicalManagerId())
+            : null;
+        Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager, technicalManager);
 
         concert = concertRepository.save(concert);
         approvalWorkflowService.createApprovalWorkflow(concert);
@@ -107,10 +110,13 @@ public class ConcertService {
         User budgetManager = request.budgetManagerId() != null 
             ? findBudgetManagerById(request.budgetManagerId())
             : null;
+        User technicalManager = request.technicalManagerId() != null
+            ? findTechnicalManagerById(request.technicalManagerId())
+            : null;
         
         budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
         
-        concertBuilder.updateFields(concert, request, artist, budgetManager);
+        concertBuilder.updateFields(concert, request, artist, budgetManager, technicalManager);
         concertRepository.save(concert);
     }
 
@@ -150,5 +156,11 @@ public class ConcertService {
         return userRepository.findById(id)
             .filter(user -> user.getRole() == Role.BUDGET_MANAGER && user.getActive())
             .orElseThrow(() -> new IllegalArgumentException("Budget manager not found or inactive"));
+    }
+
+    private User findTechnicalManagerById(Long id) {
+        return userRepository.findById(id)
+            .filter(user -> user.getRole() == Role.TECHNICAL_MANAGER && user.getActive())
+            .orElseThrow(() -> new IllegalArgumentException("Technical manager not found or inactive"));
     }
 }

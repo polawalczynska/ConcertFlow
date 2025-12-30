@@ -35,6 +35,13 @@ export function ConcertDetails({ concert }: ConcertDetailsProps) {
           <p className="mt-1 text-base text-text-primary">{concert.budgetManagerName}</p>
         </div>
       )}
+
+      {concert.technicalManagerName && (
+        <div>
+          <Label className="text-sm font-medium text-text-secondary">Technical Manager</Label>
+          <p className="mt-1 text-base text-text-primary">{concert.technicalManagerName}</p>
+        </div>
+      )}
     </>
   );
 }

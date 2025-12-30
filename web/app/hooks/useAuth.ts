@@ -9,6 +9,16 @@ import {
   clearTokens,
 } from "~/lib/token-storage";
 
+function getRedirectPathForRole(role?: string): string {
+  if (role === "BUDGET_MANAGER") {
+    return "/budget";
+  }
+  if (role === "TECHNICAL_MANAGER") {
+    return "/technical";
+  }
+  return "/dashboard";
+}
+
 export function useLogin() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -18,7 +28,7 @@ export function useLogin() {
       const response = await authApi.login(loginRequest);
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data.accessToken) {
         setAccessToken(data.accessToken);
       }
@@ -30,7 +40,23 @@ export function useLogin() {
       }
 
       queryClient.invalidateQueries({ queryKey: ["auth"] });
-      navigate("/dashboard");
+      
+      try {
+        const userResponse = await queryClient.fetchQuery({
+          queryKey: ["user"],
+          queryFn: async () => {
+            const { userApi } = await import("~/lib/api-client");
+            const response = await userApi.getCurrentUser();
+            return response.data;
+          },
+        });
+        
+        const redirectPath = getRedirectPathForRole(userResponse?.role);
+        navigate(redirectPath);
+      } catch (error) {
+        console.error("Failed to fetch user after login:", error);
+        navigate("/login");
+      }
     },
     onError: (error: unknown) => {
       console.error("Login error:", error);

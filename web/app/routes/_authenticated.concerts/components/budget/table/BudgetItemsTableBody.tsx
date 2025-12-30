@@ -1,4 +1,4 @@
-import type { BudgetItemResponse } from "~/api";
+import type { BudgetItemResponse, BudgetDetailResponseBudgetStatusEnum } from "~/api";
 import { BudgetItemsTableRow } from "./BudgetItemsTableRow";
 
 interface BudgetItemsTableBodyProps {
@@ -6,6 +6,7 @@ interface BudgetItemsTableBodyProps {
   onEdit: (item: BudgetItemResponse) => void;
   onDelete: (item: BudgetItemResponse) => void;
   canEdit: boolean;
+  budgetStatus?: BudgetDetailResponseBudgetStatusEnum;
 }
 
 export function BudgetItemsTableBody({
@@ -13,6 +14,7 @@ export function BudgetItemsTableBody({
   onEdit,
   onDelete,
   canEdit,
+  budgetStatus,
 }: BudgetItemsTableBodyProps) {
   return (
     <tbody>
@@ -23,6 +25,7 @@ export function BudgetItemsTableBody({
           onEdit={onEdit}
           onDelete={onDelete}
           canEdit={canEdit}
+          budgetStatus={budgetStatus}
         />
       ))}
     </tbody>

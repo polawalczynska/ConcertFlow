@@ -10,6 +10,7 @@ import { ConcertDetails } from "./view/ConcertDetails";
 import { ConcertDescription } from "./view/ConcertDescription";
 import { CancellationReason } from "./view/CancellationReason";
 import { BudgetManagement } from "../budget/BudgetManagement";
+import { TechnicalManagement } from "../technical/TechnicalManagement";
 import { useUser } from "~/hooks/useUser";
 import { UserResponseRoleEnum } from "~/api";
 
@@ -42,7 +43,10 @@ export function ViewConcertDialog({ isOpen, onOpenChange, concert }: ViewConcert
           </div>
 
           {isCoordinator && concert.id && (
-            <BudgetManagement concertId={concert.id} />
+            <>
+              <BudgetManagement concertId={concert.id} />
+              <TechnicalManagement concertId={concert.id} />
+            </>
           )}
         </div>
       </DialogContent>

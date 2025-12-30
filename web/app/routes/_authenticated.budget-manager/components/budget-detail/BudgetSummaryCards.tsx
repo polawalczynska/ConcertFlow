@@ -7,8 +7,6 @@ interface BudgetSummaryCardsProps {
 
 export function BudgetSummaryCards({ budget }: BudgetSummaryCardsProps) {
   const isApproved = budget.budgetStatus === "APPROVED";
-  const isSubmitted = budget.budgetStatus === "SUBMITTED";
-  const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
 
   return (
     <div className={`mb-6 grid gap-4 ${isApproved ? "grid-cols-3" : "grid-cols-2"}`}>

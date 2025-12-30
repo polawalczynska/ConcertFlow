@@ -6,7 +6,7 @@ interface UseRequestRevisionFormProps {
   budgetItemsCount: number;
 }
 
-export function useRequestRevisionForm({ isOpen, budgetItemsCount }: UseRequestRevisionFormProps) {
+export function useRequestRevisionForm({ isOpen }: UseRequestRevisionFormProps) {
   const [revisionReason, setRevisionReason] = useState("");
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [changeReasons, setChangeReasons] = useState<Record<number, string>>({});

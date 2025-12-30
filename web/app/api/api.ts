@@ -56,11 +56,14 @@ export interface ApproveBudgetRequest {
     'approvedBudget': number;
     'itemApprovals'?: Array<BudgetItemApproval>;
 }
+export interface ApproveTechnicalRequest {
+    'concertId': number;
+    'technicalVersion': number;
+}
 export interface ArtistRequest {
     'name': string;
     'email': string;
     'phone'?: string;
-    'technicalRequirements'?: string;
     'genre'?: string;
     'website'?: string;
     'contactPerson'?: string;
@@ -70,11 +73,19 @@ export interface ArtistResponse {
     'name'?: string;
     'email'?: string;
     'phone'?: string;
-    'technicalRequirements'?: string;
     'genre'?: string;
     'website'?: string;
     'contactPerson'?: string;
     'upcomingConcertsCount'?: number;
+}
+export interface AudioRequirementsDto {
+    'mainPA'?: string;
+    'subwoofers'?: string;
+    'frontFill'?: string;
+    'monitorWedges'?: string;
+    'consoleType'?: string;
+    'inputChannels'?: number;
+    'outputBusses'?: string;
 }
 export interface AuthResponse {
     'accessToken'?: string;
@@ -247,6 +258,7 @@ export interface ConcertRequest {
     'description'?: string;
     'artistId': number;
     'budgetManagerId'?: number;
+    'technicalManagerId'?: number;
 }
 export interface ConcertResponse {
     'id'?: number;
@@ -264,6 +276,8 @@ export interface ConcertResponse {
     'artistName'?: string;
     'budgetManagerId'?: number;
     'budgetManagerName'?: string;
+    'technicalManagerId'?: number;
+    'technicalManagerName'?: string;
     'budgetStatus'?: ConcertResponseBudgetStatusEnum;
     'approvals'?: Array<ApprovalResponse>;
     'createdAt'?: string;
@@ -383,6 +397,18 @@ export interface GenreStats {
     'genre'?: string;
     'concertCount'?: number;
 }
+export interface LightingFixtureDto {
+    'type'?: string;
+    'quantity'?: number;
+    'universe'?: string;
+    'powerDraw'?: number;
+}
+export interface LightingRequirementsDto {
+    'totalFixtures'?: number;
+    'dmxUniverses'?: number;
+    'lightingPowerDraw'?: number;
+    'fixtures'?: Array<LightingFixtureDto>;
+}
 export interface LoginRequest {
     'email': string;
     'password': string;
@@ -401,13 +427,26 @@ export interface PageBudgetApprovalDashboardResponse {
     'last'?: boolean;
     'empty'?: boolean;
 }
+export interface PageTechnicalApprovalDashboardResponse {
+    'totalElements'?: number;
+    'totalPages'?: number;
+    'size'?: number;
+    'content'?: Array<TechnicalApprovalDashboardResponse>;
+    'number'?: number;
+    'sort'?: SortObject;
+    'numberOfElements'?: number;
+    'pageable'?: PageableObject;
+    'first'?: boolean;
+    'last'?: boolean;
+    'empty'?: boolean;
+}
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageSize'?: number;
-    'pageNumber'?: number;
-    'unpaged'?: boolean;
     'paged'?: boolean;
+    'unpaged'?: boolean;
+    'pageNumber'?: number;
+    'pageSize'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -448,16 +487,40 @@ export interface RequestBudgetRevisionRequest {
     'requiredChanges': Array<RevisionItem>;
     'deadline': string;
 }
+export interface RequestTechnicalRevisionRequest {
+    'concertId': number;
+    'revisionReason': string;
+    'requiredChanges': Array<TechnicalRevisionItem>;
+    'deadline': string;
+}
 export interface RevisionItem {
     'itemId': number;
     'changeReason': string;
     'suggestedAmount'?: string;
     'notes'?: string;
 }
+export interface SafetyRequirementsDto {
+    'fireSafetyPermit'?: boolean;
+    'electricalInspection'?: boolean;
+    'loadInSafetyPlan'?: boolean;
+    'emergencyEvacuationPlan'?: boolean;
+    'medicalStaffOnsite'?: boolean;
+    'pyrotechnicsLicense'?: boolean;
+    'riggingCertification'?: boolean;
+}
+export interface SaveTechnicalRequirementsRequest {
+    'concertId': number;
+    'powerRequirements'?: number;
+    'technicalRequirements'?: string;
+    'technicalFlags'?: Array<string>;
+    'audio'?: AudioRequirementsDto;
+    'lighting'?: LightingRequirementsDto;
+    'safety'?: SafetyRequirementsDto;
+}
 export interface SortObject {
     'empty'?: boolean;
-    'unsorted'?: boolean;
     'sorted'?: boolean;
+    'unsorted'?: boolean;
 }
 export interface StatusDistribution {
     'status'?: string;
@@ -468,6 +531,68 @@ export interface SubmitBudgetForApprovalRequest {
     'concertId': number;
     'notes'?: string;
     'termsAccepted': boolean;
+}
+export interface SubmitTechnicalRequirementsRequest {
+    'concertId': number;
+    'notes'?: string;
+    'termsAccepted': boolean;
+}
+export interface TechnicalApprovalDashboardResponse {
+    'concertId'?: number;
+    'concertName'?: string;
+    'artistName'?: string;
+    'concertDate'?: string;
+    'venue'?: string;
+    'city'?: string;
+    'technicalStatus'?: TechnicalApprovalDashboardResponseTechnicalStatusEnum;
+    'powerRequirements'?: number;
+    'technicalFlags'?: Array<string>;
+    'daysUntil'?: number;
+    'submittedAt'?: string;
+}
+
+export const TechnicalApprovalDashboardResponseTechnicalStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    Approved: 'APPROVED',
+    RevisionRequested: 'REVISION_REQUESTED'
+} as const;
+
+export type TechnicalApprovalDashboardResponseTechnicalStatusEnum = typeof TechnicalApprovalDashboardResponseTechnicalStatusEnum[keyof typeof TechnicalApprovalDashboardResponseTechnicalStatusEnum];
+
+export interface TechnicalDetailResponse {
+    'concertId'?: number;
+    'concertName'?: string;
+    'artistName'?: string;
+    'concertDate'?: string;
+    'venue'?: string;
+    'city'?: string;
+    'technicalStatus'?: TechnicalDetailResponseTechnicalStatusEnum;
+    'powerRequirements'?: number;
+    'technicalRequirements'?: string;
+    'technicalFlags'?: Array<string>;
+    'audio'?: AudioRequirementsDto;
+    'lighting'?: LightingRequirementsDto;
+    'safety'?: SafetyRequirementsDto;
+    'submittedAt'?: string;
+    'approvedAt'?: string;
+    'approvedById'?: number;
+    'version'?: number;
+}
+
+export const TechnicalDetailResponseTechnicalStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    Approved: 'APPROVED',
+    RevisionRequested: 'REVISION_REQUESTED'
+} as const;
+
+export type TechnicalDetailResponseTechnicalStatusEnum = typeof TechnicalDetailResponseTechnicalStatusEnum[keyof typeof TechnicalDetailResponseTechnicalStatusEnum];
+
+export interface TechnicalRevisionItem {
+    'areaId': string;
+    'changeReason': string;
+    'notes'?: string;
 }
 export interface UpcomingEvent {
     'id'?: number;
@@ -2625,6 +2750,568 @@ export class DashboardControllerApi extends BaseAPI {
 
 
 /**
+ * TechnicalApprovalControllerApi - axios parameter creator
+ */
+export const TechnicalApprovalControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveTechnicalRequest} approveTechnicalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        approveTechnical: async (concertId: number, approveTechnicalRequest: ApproveTechnicalRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('approveTechnical', 'concertId', concertId)
+            // verify required parameter 'approveTechnicalRequest' is not null or undefined
+            assertParamExists('approveTechnical', 'approveTechnicalRequest', approveTechnicalRequest)
+            const localVarPath = `/api/technical/approval/concert/{concertId}/approve`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(approveTechnicalRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} technicalManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPendingTechnicalApprovals: async (technicalManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'technicalManagerId' is not null or undefined
+            assertParamExists('getPendingTechnicalApprovals', 'technicalManagerId', technicalManagerId)
+            const localVarPath = `/api/technical/approval/pending`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['size'] = size;
+            }
+
+            if (sortBy !== undefined) {
+                localVarQueryParameter['sortBy'] = sortBy;
+            }
+
+            if (direction !== undefined) {
+                localVarQueryParameter['direction'] = direction;
+            }
+
+            if (technicalManagerId !== undefined) {
+                localVarQueryParameter['technicalManagerId'] = technicalManagerId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} technicalManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalDetails: async (concertId: number, technicalManagerId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('getTechnicalDetails', 'concertId', concertId)
+            // verify required parameter 'technicalManagerId' is not null or undefined
+            assertParamExists('getTechnicalDetails', 'technicalManagerId', technicalManagerId)
+            const localVarPath = `/api/technical/approval/concert/{concertId}`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (technicalManagerId !== undefined) {
+                localVarQueryParameter['technicalManagerId'] = technicalManagerId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalDetailsForCoordinator: async (concertId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('getTechnicalDetailsForCoordinator', 'concertId', concertId)
+            const localVarPath = `/api/technical/approval/concert/{concertId}/details`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestTechnicalRevisionRequest} requestTechnicalRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestTechnicalRevision: async (concertId: number, requestTechnicalRevisionRequest: RequestTechnicalRevisionRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('requestTechnicalRevision', 'concertId', concertId)
+            // verify required parameter 'requestTechnicalRevisionRequest' is not null or undefined
+            assertParamExists('requestTechnicalRevision', 'requestTechnicalRevisionRequest', requestTechnicalRevisionRequest)
+            const localVarPath = `/api/technical/approval/concert/{concertId}/request-revision`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(requestTechnicalRevisionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SaveTechnicalRequirementsRequest} saveTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveTechnicalRequirements: async (concertId: number, saveTechnicalRequirementsRequest: SaveTechnicalRequirementsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('saveTechnicalRequirements', 'concertId', concertId)
+            // verify required parameter 'saveTechnicalRequirementsRequest' is not null or undefined
+            assertParamExists('saveTechnicalRequirements', 'saveTechnicalRequirementsRequest', saveTechnicalRequirementsRequest)
+            const localVarPath = `/api/technical/approval/concert/{concertId}/save`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(saveTechnicalRequirementsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitTechnicalRequirementsRequest} submitTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTechnicalRequirements: async (concertId: number, submitTechnicalRequirementsRequest: SubmitTechnicalRequirementsRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'concertId' is not null or undefined
+            assertParamExists('submitTechnicalRequirements', 'concertId', concertId)
+            // verify required parameter 'submitTechnicalRequirementsRequest' is not null or undefined
+            assertParamExists('submitTechnicalRequirements', 'submitTechnicalRequirementsRequest', submitTechnicalRequirementsRequest)
+            const localVarPath = `/api/technical/approval/concert/{concertId}/submit`
+                .replace(`{${"concertId"}}`, encodeURIComponent(String(concertId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(submitTechnicalRequirementsRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TechnicalApprovalControllerApi - functional programming interface
+ */
+export const TechnicalApprovalControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TechnicalApprovalControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveTechnicalRequest} approveTechnicalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async approveTechnical(concertId: number, approveTechnicalRequest: ApproveTechnicalRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveTechnical(concertId, approveTechnicalRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.approveTechnical']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} technicalManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPendingTechnicalApprovals(technicalManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageTechnicalApprovalDashboardResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPendingTechnicalApprovals(technicalManagerId, page, size, sortBy, direction, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.getPendingTechnicalApprovals']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} technicalManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTechnicalDetails(concertId: number, technicalManagerId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TechnicalDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTechnicalDetails(concertId, technicalManagerId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.getTechnicalDetails']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTechnicalDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TechnicalDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTechnicalDetailsForCoordinator(concertId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.getTechnicalDetailsForCoordinator']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestTechnicalRevisionRequest} requestTechnicalRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async requestTechnicalRevision(concertId: number, requestTechnicalRevisionRequest: RequestTechnicalRevisionRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.requestTechnicalRevision(concertId, requestTechnicalRevisionRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.requestTechnicalRevision']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SaveTechnicalRequirementsRequest} saveTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveTechnicalRequirements(concertId: number, saveTechnicalRequirementsRequest: SaveTechnicalRequirementsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveTechnicalRequirements(concertId, saveTechnicalRequirementsRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.saveTechnicalRequirements']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitTechnicalRequirementsRequest} submitTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async submitTechnicalRequirements(concertId: number, submitTechnicalRequirementsRequest: SubmitTechnicalRequirementsRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitTechnicalRequirements(concertId, submitTechnicalRequirementsRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TechnicalApprovalControllerApi.submitTechnicalRequirements']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * TechnicalApprovalControllerApi - factory interface
+ */
+export const TechnicalApprovalControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TechnicalApprovalControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {ApproveTechnicalRequest} approveTechnicalRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        approveTechnical(concertId: number, approveTechnicalRequest: ApproveTechnicalRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.approveTechnical(concertId, approveTechnicalRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} technicalManagerId 
+         * @param {number} [page] 
+         * @param {number} [size] 
+         * @param {string} [sortBy] 
+         * @param {string} [direction] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPendingTechnicalApprovals(technicalManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig): AxiosPromise<PageTechnicalApprovalDashboardResponse> {
+            return localVarFp.getPendingTechnicalApprovals(technicalManagerId, page, size, sortBy, direction, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {number} technicalManagerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalDetails(concertId: number, technicalManagerId: number, options?: RawAxiosRequestConfig): AxiosPromise<TechnicalDetailResponse> {
+            return localVarFp.getTechnicalDetails(concertId, technicalManagerId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig): AxiosPromise<TechnicalDetailResponse> {
+            return localVarFp.getTechnicalDetailsForCoordinator(concertId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {RequestTechnicalRevisionRequest} requestTechnicalRevisionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        requestTechnicalRevision(concertId: number, requestTechnicalRevisionRequest: RequestTechnicalRevisionRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.requestTechnicalRevision(concertId, requestTechnicalRevisionRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SaveTechnicalRequirementsRequest} saveTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveTechnicalRequirements(concertId: number, saveTechnicalRequirementsRequest: SaveTechnicalRequirementsRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.saveTechnicalRequirements(concertId, saveTechnicalRequirementsRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} concertId 
+         * @param {SubmitTechnicalRequirementsRequest} submitTechnicalRequirementsRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitTechnicalRequirements(concertId: number, submitTechnicalRequirementsRequest: SubmitTechnicalRequirementsRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.submitTechnicalRequirements(concertId, submitTechnicalRequirementsRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TechnicalApprovalControllerApi - object-oriented interface
+ */
+export class TechnicalApprovalControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {ApproveTechnicalRequest} approveTechnicalRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public approveTechnical(concertId: number, approveTechnicalRequest: ApproveTechnicalRequest, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).approveTechnical(concertId, approveTechnicalRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} technicalManagerId 
+     * @param {number} [page] 
+     * @param {number} [size] 
+     * @param {string} [sortBy] 
+     * @param {string} [direction] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getPendingTechnicalApprovals(technicalManagerId: number, page?: number, size?: number, sortBy?: string, direction?: string, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).getPendingTechnicalApprovals(technicalManagerId, page, size, sortBy, direction, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {number} technicalManagerId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getTechnicalDetails(concertId: number, technicalManagerId: number, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).getTechnicalDetails(concertId, technicalManagerId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getTechnicalDetailsForCoordinator(concertId: number, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).getTechnicalDetailsForCoordinator(concertId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {RequestTechnicalRevisionRequest} requestTechnicalRevisionRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public requestTechnicalRevision(concertId: number, requestTechnicalRevisionRequest: RequestTechnicalRevisionRequest, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).requestTechnicalRevision(concertId, requestTechnicalRevisionRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {SaveTechnicalRequirementsRequest} saveTechnicalRequirementsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public saveTechnicalRequirements(concertId: number, saveTechnicalRequirementsRequest: SaveTechnicalRequirementsRequest, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).saveTechnicalRequirements(concertId, saveTechnicalRequirementsRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} concertId 
+     * @param {SubmitTechnicalRequirementsRequest} submitTechnicalRequirementsRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public submitTechnicalRequirements(concertId: number, submitTechnicalRequirementsRequest: SubmitTechnicalRequirementsRequest, options?: RawAxiosRequestConfig) {
+        return TechnicalApprovalControllerApiFp(this.configuration).submitTechnicalRequirements(concertId, submitTechnicalRequirementsRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * UserControllerApi - axios parameter creator
  */
 export const UserControllerApiAxiosParamCreator = function (configuration?: Configuration) {
@@ -2687,6 +3374,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalManagers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user/technical-managers`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2718,6 +3434,17 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserControllerApi.getCurrentUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTechnicalManagers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTechnicalManagers(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.getTechnicalManagers']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -2743,6 +3470,14 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         getCurrentUser(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
             return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalManagers(options?: RawAxiosRequestConfig): AxiosPromise<Array<UserResponse>> {
+            return localVarFp.getTechnicalManagers(options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -2766,6 +3501,15 @@ export class UserControllerApi extends BaseAPI {
      */
     public getCurrentUser(options?: RawAxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).getCurrentUser(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getTechnicalManagers(options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).getTechnicalManagers(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

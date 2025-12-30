@@ -9,7 +9,8 @@ export function Navbar() {
   const logout = useLogout();
   const { data: user, isLoading } = useUser();
 
-  const concertsLink = user?.role === "BUDGET_MANAGER" ? "/budget" : "/manage";
+  const concertsLink =
+    user?.role === "BUDGET_MANAGER" ? "/budget" : user?.role === "TECHNICAL_MANAGER" ? "/technical" : "/manage";
 
   const menuItems = [
     {
@@ -34,7 +35,8 @@ export function Navbar() {
   };
 
   // Determine home page based on user role
-  const homePage = user?.role === "BUDGET_MANAGER" ? "/budget" : "/dashboard";
+  const homePage =
+    user?.role === "BUDGET_MANAGER" ? "/budget" : user?.role === "TECHNICAL_MANAGER" ? "/technical" : "/dashboard";
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border-light bg-bg-main">

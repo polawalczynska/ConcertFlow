@@ -62,13 +62,11 @@ export function RequestRevisionDialog({
       return;
     }
 
-    const deadlineISO = deadline.includes("Z") ? deadline : new Date(deadline).toISOString();
-
     onRequestRevision({
       concertId: budgetDetails?.concertId ?? 0,
       revisionReason: revisionReason.trim(),
       requiredChanges,
-      deadline: deadlineISO,
+      deadline: deadline,
     });
   };
 

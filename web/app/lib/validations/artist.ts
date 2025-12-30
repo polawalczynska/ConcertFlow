@@ -38,9 +38,6 @@ export const artistSchema = z.object({
   contactPerson: z
     .string()
     .optional(),
-  technicalRequirements: z
-    .string()
-    .optional(),
 });
 
 export type ArtistFormData = z.infer<typeof artistSchema>;
