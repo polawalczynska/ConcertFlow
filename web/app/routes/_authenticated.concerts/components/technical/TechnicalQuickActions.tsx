@@ -6,6 +6,7 @@ import { Send } from "lucide-react";
 import { SubmitTechnicalDialog } from "../dialogs/SubmitTechnicalDialog";
 import { useTechnicalRequirementsContext } from "./context/TechnicalRequirementsContext";
 import { technicalApi } from "~/lib/api-client";
+import { useBudgetDetails } from "~/hooks/useBudgetDetails";
 
 interface TechnicalQuickActionsProps {
   concertId: number;
@@ -16,8 +17,10 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { buildSubmitRequest, saveData, isSubmitted, isApproved } = useTechnicalRequirementsContext();
+  const { data: budgetDetails } = useBudgetDetails(concertId);
 
-  const canSubmit = !isSubmitted && !isApproved;
+  const isBudgetApproved = budgetDetails?.budgetStatus === "APPROVED";
+  const canSubmit = !isSubmitted && !isApproved && isBudgetApproved;
 
   const handleSubmit = async (notes: string, termsAccepted: boolean) => {
     setIsSubmitting(true);

@@ -43,6 +43,7 @@ function mapToTechnicalApproval(response: TechnicalApprovalDashboardResponse): T
     urgency,
     daysUntil: response.daysUntil || daysUntil,
     technicalRequirements: "",
+    submittedAt: response.submittedAt || null,
   };
 }
 

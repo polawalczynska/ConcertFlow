@@ -14,5 +14,6 @@ export interface TechnicalApproval {
   urgency: "CRITICAL" | "HIGH" | "NORMAL";
   daysUntil: number;
   technicalRequirements: string;
+  submittedAt?: string | null;
 }
 

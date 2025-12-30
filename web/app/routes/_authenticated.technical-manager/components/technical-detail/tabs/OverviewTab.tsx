@@ -1,12 +1,27 @@
 import { Check, Clock, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import type { TechnicalApproval } from "../../../types/TechnicalApproval";
+import { parseLocalDateTime } from "~/lib/date-utils";
 
 interface OverviewTabProps {
   approval: TechnicalApproval;
 }
 
 export function OverviewTab({ approval }: OverviewTabProps) {
+  const submittedDate = approval.submittedAt 
+    ? parseLocalDateTime(approval.submittedAt)
+    : null;
+  
+  const submittedDateText = submittedDate
+    ? submittedDate.toLocaleString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : "N/A";
+
   return (
     <div className="space-y-4">
       <Card>
@@ -21,7 +36,7 @@ export function OverviewTab({ approval }: OverviewTabProps) {
               </div>
               <div className="flex-1">
                 <p className="font-medium">Initial Submission</p>
-                <p className="text-sm text-text-secondary">Received {approval.date}</p>
+                <p className="text-sm text-text-secondary">Received {submittedDateText}</p>
               </div>
             </div>
             <div className="ml-4 border-l-2 border-dashed h-6" />
