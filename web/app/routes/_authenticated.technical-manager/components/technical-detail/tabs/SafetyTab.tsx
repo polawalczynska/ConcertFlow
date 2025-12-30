@@ -75,7 +75,7 @@ export function SafetyTab({ approval, technicalDetails }: SafetyTabProps) {
                     )}
                   </div>
                 </div>
-                <Badge className={safetyItem.checked ? "bg-green-600" : "bg-orange-500"}>
+                <Badge className={safetyItem.checked ? "bg-green-100 text-green-800 border-green-200" : "bg-orange-100 text-orange-800 border-orange-200"}>
                   {safetyItem.checked ? "Provided" : "Not Provided"}
                 </Badge>
               </div>

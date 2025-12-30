@@ -1,6 +1,7 @@
 import { Badge } from "~/components/ui/Badge";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { parseLocalDateTime } from "~/lib/date-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
 
 interface TechnicalHeaderProps {
   approval: TechnicalApproval;
@@ -21,10 +22,8 @@ export function TechnicalHeader({ approval }: TechnicalHeaderProps) {
             : "N/A"} • {approval.city}
         </p>
       </div>
-      <Badge>
-        {approval.status === "PENDING" && "Pending"}
-        {approval.status === "APPROVED" && "Approved"}
-        {approval.status === "REVISION_REQUESTED" && "Revision Requested"}
+      <Badge className={getStatusBadgeClasses(approval.status)}>
+        {formatStatusLabel(approval.status)}
       </Badge>
     </div>
   );
