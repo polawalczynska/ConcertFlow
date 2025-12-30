@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useConcerts } from "~/hooks/useConcerts";
 import { useArtists } from "~/hooks/useArtists";
 import { useBudgetManagers } from "~/hooks/useBudgetManagers";
+import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
 import type { GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/components/AuthGuard";
 import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";
@@ -37,6 +38,7 @@ export default function ConcertsManagePage() {
   );
   const { data: artists = [], error: artistsError } = useArtists();
   const { data: budgetManagers = [], error: budgetManagersError } = useBudgetManagers();
+  const { data: technicalManagers = [], error: technicalManagersError } = useTechnicalManagers();
 
   if (budgetManagersError) {
     console.error("Error loading budget managers:", budgetManagersError);
@@ -45,10 +47,6 @@ export default function ConcertsManagePage() {
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();
 
-  // Debug logging
-  if (typeof window !== "undefined") {
-    console.log("ConcertsManagePage state:", { userLoading, userError, user, isCoordinator });
-  }
 
   if (userLoading) {
     return (
@@ -78,8 +76,6 @@ export default function ConcertsManagePage() {
   }
 
   if (!isCoordinator) {
-    // This should not be reached due to useCoordinatorAccess redirect,
-    // but keeping as a safety check
     return null;
   }
 
@@ -133,6 +129,7 @@ export default function ConcertsManagePage() {
           onSubmit={concertForm.handleSubmit}
           artists={artists}
           budgetManagers={budgetManagers}
+          technicalManagers={technicalManagers}
         />
         <DeleteConcertDialog
           isOpen={concertActions.isDeleteDialogOpen}

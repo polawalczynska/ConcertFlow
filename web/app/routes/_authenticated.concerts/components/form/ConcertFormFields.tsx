@@ -7,6 +7,7 @@ import { VenueField } from "./fields/VenueField";
 import { CityField } from "./fields/CityField";
 import { DescriptionField } from "./fields/DescriptionField";
 import { BudgetManagerSelectField } from "./fields/BudgetManagerSelectField";
+import { TechnicalManagerSelectField } from "./fields/TechnicalManagerSelectField";
 
 interface ConcertFormFieldsProps {
   formData: ConcertRequest;
@@ -14,6 +15,7 @@ interface ConcertFormFieldsProps {
   onFieldChange: (field: keyof ConcertRequest, value: string | number | null) => void;
   artists: Array<{ id?: number; name?: string }>;
   budgetManagers: Array<{ id?: number; firstName?: string; lastName?: string }>;
+  technicalManagers: Array<{ id?: number; firstName?: string; lastName?: string }>;
 }
 
 export function ConcertFormFields({
@@ -22,6 +24,7 @@ export function ConcertFormFields({
   onFieldChange,
   artists,
   budgetManagers,
+  technicalManagers,
 }: ConcertFormFieldsProps) {
   return (
     <div className="grid gap-4 py-4 sm:grid-cols-3">
@@ -61,6 +64,12 @@ export function ConcertFormFields({
         onChange={(value) => onFieldChange("budgetManagerId", value)}
         error={formErrors.budgetManagerId}
         budgetManagers={budgetManagers}
+      />
+      <TechnicalManagerSelectField
+        value={(formData as any).technicalManagerId}
+        onChange={(value) => onFieldChange("technicalManagerId" as any, value)}
+        error={formErrors.technicalManagerId}
+        technicalManagers={technicalManagers}
       />
       <DescriptionField
         value={formData.description || ""}
