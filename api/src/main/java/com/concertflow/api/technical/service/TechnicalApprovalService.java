@@ -88,6 +88,11 @@ public class TechnicalApprovalService {
         requirements.setApprovedAt(LocalDateTime.now());
         requirements.setApprovedById(approver.getId());
 
+        if (concert.getBudgetStatus() == BudgetStatus.APPROVED) {
+            concert.setStatus(ConcertStatus.APPROVED);
+            log.info("Concert status set to APPROVED (both budget and technical requirements approved)");
+        }
+
         TechnicalApproval approval = approvalRecordService.createApprovalRecord(
             concert,
             approver,
