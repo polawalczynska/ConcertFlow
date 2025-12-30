@@ -30,6 +30,12 @@ public class UserController {
     public List<UserResponse> getBudgetManagers() {
         return userService.getBudgetManagers();
     }
+
+    @GetMapping("/technical-managers")
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public List<UserResponse> getTechnicalManagers() {
+        return userService.getTechnicalManagers();
+    }
 }
 
 

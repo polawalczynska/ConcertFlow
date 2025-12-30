@@ -29,5 +29,12 @@ public class UserService {
             .map(UserResponse::fromUser)
             .collect(Collectors.toList());
     }
+
+    public List<UserResponse> getTechnicalManagers() {
+        return userRepository.findAll().stream()
+            .filter(user -> user.getRole() == Role.TECHNICAL_MANAGER && user.getActive())
+            .map(UserResponse::fromUser)
+            .collect(Collectors.toList());
+    }
 }
 
