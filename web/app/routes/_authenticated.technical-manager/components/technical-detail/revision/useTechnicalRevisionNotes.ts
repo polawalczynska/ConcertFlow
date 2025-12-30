@@ -1,5 +1,16 @@
 import type { TechnicalDetailResponse } from "~/api";
 
+interface TechnicalApprovalResponse {
+  id?: number;
+  approverName?: string;
+  approverRole?: string;
+  decision?: string;
+  comments?: string;
+  decisionDate?: string;
+  approvalLevel?: number;
+  requiresRevision?: boolean;
+}
+
 export function useTechnicalRevisionNotes(technicalDetails: TechnicalDetailResponse | null | undefined) {
   const isRevisionRequested = technicalDetails?.technicalStatus === "REVISION_REQUESTED";
   
@@ -7,15 +18,15 @@ export function useTechnicalRevisionNotes(technicalDetails: TechnicalDetailRespo
     return { shouldShow: false, revisionRequest: null, revisionInfo: null };
   }
 
-  const approvalHistory = (technicalDetails as any)?.approvalHistory as any[] | undefined;
+  const approvalHistory = (technicalDetails as TechnicalDetailResponse & { approvalHistory?: TechnicalApprovalResponse[] })?.approvalHistory;
   
   if (!approvalHistory || approvalHistory.length === 0) {
     return { shouldShow: false, revisionRequest: null, revisionInfo: null };
   }
 
   const revisionRequest = approvalHistory
-    .filter((approval: any) => approval.requiresRevision || approval.decision === "Returned for Revision")
-    .sort((a: any, b: any) => {
+    .filter((approval) => approval.requiresRevision || approval.decision === "Returned for Revision")
+    .sort((a, b) => {
       if (!a.decisionDate || !b.decisionDate) return 0;
       return new Date(b.decisionDate).getTime() - new Date(a.decisionDate).getTime();
     })[0];
@@ -31,7 +42,7 @@ export function useTechnicalRevisionNotes(technicalDetails: TechnicalDetailRespo
     
     const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
     const requiredChanges = requiredChangesMatch 
-      ? requiredChangesMatch[1].split('\n').filter((line: string) => line.trim().startsWith('-')).map((line: string) => line.replace(/^-\s*/, '').trim())
+      ? requiredChangesMatch[1].split('\n').filter((line) => line.trim().startsWith('-')).map((line) => line.replace(/^-\s*/, '').trim())
       : [];
     
     return {

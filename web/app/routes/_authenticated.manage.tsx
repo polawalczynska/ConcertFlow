@@ -28,7 +28,7 @@ export default function ConcertsManagePage() {
     statusFilter === "all" ? undefined : (statusFilter as GetAllConcertsStatusEnum);
   const artistIdNum = artistIdFilter === "all" ? undefined : Number.parseInt(artistIdFilter);
 
-  const { data: concerts = [], isLoading, error: concertsError } = useConcerts(
+  const { data: concerts = [], isLoading } = useConcerts(
     statusEnum,
     artistIdNum,
     undefined,
@@ -36,13 +36,9 @@ export default function ConcertsManagePage() {
     0,
     100
   );
-  const { data: artists = [], error: artistsError } = useArtists();
-  const { data: budgetManagers = [], error: budgetManagersError } = useBudgetManagers();
-  const { data: technicalManagers = [], error: technicalManagersError } = useTechnicalManagers();
-
-  if (budgetManagersError) {
-    console.error("Error loading budget managers:", budgetManagersError);
-  }
+  const { data: artists = [] } = useArtists();
+  const { data: budgetManagers = [] } = useBudgetManagers();
+  const { data: technicalManagers = [] } = useTechnicalManagers();
 
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();

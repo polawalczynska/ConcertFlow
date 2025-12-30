@@ -1,5 +1,6 @@
 import { useArtists } from "~/hooks/useArtists";
 import { useBudgetManagers } from "~/hooks/useBudgetManagers";
+import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
 import { useDashboardStats } from "~/hooks/useDashboardStats";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
@@ -15,6 +16,7 @@ export default function CoordinatorDashboard() {
   const {user, userLoading, isCoordinator} = useCoordinatorAccess();
   const {data: artists = []} = useArtists();
   const {data: budgetManagers = []} = useBudgetManagers();
+  const {data: technicalManagers = []} = useTechnicalManagers();
   const {data: dashboardStats} = useDashboardStats();
   const concertForm = useConcertForm();
   
@@ -85,6 +87,7 @@ export default function CoordinatorDashboard() {
         onSubmit={concertForm.handleSubmit}
         artists={artists}
         budgetManagers={budgetManagers}
+        technicalManagers={technicalManagers}
       />
     </div>
   );

@@ -16,7 +16,6 @@ export function TechnicalActionButtons({
   const isApproved = approval.status === "APPROVED";
   const isRevisionRequested = approval.status === "REVISION_REQUESTED";
   const isSubmitted = approval.status === "SUBMITTED";
-  const canTakeAction = isSubmitted || isRevisionRequested;
 
   if (isApproved) {
     return null;

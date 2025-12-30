@@ -5,6 +5,17 @@ import { TechnicalStatusHeader } from "./status/TechnicalStatusHeader";
 import { TechnicalLatestResponse } from "./status/TechnicalLatestResponse";
 import type { TechnicalDetailResponse } from "~/api";
 
+interface TechnicalApprovalResponse {
+  id?: number;
+  approverName?: string;
+  approverRole?: string;
+  decision?: string;
+  comments?: string;
+  decisionDate?: string;
+  approvalLevel?: number;
+  requiresRevision?: boolean;
+}
+
 interface TechnicalStatusSectionProps {
   concertId: number;
 }
@@ -27,7 +38,7 @@ export function TechnicalStatusSection({ concertId }: TechnicalStatusSectionProp
   });
 
   const technicalStatus = technicalDetails?.technicalStatus || "PENDING";
-  const approvalHistory = (technicalDetails as any)?.approvalHistory as any[] | undefined;
+  const approvalHistory = (technicalDetails as TechnicalDetailResponse & { approvalHistory?: TechnicalApprovalResponse[] })?.approvalHistory;
   const latestApproval = approvalHistory?.[(approvalHistory?.length ?? 1) - 1];
 
   return (

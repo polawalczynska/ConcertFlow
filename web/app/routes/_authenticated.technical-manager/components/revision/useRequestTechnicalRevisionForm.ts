@@ -6,7 +6,7 @@ interface UseRequestTechnicalRevisionFormProps {
   areas: TechnicalArea[];
 }
 
-export function useRequestTechnicalRevisionForm({ isOpen, areas }: UseRequestTechnicalRevisionFormProps) {
+export function useRequestTechnicalRevisionForm({ isOpen }: UseRequestTechnicalRevisionFormProps) {
   const [revisionReason, setRevisionReason] = useState("");
   const [selectedAreas, setSelectedAreas] = useState<Set<string>>(new Set());
   const [changeReasons, setChangeReasons] = useState<Record<string, string>>({});

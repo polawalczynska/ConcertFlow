@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Label } from "~/components/ui/Label";
 import { Textarea } from "~/components/ui/Textarea";
@@ -17,7 +16,6 @@ interface TechnicalRequirementsFormProps {
 }
 
 export function TechnicalRequirementsForm({ 
-  concertId, 
   isBudgetApproved 
 }: TechnicalRequirementsFormProps) {
   const { data, updateData, saveData, isSaving, isApproved, technicalStatus, isLoading } = useTechnicalRequirementsContext();
@@ -27,6 +25,7 @@ export function TechnicalRequirementsForm({
     try {
       await saveData();
     } catch (error) {
+      console.error("Error saving technical requirements:", error);
     }
   };
 

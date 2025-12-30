@@ -66,8 +66,8 @@ export function ConcertFormFields({
         budgetManagers={budgetManagers}
       />
       <TechnicalManagerSelectField
-        value={(formData as any).technicalManagerId}
-        onChange={(value) => onFieldChange("technicalManagerId" as any, value)}
+        value={formData.technicalManagerId}
+        onChange={(value) => onFieldChange("technicalManagerId", value)}
         error={formErrors.technicalManagerId}
         technicalManagers={technicalManagers}
       />

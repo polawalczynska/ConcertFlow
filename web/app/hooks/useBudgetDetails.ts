@@ -4,7 +4,7 @@ import { getAccessToken } from "~/lib/token-storage";
 
 const getApiBaseUrl = () => {
   if (typeof window !== "undefined") {
-    return (window as any).ENV?.API_BASE_URL || "http://localhost:8080";
+    return (window as { ENV?: { API_BASE_URL?: string } })?.ENV?.API_BASE_URL || "http://localhost:8080";
   }
   return "http://localhost:8080";
 };

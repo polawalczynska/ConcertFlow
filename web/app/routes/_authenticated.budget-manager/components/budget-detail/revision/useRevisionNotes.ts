@@ -1,4 +1,4 @@
-import type { BudgetDetailResponse, BudgetApprovalResponse } from "~/api";
+import type { BudgetDetailResponse } from "~/api";
 
 export function useRevisionNotes(budget: BudgetDetailResponse) {
   const revisionRequests = budget.approvalHistory

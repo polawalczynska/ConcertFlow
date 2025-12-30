@@ -39,9 +39,9 @@ export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
         <p className="font-semibold text-text-primary">
           ${budget.submittedBudget?.toLocaleString() ?? "0"}
         </p>
-        {isApproved && (budget as any).approvedBudget && (
+        {isApproved && budget.approvedBudget && (
           <p className="text-green-700 font-semibold mt-1">
-            Approved: ${(budget as any).approvedBudget.toLocaleString()}
+            Approved: ${budget.approvedBudget.toLocaleString()}
           </p>
         )}
         {isRevisionRequested && budget.estimatedBudget && (

@@ -23,7 +23,6 @@ interface SubmitTechnicalDialogProps {
 export function SubmitTechnicalDialog({
   isOpen,
   onOpenChange,
-  concertId,
   onSubmit,
   isLoading,
 }: SubmitTechnicalDialogProps) {

@@ -8,7 +8,7 @@ interface TechnicalSummaryCardsProps {
   approval: TechnicalApproval;
 }
 
-function calculateSafetyItemsCount(safety: any): number {
+function calculateSafetyItemsCount(safety: { fireSafetyPermit?: boolean; electricalInspection?: boolean; loadInSafetyPlan?: boolean; emergencyEvacuationPlan?: boolean; medicalStaffOnsite?: boolean; pyrotechnicsLicense?: boolean; riggingCertification?: boolean } | null | undefined): number {
   if (!safety) return 0;
   let count = 0;
   if (safety.fireSafetyPermit) count++;

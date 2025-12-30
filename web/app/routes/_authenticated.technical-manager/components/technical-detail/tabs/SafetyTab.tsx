@@ -1,7 +1,6 @@
 import { CheckCircle2, AlertCircle, Flame } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
-import { Label } from "~/components/ui/Label";
 import type { TechnicalApproval } from "../../../types/TechnicalApproval";
 import type { TechnicalDetailResponse } from "~/api";
 

@@ -5,7 +5,7 @@ interface TechnicalRequirementsContextValue {
   data: TechnicalRequirementsData;
   updateData: (updates: Partial<TechnicalRequirementsData>) => void;
   saveData: () => Promise<void>;
-  buildSubmitRequest: (notes: string, termsAccepted: boolean) => any;
+  buildSubmitRequest: (notes: string, termsAccepted: boolean) => { concertId: number; notes?: string; termsAccepted: boolean };
   isLoading: boolean;
   isSaving: boolean;
   isSubmitted: boolean;
