@@ -23,9 +23,12 @@ export function useRevisionNotes(budget: BudgetDetailResponse) {
         })[0]
     : latestRevisionRequest;
 
-  const itemsWithRevisions = budget.budgetItems?.filter(
-    (item) => item.notes?.includes("REVISION REQUESTED:")
-  ) || [];
+  
+  const itemsWithRevisions = (budget.budgetStatus === "REVISION_REQUESTED" 
+    ? budget.budgetItems?.filter(
+        (item) => item.notes?.includes("REVISION REQUESTED:")
+      ) 
+    : []) || [];
 
   const parseRevisionComments = (comments?: string) => {
     if (!comments) return null;
@@ -57,7 +60,9 @@ export function useRevisionNotes(budget: BudgetDetailResponse) {
     return details;
   };
 
-  const shouldShow = latestRevisionRequest || budget.budgetStatus === "REVISION_REQUESTED";
+  // Only show revision notes if the budget is currently in REVISION_REQUESTED status
+  // Once coordinator resubmits, status changes to SUBMITTED and revision notes should not be shown
+  const shouldShow = budget.budgetStatus === "REVISION_REQUESTED";
 
   return {
     revisionRequest,
