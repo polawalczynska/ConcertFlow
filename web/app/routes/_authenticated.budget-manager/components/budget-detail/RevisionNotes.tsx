@@ -7,18 +7,31 @@ interface RevisionNotesProps {
 }
 
 export function RevisionNotes({ budget }: RevisionNotesProps) {
-  const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
-  
-  if (!isRevisionRequested) {
-    return null;
-  }
-
-  const revisionRequest = budget.approvalHistory
-    ?.filter((approval) => approval.requiresRevision || approval.decision === "Returned for Revision")
+  const revisionRequests = budget.approvalHistory
+    ?.filter((approval) => 
+      (approval.requiresRevision || approval.decision === "Returned for Revision") &&
+      approval.approverRole === "BUDGET_MANAGER"
+    )
     .sort((a, b) => {
       if (!a.decisionDate || !b.decisionDate) return 0;
       return new Date(b.decisionDate).getTime() - new Date(a.decisionDate).getTime();
-    })[0];
+    }) || [];
+
+  const latestRevisionRequest = revisionRequests[0];
+  
+  if (!latestRevisionRequest && budget.budgetStatus !== "REVISION_REQUESTED") {
+    return null;
+  }
+
+  const isRevisionRequested = budget.budgetStatus === "REVISION_REQUESTED";
+  const revisionRequest = isRevisionRequested 
+    ? budget.approvalHistory
+        ?.filter((approval) => approval.requiresRevision || approval.decision === "Returned for Revision")
+        .sort((a, b) => {
+          if (!a.decisionDate || !b.decisionDate) return 0;
+          return new Date(b.decisionDate).getTime() - new Date(a.decisionDate).getTime();
+        })[0]
+    : latestRevisionRequest;
 
   const itemsWithRevisions = budget.budgetItems?.filter(
     (item) => item.notes?.includes("REVISION REQUESTED:")
@@ -54,12 +67,16 @@ export function RevisionNotes({ budget }: RevisionNotesProps) {
     return details;
   };
 
+  if (!revisionRequest && revisionRequests.length === 0) {
+    return null;
+  }
+
   return (
     <Card className="mb-6 border-orange-200 bg-orange-50 shadow-sm">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg text-orange-900">
           <AlertCircle className="h-5 w-5" />
-          Revision Request Details
+          {isRevisionRequested ? "Current Revision Request" : "Your Revision Request"}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
