@@ -1,129 +1,36 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
-import { AlertCircle } from "lucide-react";
+import { Card, CardContent } from "~/components/ui/Card";
 import type { TechnicalDetailResponse } from "~/api";
-import { parseLocalDateTime } from "~/lib/date-utils";
+import { TechnicalRevisionNotesHeader } from "./revision/TechnicalRevisionNotesHeader";
+import { TechnicalRevisionReason } from "./revision/TechnicalRevisionReason";
+import { TechnicalRequiredChanges } from "./revision/TechnicalRequiredChanges";
+import { TechnicalRevisionDeadline } from "./revision/TechnicalRevisionDeadline";
+import { TechnicalRevisionRequestDate } from "./revision/TechnicalRevisionRequestDate";
+import { useTechnicalRevisionNotes } from "./revision/useTechnicalRevisionNotes";
 
 interface TechnicalRevisionNotesProps {
   technicalDetails: TechnicalDetailResponse | null | undefined;
 }
 
 export function TechnicalRevisionNotes({ technicalDetails }: TechnicalRevisionNotesProps) {
-  const isRevisionRequested = technicalDetails?.technicalStatus === "REVISION_REQUESTED";
-  
-  if (!isRevisionRequested || !technicalDetails) {
-    return null;
-  }
+  const { shouldShow, revisionRequest, revisionInfo } = useTechnicalRevisionNotes(technicalDetails);
 
-  const approvalHistory = (technicalDetails as any)?.approvalHistory as any[] | undefined;
-  
-  if (!approvalHistory || approvalHistory.length === 0) {
-    return null;
-  }
-
-  const revisionRequest = approvalHistory
-    .filter((approval: any) => approval.requiresRevision || approval.decision === "Returned for Revision")
-    .sort((a: any, b: any) => {
-      if (!a.decisionDate || !b.decisionDate) return 0;
-      return new Date(b.decisionDate).getTime() - new Date(a.decisionDate).getTime();
-    })[0];
-  
-  if (!revisionRequest) {
-    return null;
-  }
-
-  const parseRevisionComments = (comments?: string) => {
-    if (!comments) return null;
-    const deadlineMatch = comments.match(/Deadline:\s*(.+)/);
-    const reason = comments.split('\n')[0];
-    
-    const requiredChangesMatch = comments.match(/Required Changes:\s*\n((?:- .+\n?)+)/);
-    const requiredChanges = requiredChangesMatch 
-      ? requiredChangesMatch[1].split('\n').filter((line: string) => line.trim().startsWith('-')).map((line: string) => line.replace(/^-\s*/, '').trim())
-      : [];
-    
-    return {
-      reason: reason && reason.includes('Revision Reason:') 
-        ? reason.replace('Revision Reason: ', '').trim() 
-        : reason && !reason.includes('Deadline:') ? reason : null,
-      deadline: deadlineMatch ? deadlineMatch[1].trim() : null,
-      requiredChanges,
-    };
-  };
-
-  const revisionInfo = revisionRequest?.comments 
-    ? parseRevisionComments(revisionRequest.comments)
-    : null;
-
-  if (!revisionRequest) {
+  if (!shouldShow) {
     return null;
   }
 
   return (
     <Card className="mb-6 border-orange-200 bg-orange-50 shadow-sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg text-orange-900">
-          <AlertCircle className="h-5 w-5" />
-          Revision Request Details
-        </CardTitle>
-      </CardHeader>
+      <TechnicalRevisionNotesHeader />
       <CardContent className="space-y-4">
-        {revisionInfo?.reason && (
-          <div>
-            <p className="text-sm font-semibold text-orange-900 mb-1">Revision Reason:</p>
-            <p className="text-sm text-orange-800">{revisionInfo.reason}</p>
-          </div>
-        )}
+        <TechnicalRevisionReason reason={revisionInfo?.reason} />
 
-        {revisionInfo?.requiredChanges && revisionInfo.requiredChanges.length > 0 && (
-          <div>
-            <p className="text-sm font-semibold text-orange-900 mb-2">Required Changes:</p>
-            <div className="space-y-2">
-              {revisionInfo.requiredChanges.map((change: string, index: number) => (
-                <div key={index} className="border-l-4 border-orange-400 bg-white rounded p-3">
-                  <p className="text-sm text-text-primary">{change}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <TechnicalRequiredChanges 
+          requiredChanges={revisionInfo?.requiredChanges || []} 
+        />
 
-        {revisionInfo?.deadline && (() => {
-          const deadlineDate = parseLocalDateTime(revisionInfo.deadline);
-          if (!deadlineDate) return null;
-          
-          return (
-            <div>
-              <p className="text-sm font-semibold text-orange-900 mb-1">Revision Deadline:</p>
-              <p className="text-sm font-medium text-orange-800">
-                {deadlineDate.toLocaleString(undefined, {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </p>
-            </div>
-          );
-        })()}
+        <TechnicalRevisionDeadline deadline={revisionInfo?.deadline} />
 
-        {revisionRequest?.decisionDate && (() => {
-          const decisionDate = parseLocalDateTime(revisionRequest.decisionDate);
-          if (!decisionDate) return null;
-          return (
-            <div className="pt-2 border-t border-orange-200">
-              <p className="text-xs text-orange-700">
-                Requested on: {decisionDate.toLocaleString(undefined, {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </p>
-            </div>
-          );
-        })()}
+        <TechnicalRevisionRequestDate decisionDate={revisionRequest?.decisionDate} />
       </CardContent>
     </Card>
   );
