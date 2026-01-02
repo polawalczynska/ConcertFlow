@@ -85,6 +85,23 @@ public class TeamInvitationService {
         return teamMapper.toTeamInvitationResponse(invitation);
     }
 
+    @Transactional
+    public void cancelInvitation(Long invitationId, User coordinator) {
+        TeamInvitation invitation = findInvitationById(invitationId);
+        validator.validateInvitationIsPending(invitation.getStatus());
+        validator.validateCoordinatorOwnership(invitation, coordinator);
+
+        updateInvitationStatus(invitation, InvitationStatus.CANCELLED);
+        teamInvitationRepository.save(invitation);
+
+        log.info("Team invitation cancelled: {} by coordinator {}", invitation.getInvitedUser().getEmail(), coordinator.getEmail());
+    }
+
+    private TeamInvitation findInvitationById(Long invitationId) {
+        return teamInvitationRepository.findById(invitationId)
+                .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
+    }
+
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));

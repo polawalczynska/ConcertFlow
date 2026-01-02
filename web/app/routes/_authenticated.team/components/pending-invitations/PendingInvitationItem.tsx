@@ -1,13 +1,22 @@
 import { Badge } from "~/components/ui/Badge";
+import { Button } from "~/components/ui/Button";
+import { X } from "lucide-react";
 import type { TeamInvitationResponse } from "~/api";
 import { formatRole } from "~/lib/role-utils";
 
 interface PendingInvitationItemProps {
   invitation: TeamInvitationResponse;
+  onCancel?: (invitation: TeamInvitationResponse) => void;
+  isCancelling?: boolean;
 }
 
-export function PendingInvitationItem({ invitation }: PendingInvitationItemProps) {
+export function PendingInvitationItem({ 
+  invitation, 
+  onCancel, 
+  isCancelling = false 
+}: PendingInvitationItemProps) {
   const invitedDate = invitation.invitedAt ? new Date(invitation.invitedAt).toLocaleDateString() : "Unknown";
+  
   return (
     <div className="flex items-center justify-between rounded-lg border border-orange-200 bg-white p-4">
       <div className="flex-1">
@@ -26,6 +35,17 @@ export function PendingInvitationItem({ invitation }: PendingInvitationItemProps
           Invited {invitedDate}
         </p>
       </div>
+      {onCancel && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onCancel(invitation)}
+          disabled={isCancelling}
+          className="ml-4 text-text-secondary hover:text-red-600"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 }

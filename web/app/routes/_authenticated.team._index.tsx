@@ -10,6 +10,7 @@ import { useTeamMembers } from "~/hooks/useTeamMembers";
 import { useTeamInvitations } from "~/hooks/useTeamInvitations";
 import { useInviteTeamMember } from "~/hooks/useInviteTeamMember";
 import { useRemoveTeamMember } from "~/hooks/useRemoveTeamMember";
+import { useCancelTeamInvitation } from "~/hooks/useCancelTeamInvitation";
 import { useCheckTeamMembership } from "~/hooks/useCheckTeamMembership";
 import { useUser } from "~/hooks/useUser";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
@@ -27,6 +28,7 @@ export default function TeamPage() {
   const { data: isTeamMember = false, isLoading: isLoadingMembership } = useCheckTeamMembership();
   const inviteMutation = useInviteTeamMember();
   const removeMutation = useRemoveTeamMember();
+  const cancelInvitationMutation = useCancelTeamInvitation();
 
   if (isLoadingUser) {
     return (
@@ -74,6 +76,16 @@ export default function TeamPage() {
     }
   };
 
+  const handleCancelInvitation = async (invitation: TeamInvitationResponse) => {
+    if (invitation.id) {
+      try {
+        await cancelInvitationMutation.mutateAsync(invitation.id);
+      } catch (error) {
+        console.error("Failed to cancel invitation:", error);
+      }
+    }
+  };
+
   if (isCoordinator) {
     return (
       <AuthGuard>
@@ -85,6 +97,8 @@ export default function TeamPage() {
             pendingInvitations={pendingInvitations}
             searchQuery={searchQuery}
             onDeleteMember={handleDeleteMember}
+            onCancelInvitation={handleCancelInvitation}
+            isCancellingInvitation={cancelInvitationMutation.isPending}
             isLoading={isLoadingMembers || isLoadingInvitations}
           />
         </div>

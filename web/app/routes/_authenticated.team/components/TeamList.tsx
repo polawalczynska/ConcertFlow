@@ -8,10 +8,19 @@ interface TeamListProps {
   pendingInvitations: TeamInvitationResponse[];
   searchQuery: string;
   onDeleteMember: (member: TeamMemberResponse) => void;
+  onCancelInvitation?: (invitation: TeamInvitationResponse) => void;
+  isCancellingInvitation?: boolean;
   isLoading?: boolean;
 }
 
-export function TeamList({ members, pendingInvitations, onDeleteMember, isLoading }: TeamListProps) {
+export function TeamList({ 
+  members, 
+  pendingInvitations, 
+  onDeleteMember, 
+  onCancelInvitation,
+  isCancellingInvitation = false,
+  isLoading 
+}: TeamListProps) {
   const { data: user } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
   const pendingInvites = pendingInvitations.filter((inv) => inv.status === "PENDING");
@@ -29,7 +38,11 @@ export function TeamList({ members, pendingInvitations, onDeleteMember, isLoadin
   return (
     <div className="space-y-6">
       {isCoordinator && pendingInvites.length > 0 && (
-        <PendingInvitations invitations={pendingInvites} />
+        <PendingInvitations 
+          invitations={pendingInvites}
+          onCancelInvitation={onCancelInvitation}
+          isCancelling={isCancellingInvitation}
+        />
       )}
       
       {members.length === 0 ? (

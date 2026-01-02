@@ -65,4 +65,9 @@ public class TeamService {
     public boolean hasAcceptedInvitation(Long userId) {
         return teamMemberService.hasAcceptedInvitation(userId);
     }
+
+    @Transactional
+    public void cancelInvitation(Long invitationId, User coordinator) {
+        teamInvitationService.cancelInvitation(invitationId, coordinator);
+    }
 }

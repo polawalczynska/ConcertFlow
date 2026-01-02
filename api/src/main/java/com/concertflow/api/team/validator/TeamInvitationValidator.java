@@ -25,5 +25,12 @@ public class TeamInvitationValidator {
             throw new InvalidInvitationStatusException("Invitation is not pending");
         }
     }
+
+    public void validateCoordinatorOwnership(com.concertflow.api.team.entity.TeamInvitation invitation, com.concertflow.api.user.entity.User coordinator) {
+        if (!invitation.getInvitedBy().getId().equals(coordinator.getId())) {
+            throw new com.concertflow.api.exceptions.types.UnauthorizedAccessException(
+                "You can only cancel invitations that you sent");
+        }
+    }
 }
 

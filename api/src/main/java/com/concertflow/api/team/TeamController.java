@@ -87,6 +87,16 @@ public class TeamController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/invitations/{id}")
+    @RequireAuthenticated
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public ResponseEntity<Void> cancelInvitation(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User coordinator) {
+        teamService.cancelInvitation(id, coordinator);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/members/{id}/concerts")
     @RequireAuthenticated
     public List<ConcertResponse> getAssignedConcerts(@PathVariable Long id) {
