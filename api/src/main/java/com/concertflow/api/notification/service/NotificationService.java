@@ -1,29 +1,30 @@
 package com.concertflow.api.notification.service;
 
-import com.concertflow.api.budget.dto.RequestBudgetRevisionRequest;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.notification.entity.Notification;
 import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.entity.NotificationType;
-import com.concertflow.api.team.entity.TeamInvitation;
+import com.concertflow.api.notification.event.*;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class NotificationService {
     private final NotificationRepository notificationRepository;
 
-    public void sendBudgetApprovedNotification(Concert concert, User approver) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleBudgetApproved(BudgetApprovedEvent event) {
+        Concert concert = event.concert();
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
             createNotification(
@@ -38,22 +39,11 @@ public class NotificationService {
         log.info("Budget approved notification sent for concert: {}", concert.getId());
     }
 
-    public void sendBudgetRejectedNotification(Concert concert, User rejector, String reason) {
-        User coordinator = concert.getCoordinator();
-        if (coordinator != null) {
-            createNotification(
-                coordinator,
-                NotificationType.BUDGET_REVISION_REQUESTED,
-                "Budget revision requested",
-                String.format("%s budget needs revision. Please review the requested changes.", concert.getName()),
-                concert.getId(),
-                null
-            );
-        }
-        log.info("Budget rejected notification sent for concert: {}", concert.getId());
-    }
-
-    public void sendBudgetRevisionRequestedNotification(Concert concert, User requester, RequestBudgetRevisionRequest request) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleBudgetRevisionRequested(BudgetRevisionRequestedEvent event) {
+        Concert concert = event.concert();
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
             createNotification(
@@ -68,7 +58,11 @@ public class NotificationService {
         log.info("Budget revision requested notification sent for concert: {}", concert.getId());
     }
 
-    public void sendBudgetSubmittedNotification(Concert concert, User submitter) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleBudgetSubmitted(BudgetSubmittedEvent event) {
+        Concert concert = event.concert();
         User budgetManager = concert.getBudgetManager();
         if (budgetManager != null) {
             createNotification(
@@ -83,7 +77,11 @@ public class NotificationService {
         log.info("Budget submitted notification sent for concert: {}", concert.getId());
     }
 
-    public void sendTechnicalApprovedNotification(Concert concert, User approver) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleTechnicalApproved(TechnicalApprovedEvent event) {
+        Concert concert = event.concert();
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
             createNotification(
@@ -98,7 +96,11 @@ public class NotificationService {
         log.info("Technical approved notification sent for concert: {}", concert.getId());
     }
 
-    public void sendTechnicalRevisionRequestedNotification(Concert concert, User requester) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleTechnicalRevisionRequested(TechnicalRevisionRequestedEvent event) {
+        Concert concert = event.concert();
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
             createNotification(
@@ -113,7 +115,11 @@ public class NotificationService {
         log.info("Technical revision requested notification sent for concert: {}", concert.getId());
     }
 
-    public void sendTechnicalSubmittedNotification(Concert concert, User submitter) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleTechnicalSubmitted(TechnicalSubmittedEvent event) {
+        Concert concert = event.concert();
         User technicalManager = concert.getTechnicalManager();
         if (technicalManager != null) {
             createNotification(
@@ -128,14 +134,21 @@ public class NotificationService {
         log.info("Technical submitted notification sent for concert: {}", concert.getId());
     }
 
-    public void sendConcertStatusChangedNotification(Concert concert, ConcertStatus oldStatus, ConcertStatus newStatus) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleConcertStatusChanged(ConcertStatusChangedEvent event) {
+        Concert concert = event.concert();
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
             createNotification(
                 coordinator,
                 NotificationType.CONCERT_STATUS_CHANGED,
                 "Concert status changed",
-                String.format("%s status updated from %s to %s", concert.getName(), formatStatus(oldStatus), formatStatus(newStatus)),
+                String.format("%s status updated from %s to %s", 
+                    concert.getName(), 
+                    formatStatus(event.oldStatus()), 
+                    formatStatus(event.newStatus())),
                 concert.getId(),
                 null
             );
@@ -143,10 +156,14 @@ public class NotificationService {
         log.info("Concert status changed notification sent for concert: {}", concert.getId());
     }
 
-    public void sendTeamInvitationNotification(TeamInvitation invitation) {
+    @EventListener
+    @Async
+    @Transactional
+    public void handleTeamInvitationCreated(TeamInvitationCreatedEvent event) {
+        var invitation = event.invitation();
         User invitedUser = invitation.getInvitedUser();
         User invitedBy = invitation.getInvitedBy();
-        if (invitedUser != null) {
+        if (invitedUser != null && invitedBy != null) {
             createNotification(
                 invitedUser,
                 NotificationType.TEAM_INVITATION,

@@ -3,7 +3,7 @@ package com.concertflow.api.team.service;
 import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
 import com.concertflow.api.exceptions.types.UserNotFoundException;
-import com.concertflow.api.notification.service.NotificationService;
+import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
 import com.concertflow.api.team.entity.InvitationStatus;
@@ -15,6 +15,7 @@ import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.entity.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class TeamInvitationService {
     private final UserRepository userRepository;
     private final TeamMapper teamMapper;
     private final TeamInvitationValidator validator;
-    private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<TeamInvitationResponse> getPendingInvitations(Long coordinatorId) {
         List<TeamInvitation> invitations = teamInvitationRepository
@@ -49,7 +50,7 @@ public class TeamInvitationService {
         TeamInvitation invitation = createInvitation(invitedUser, coordinator);
         invitation = teamInvitationRepository.save(invitation);
         
-        notificationService.sendTeamInvitationNotification(invitation);
+        eventPublisher.publishEvent(new TeamInvitationCreatedEvent(invitation));
         
         log.info("Team invitation created: {} invited by {}", invitedUser.getEmail(), coordinator.getEmail());
         return teamMapper.toTeamInvitationResponse(invitation);

@@ -5,10 +5,14 @@ import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.BudgetVersionConflictException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.BudgetMapper;
-import com.concertflow.api.notification.service.NotificationService;
+import com.concertflow.api.notification.event.BudgetApprovedEvent;
+import com.concertflow.api.notification.event.BudgetRevisionRequestedEvent;
+import com.concertflow.api.notification.event.BudgetSubmittedEvent;
+import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +30,7 @@ import java.util.List;
 public class BudgetApprovalService {
     private final ConcertRepository concertRepository;
     private final BudgetValidationService validationService;
-    private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
     private final BudgetMapper budgetMapper;
     private final BudgetFlagService flagService;
     private final BudgetAccessValidator accessValidator;
@@ -107,14 +111,11 @@ public class BudgetApprovalService {
 
         ConcertStatus oldStatus = concert.getStatus();
         concertRepository.save(concert);
-        notificationService.sendBudgetApprovedNotification(concert, approver);
+        
+        eventPublisher.publishEvent(new BudgetApprovedEvent(concert, approver));
         
         if (concert.getStatus() == ConcertStatus.APPROVED && oldStatus != ConcertStatus.APPROVED) {
-            notificationService.sendConcertStatusChangedNotification(
-                concert, 
-                oldStatus, 
-                ConcertStatus.APPROVED
-            );
+            eventPublisher.publishEvent(new ConcertStatusChangedEvent(concert, oldStatus, ConcertStatus.APPROVED));
         }
 
         log.info("Budget approved for concert: {}", concertId);
@@ -155,7 +156,7 @@ public class BudgetApprovalService {
         concert.setBudgetRejectionReason(revisionNotes);
 
         concertRepository.save(concert);
-        notificationService.sendBudgetRevisionRequestedNotification(concert, requester, request);
+        eventPublisher.publishEvent(new BudgetRevisionRequestedEvent(concert, requester));
 
         log.info("Budget revision requested for concert: {}", concertId);
     }
@@ -172,7 +173,7 @@ public class BudgetApprovalService {
         concert.setBudgetVersion(concert.getBudgetVersion() + 1);
 
         concertRepository.save(concert);
-        notificationService.sendBudgetSubmittedNotification(concert, submitter);
+        eventPublisher.publishEvent(new BudgetSubmittedEvent(concert, submitter));
 
         log.info("Budget submitted for approval, concert: {}", concertId);
     }
