@@ -1,5 +1,6 @@
 import { Button } from "~/components/ui/Button";
 import { Music, Plus } from "lucide-react";
+import { useUser } from "~/hooks/useUser";
 
 interface ArtistsEmptyStateProps {
   hasSearchQuery: boolean;
@@ -7,6 +8,9 @@ interface ArtistsEmptyStateProps {
 }
 
 export function ArtistsEmptyState({hasSearchQuery, onAddArtist}: ArtistsEmptyStateProps) {
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
+
   return (
     <div className="flex flex-col items-center justify-center rounded-xl p-12">
       <Music className="mb-4 h-12 w-12 text-text-muted"/>
@@ -14,7 +18,7 @@ export function ArtistsEmptyState({hasSearchQuery, onAddArtist}: ArtistsEmptySta
       <p className="mb-4 text-sm text-text-secondary">
         {hasSearchQuery ? "Try adjusting your search" : "Get started by adding your first artist"}
       </p>
-      {!hasSearchQuery && (
+      {!hasSearchQuery && isCoordinator && (
         <Button onClick={onAddArtist} className="bg-purple-main hover:bg-purple-dark">
           <Plus className="mr-2 h-4 w-4"/>
           Add Artist

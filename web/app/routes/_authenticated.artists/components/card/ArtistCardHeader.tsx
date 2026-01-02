@@ -1,5 +1,6 @@
 import { Button } from "~/components/ui/Button";
 import { Music, Edit, Trash2 } from "lucide-react";
+import { useUser } from "~/hooks/useUser";
 import type { ArtistResponse } from "~/api";
 
 interface ArtistCardHeaderProps {
@@ -9,6 +10,9 @@ interface ArtistCardHeaderProps {
 }
 
 export function ArtistCardHeader({ artist, onEdit, onDelete }: ArtistCardHeaderProps) {
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
+
   return (
     <div className="mb-4 flex items-start justify-between">
       <div>
@@ -20,24 +24,26 @@ export function ArtistCardHeader({ artist, onEdit, onDelete }: ArtistCardHeaderP
           </div>
         )}
       </div>
-      <div className="flex gap-1">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onEdit(artist)}
-          className="h-8 w-8 p-0 text-text-secondary hover:text-purple-main"
-        >
-          <Edit className="h-4 w-4" />
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onDelete(artist)}
-          className="h-8 w-8 p-0 text-text-secondary hover:text-red-600"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
+      {isCoordinator && (
+        <div className="flex gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onEdit(artist)}
+            className="h-8 w-8 p-0 text-text-secondary hover:text-purple-main"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onDelete(artist)}
+            className="h-8 w-8 p-0 text-text-secondary hover:text-red-600"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
