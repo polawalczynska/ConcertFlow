@@ -1,5 +1,6 @@
 package com.concertflow.api.exceptions.handler;
 
+import com.concertflow.api.exceptions.types.AlreadyTeamMemberException;
 import com.concertflow.api.exceptions.types.ArtistAlreadyExistsException;
 import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
@@ -151,6 +152,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleInvalidInvitationStatusException(InvalidInvitationStatusException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         pd.setTitle("INVALID_INVITATION_STATUS");
+        return pd;
+    }
+
+    @ExceptionHandler(AlreadyTeamMemberException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleAlreadyTeamMemberException(AlreadyTeamMemberException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("ALREADY_TEAM_MEMBER");
         return pd;
     }
 }

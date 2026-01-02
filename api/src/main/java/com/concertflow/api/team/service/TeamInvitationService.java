@@ -48,6 +48,8 @@ public class TeamInvitationService {
     public TeamInvitationResponse inviteTeamMember(InviteTeamMemberRequest request, User coordinator) {
         User invitedUser = findUserByEmail(request.getEmail());
         validator.validateNoPendingInvitation(invitedUser);
+        validator.validateNotAlreadyOnTeam(invitedUser, coordinator);
+        validator.validateNotAlreadyTeamMember(invitedUser);
 
         TeamInvitation invitation = createInvitation(invitedUser, coordinator);
         invitation = teamInvitationRepository.save(invitation);
