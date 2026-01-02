@@ -96,7 +96,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     List<Concert> findByCoordinatorId(Long coordinatorId);
 
-    @Query("SELECT c FROM Concert c WHERE c.budgetManager.id = :budgetManagerId")
+    @Query("SELECT DISTINCT c FROM Concert c LEFT JOIN FETCH c.budgetItems WHERE c.budgetManager.id = :budgetManagerId")
     List<Concert> findByBudgetManagerId(@Param("budgetManagerId") Long budgetManagerId);
 
     @Query("SELECT c FROM Concert c WHERE c.technicalManager.id = :technicalManagerId")
