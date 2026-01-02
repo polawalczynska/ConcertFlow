@@ -65,12 +65,45 @@ public class TeamMemberService {
         return teamMapper.toTeamMemberResponse(user, assignedConcerts);
     }
 
+    public Long findCoordinatorIdForTeamMember(Long userId) {
+        List<TeamInvitation> acceptedInvitations = teamInvitationRepository
+                .findByInvitedUser_IdAndStatus(userId, InvitationStatus.ACCEPTED);
+        
+        if (acceptedInvitations.isEmpty()) {
+            return null;
+        }
+        
+        // Return the coordinator who invited this user (assuming one coordinator per team member)
+        return acceptedInvitations.get(0).getInvitedBy().getId();
+    }
+
+    public List<TeamMemberResponse> getTeamMembersForManager(Long managerId) {
+        Long coordinatorId = findCoordinatorIdForTeamMember(managerId);
+        if (coordinatorId == null) {
+            return List.of();
+        }
+        return getTeamMembers(coordinatorId);
+    }
+
     @Transactional
-    public void removeTeamMember(Long memberId) {
+    public void removeTeamMember(Long memberId, Long coordinatorId) {
         User user = userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         
-        log.info("Removing team member: {}", user.getEmail());
+        // Find and delete all accepted invitations for this user from this coordinator
+        List<TeamInvitation> acceptedInvitations = teamInvitationRepository
+                .findByInvitedUser_IdAndStatus(memberId, InvitationStatus.ACCEPTED);
+        
+        List<TeamInvitation> invitationsToDelete = acceptedInvitations.stream()
+                .filter(invitation -> invitation.getInvitedBy().getId().equals(coordinatorId))
+                .collect(Collectors.toList());
+        
+        if (!invitationsToDelete.isEmpty()) {
+            teamInvitationRepository.deleteAll(invitationsToDelete);
+            log.info("Removed team member: {} (deleted {} invitation(s))", user.getEmail(), invitationsToDelete.size());
+        } else {
+            log.warn("No accepted invitations found for user {} from coordinator {}", user.getEmail(), coordinatorId);
+        }
     }
 }
 

@@ -23,12 +23,16 @@ public class TeamService {
         return teamMemberService.getTeamMembers(coordinatorId);
     }
 
+    public List<TeamMemberResponse> getTeamMembersForManager(User manager) {
+        return teamMemberService.getTeamMembersForManager(manager.getId());
+    }
+
     public TeamMemberResponse getTeamMember(Long memberId) {
         return teamMemberService.getTeamMember(memberId);
     }
 
-    public void removeTeamMember(Long memberId) {
-        teamMemberService.removeTeamMember(memberId);
+    public void removeTeamMember(Long memberId, User coordinator) {
+        teamMemberService.removeTeamMember(memberId, coordinator.getId());
     }
 
     public List<TeamInvitationResponse> getPendingInvitations(Long coordinatorId) {

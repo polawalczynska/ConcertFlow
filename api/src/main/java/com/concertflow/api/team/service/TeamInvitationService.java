@@ -101,7 +101,7 @@ public class TeamInvitationService {
     }
 
     private TeamInvitation findInvitationById(Long invitationId) {
-        return teamInvitationRepository.findById(invitationId)
+        return teamInvitationRepository.findByIdWithRelations(invitationId)
                 .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
     }
 
@@ -111,9 +111,15 @@ public class TeamInvitationService {
     }
 
     private TeamInvitation findInvitationByIdAndUser(Long invitationId, Long userId) {
-        return teamInvitationRepository
-                .findByIdAndInvitedUser_Id(invitationId, userId)
+        TeamInvitation invitation = teamInvitationRepository
+                .findByIdWithRelations(invitationId)
                 .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
+        
+        if (!invitation.getInvitedUser().getId().equals(userId)) {
+            throw new TeamInvitationNotFoundException("Invitation not found");
+        }
+        
+        return invitation;
     }
 
     private TeamInvitation createInvitation(User invitedUser, User coordinator) {
