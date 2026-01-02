@@ -14,7 +14,11 @@ public record NotificationResponse(
     Boolean read,
     LocalDateTime createdAt,
     Long concertId,
-    Long invitationId
+    Long invitationId,
+    String category,
+    String icon,
+    String color,
+    String relativeTime
 ) {
 }
 

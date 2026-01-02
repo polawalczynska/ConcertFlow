@@ -3,16 +3,21 @@ package com.concertflow.api.team.mapper;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
 import com.concertflow.api.team.dto.TeamMemberResponse;
 import com.concertflow.api.team.entity.TeamInvitation;
+import com.concertflow.api.user.adapter.RoleAdapter;
 import com.concertflow.api.user.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TeamMapper {
+    private final RoleAdapter roleAdapter;
+
     public TeamMemberResponse toTeamMemberResponse(User user, Integer assignedConcerts) {
         return TeamMemberResponse.builder()
                 .id(user.getId())
                 .name(user.getFirstName() + " " + user.getLastName())
-                .role(user.getRole().name())
+                .role(roleAdapter.adapt(user.getRole()))
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .status(user.getActive() ? "active" : "inactive")
@@ -24,7 +29,7 @@ public class TeamMapper {
         return TeamInvitationResponse.builder()
                 .id(invitation.getId())
                 .email(invitation.getInvitedUser().getEmail())
-                .role(invitation.getInvitedUser().getRole().name())
+                .role(roleAdapter.adapt(invitation.getInvitedUser().getRole()))
                 .status(invitation.getStatus().name())
                 .invitedAt(invitation.getInvitedAt())
                 .invitedBy(invitation.getInvitedBy().getFirstName() + " " + invitation.getInvitedBy().getLastName())

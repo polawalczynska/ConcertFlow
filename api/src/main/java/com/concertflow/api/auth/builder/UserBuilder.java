@@ -2,6 +2,7 @@ package com.concertflow.api.auth.builder;
 
 import com.concertflow.api.auth.dto.RegisterRequest;
 import com.concertflow.api.user.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

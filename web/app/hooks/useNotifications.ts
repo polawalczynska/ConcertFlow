@@ -21,7 +21,7 @@ export function useUnreadNotificationCount() {
       return response.data;
     },
     staleTime: 10 * 1000,
-    refetchInterval: 30 * 1000, // Refetch every 30 seconds
+    refetchInterval: 30 * 1000,
   });
 }
 

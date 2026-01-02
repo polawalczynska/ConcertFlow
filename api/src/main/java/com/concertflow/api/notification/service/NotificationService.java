@@ -6,6 +6,8 @@ import com.concertflow.api.notification.entity.Notification;
 import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.entity.NotificationType;
 import com.concertflow.api.notification.event.*;
+import com.concertflow.api.team.entity.TeamInvitation;
+import com.concertflow.api.team.entity.TeamInvitationRepository;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +15,15 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationService {
     private final NotificationRepository notificationRepository;
+    private final TeamInvitationRepository teamInvitationRepository;
 
     @EventListener
     @Async
@@ -156,25 +161,42 @@ public class NotificationService {
         log.info("Concert status changed notification sent for concert: {}", concert.getId());
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Async
     @Transactional
     public void handleTeamInvitationCreated(TeamInvitationCreatedEvent event) {
         var invitation = event.invitation();
-        User invitedUser = invitation.getInvitedUser();
-        User invitedBy = invitation.getInvitedBy();
-        if (invitedUser != null && invitedBy != null) {
-            createNotification(
-                invitedUser,
-                NotificationType.TEAM_INVITATION,
-                "Team invitation received",
-                String.format("You have been invited to join the team by %s", 
-                    invitedBy.getFirstName() + " " + invitedBy.getLastName()),
-                null,
-                invitation.getId()
-            );
+        Long invitationId = invitation.getId();
+        
+        // After commit, fetch the invitation fresh from database to access lazy-loaded relationships
+        TeamInvitation freshInvitation = teamInvitationRepository.findById(invitationId)
+            .orElse(null);
+        
+        if (freshInvitation == null) {
+            log.warn("Team invitation not found for notification: {}", invitationId);
+            return;
         }
-        log.info("Team invitation notification sent for invitation: {}", invitation.getId());
+        
+        try {
+            User invitedUser = freshInvitation.getInvitedUser();
+            User invitedBy = freshInvitation.getInvitedBy();
+            if (invitedUser != null && invitedBy != null) {
+                createNotification(
+                    invitedUser,
+                    NotificationType.TEAM_INVITATION,
+                    "Team invitation received",
+                    String.format("You have been invited to join the team by %s", 
+                        invitedBy.getFirstName() + " " + invitedBy.getLastName()),
+                    null,
+                    freshInvitation.getId()
+                );
+                log.info("Team invitation notification sent for invitation: {}", invitationId);
+            } else {
+                log.warn("Team invitation notification failed - missing user data for invitation: {}", invitationId);
+            }
+        } catch (Exception e) {
+            log.error("Error creating team invitation notification for invitation: {}", invitationId, e);
+        }
     }
 
     public void sendUpcomingConcertReminder(Concert concert) {
