@@ -3,10 +3,14 @@ package com.concertflow.api.technical.service;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
+import com.concertflow.api.notification.event.TechnicalApprovedEvent;
+import com.concertflow.api.notification.event.TechnicalRevisionRequestedEvent;
 import com.concertflow.api.technical.dto.*;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +33,7 @@ public class TechnicalApprovalService {
     private final TechnicalApprovalRecordService approvalRecordService;
     private final TechnicalRequirementsService technicalRequirementsService;
     private final TechnicalRevisionCommentBuilder revisionCommentBuilder;
+    private final ApplicationEventPublisher eventPublisher;
 
     @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
     public Page<TechnicalApprovalDashboardResponse> getPendingTechnicalApprovals(
@@ -101,7 +106,14 @@ public class TechnicalApprovalService {
         concert.getTechnicalApprovals().add(approval);
 
         technicalRequirementsRepository.save(requirements);
+        ConcertStatus oldStatus = concert.getStatus();
         concertRepository.save(concert);
+        
+        eventPublisher.publishEvent(new TechnicalApprovedEvent(concert, approver));
+        
+        if (concert.getStatus() == ConcertStatus.APPROVED && oldStatus != ConcertStatus.APPROVED) {
+            eventPublisher.publishEvent(new ConcertStatusChangedEvent(concert, oldStatus, ConcertStatus.APPROVED));
+        }
 
         log.info("Technical requirements approved for concert: {}", concertId);
     }
@@ -129,6 +141,8 @@ public class TechnicalApprovalService {
 
         technicalRequirementsRepository.save(requirements);
         concertRepository.save(concert);
+        
+        eventPublisher.publishEvent(new TechnicalRevisionRequestedEvent(concert, requester));
 
         log.info("Technical revision requested for concert: {}", concertId);
     }

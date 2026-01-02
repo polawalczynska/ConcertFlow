@@ -26,6 +26,9 @@ export const registerSchema = z
       .string()
       .min(1, "Email is required")
       .email("Please enter a valid email address"),
+    phone: z
+      .string()
+      .optional(),
     role: z
       .string()
       .min(1, "Please select a role")
@@ -58,6 +61,7 @@ export function registerFormDataToRequest(
   firstName: string;
   lastName: string;
   email: string;
+  phone?: string;
   role: RegisterRequestRoleEnum;
   password: string;
   confirmPassword: string;
@@ -66,6 +70,7 @@ export function registerFormDataToRequest(
     firstName: data.firstName,
     lastName: data.lastName,
     email: data.email,
+    phone: data.phone,
     role: data.role as RegisterRequestRoleEnum,
     password: data.password,
     confirmPassword: data.confirmPassword,

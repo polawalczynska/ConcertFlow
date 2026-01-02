@@ -26,6 +26,8 @@ public record RegisterRequest(
     @NotBlank
     String lastName,
 
+    String phone,
+
     @NotNull
     Role role
 ) {

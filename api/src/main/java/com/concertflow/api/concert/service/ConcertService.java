@@ -1,25 +1,23 @@
 package com.concertflow.api.concert.service;
 
 import com.concertflow.api.artist.entity.Artist;
-import com.concertflow.api.artist.entity.ArtistRepository;
 import com.concertflow.api.concert.authorization.ConcertAuthorizationService;
 import com.concertflow.api.concert.builder.ConcertBuilder;
 import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
-import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
+import com.concertflow.api.concert.service.EntityFinderService;
+import com.concertflow.api.concert.service.UserFinderService;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
-import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
-import com.concertflow.api.exceptions.types.ArtistNotFoundException;
-import com.concertflow.api.exceptions.types.ConcertNotFoundException;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.ConcertMapper;
+import com.concertflow.api.team.service.TeamMemberService;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
-import com.concertflow.api.user.entity.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,26 +27,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.concertflow.api.exceptions.ErrorMessage.ARTIST_NOT_FOUND;
-import static com.concertflow.api.exceptions.ErrorMessage.CONCERT_NOT_FOUND;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ConcertService {
     private final ConcertRepository concertRepository;
-    private final ArtistRepository artistRepository;
-    private final UserRepository userRepository;
     private final ConcertMapper concertMapper;
     private final ConcertValidator concertValidator;
     private final ConcertAuthorizationService authorizationService;
     private final ApprovalWorkflowService approvalWorkflowService;
     private final ConcertBuilder concertBuilder;
     private final BudgetManagerChangeHandler budgetManagerChangeHandler;
+    private final EntityFinderService entityFinder;
+    private final UserFinderService userFinder;
+    private final TeamMemberService teamMemberService;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -76,22 +71,26 @@ public class ConcertService {
             .collect(Collectors.toList());
     }
 
-    public ConcertResponse getConcertById(Long id) {
-        Concert concert = findConcertById(id);
-        return concertMapper.toResponse(concert);
-    }
 
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void createConcert(ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
-        Artist artist = findArtistById(request.artistId());
+        Artist artist = entityFinder.findArtistById(request.artistId());
         User budgetManager = request.budgetManagerId() != null 
-            ? findBudgetManagerById(request.budgetManagerId())
+            ? userFinder.findBudgetManagerById(request.budgetManagerId())
             : null;
         User technicalManager = request.technicalManagerId() != null
-            ? findTechnicalManagerById(request.technicalManagerId())
+            ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
+        
+        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
+        }
+        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
+        }
+        
         Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager, technicalManager);
 
         concert = concertRepository.save(concert);
@@ -103,16 +102,22 @@ public class ConcertService {
     public void updateConcert(Long id, ConcertRequest request, User coordinator) {
         concertValidator.validate(request);
 
-        Concert concert = findConcertById(id);
+        Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
 
-        Artist artist = findArtistById(request.artistId());
+        Artist artist = entityFinder.findArtistById(request.artistId());
         User budgetManager = request.budgetManagerId() != null 
-            ? findBudgetManagerById(request.budgetManagerId())
+            ? userFinder.findBudgetManagerById(request.budgetManagerId())
             : null;
         User technicalManager = request.technicalManagerId() != null
-            ? findTechnicalManagerById(request.technicalManagerId())
+            ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
+        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
+        }
+        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
+        }
         
         budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
         
@@ -122,14 +127,14 @@ public class ConcertService {
 
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void deleteConcert(Long id, User coordinator) {
-        Concert concert = findConcertById(id);
+        Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         concertRepository.delete(concert);
     }
 
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void cancelConcert(Long id, CancelConcertRequest request, User coordinator) {
-        Concert concert = findConcertById(id);
+        Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
         if (concert.getStatus() == ConcertStatus.COMPLETED) {
@@ -141,26 +146,8 @@ public class ConcertService {
         concertRepository.save(concert);
     }
 
-    private Concert findConcertById(Long id) {
-        return concertRepository.findById(id)
-            .orElseThrow(() -> new ConcertNotFoundException(CONCERT_NOT_FOUND.message()));
-    }
-
-
-    private Artist findArtistById(Long id) {
-        return artistRepository.findById(id)
-            .orElseThrow(() -> new ArtistNotFoundException(ARTIST_NOT_FOUND.message()));
-    }
-
-    private User findBudgetManagerById(Long id) {
-        return userRepository.findById(id)
-            .filter(user -> user.getRole() == Role.BUDGET_MANAGER && user.getActive())
-            .orElseThrow(() -> new IllegalArgumentException("Budget manager not found or inactive"));
-    }
-
-    private User findTechnicalManagerById(Long id) {
-        return userRepository.findById(id)
-            .filter(user -> user.getRole() == Role.TECHNICAL_MANAGER && user.getActive())
-            .orElseThrow(() -> new IllegalArgumentException("Technical manager not found or inactive"));
+    public ConcertResponse getConcertById(Long id) {
+        Concert concert = entityFinder.findConcertById(id);
+        return concertMapper.toResponse(concert);
     }
 }

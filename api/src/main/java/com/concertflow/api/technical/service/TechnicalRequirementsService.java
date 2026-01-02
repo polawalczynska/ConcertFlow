@@ -4,12 +4,14 @@ import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.notification.event.TechnicalSubmittedEvent;
 import com.concertflow.api.technical.dto.SaveTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.SubmitTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.TechnicalDetailResponse;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ public class TechnicalRequirementsService {
     private final TechnicalMapper technicalMapper;
     private final TechnicalAccessValidator accessValidator;
     private final TechnicalRequirementsJsonService jsonService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @PreAuthorize("hasRole('COORDINATOR')")
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
@@ -64,6 +67,8 @@ public class TechnicalRequirementsService {
 
         technicalRequirementsRepository.save(requirements);
         concertRepository.save(concert);
+        
+        eventPublisher.publishEvent(new TechnicalSubmittedEvent(concert, submitter));
 
         log.info("Technical requirements submitted for approval, concert: {}", concertId);
     }
