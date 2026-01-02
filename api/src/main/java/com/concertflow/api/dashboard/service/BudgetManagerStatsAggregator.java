@@ -7,6 +7,7 @@ import com.concertflow.api.dashboard.dto.BudgetManagerStatsResponse;
 import com.concertflow.api.dashboard.service.calculator.BudgetCategoryChartDataCalculator;
 import com.concertflow.api.dashboard.service.calculator.BudgetStatusDistributionCalculator;
 import com.concertflow.api.dashboard.service.calculator.BudgetsByMonthChartDataCalculator;
+import com.concertflow.api.dashboard.service.calculator.RecentBudgetActivityCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ public class BudgetManagerStatsAggregator {
     private final BudgetCategoryChartDataCalculator budgetCategoryChartDataCalculator;
     private final BudgetsByMonthChartDataCalculator budgetsByMonthChartDataCalculator;
     private final BudgetStatusDistributionCalculator budgetStatusDistributionCalculator;
+    private final RecentBudgetActivityCalculator recentBudgetActivityCalculator;
 
     public BudgetManagerStatsResponse aggregateStats(Long budgetManagerId) {
         List<Concert> allConcerts = concertRepository.findByBudgetManagerId(budgetManagerId);
@@ -62,6 +64,7 @@ public class BudgetManagerStatsAggregator {
             .budgetCategories(budgetCategoryChartDataCalculator.calculate(allConcerts))
             .budgetsByMonth(budgetsByMonthChartDataCalculator.calculate(allConcerts))
             .statusDistribution(budgetStatusDistributionCalculator.calculate(allConcerts))
+            .recentActivity(recentBudgetActivityCalculator.calculate(allConcerts))
             .lastUpdated(LocalDateTime.now())
             .build();
     }

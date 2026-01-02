@@ -17,6 +17,7 @@ public record BudgetManagerStatsResponse(
     List<BudgetCategoryChartData> budgetCategories,
     List<BudgetsByMonthChartData> budgetsByMonth,
     List<BudgetStatusDistribution> statusDistribution,
+    List<RecentBudgetActivity> recentActivity,
     LocalDateTime lastUpdated
 ) {}
 

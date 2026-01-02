@@ -24,7 +24,7 @@ export default function BudgetManagerDashboard() {
     return <BudgetDashboardError />;
   }
 
-  const { budgetsByMonth, statusDistribution, budgetCategories } = mapBudgetDashboardData(stats);
+  const { budgetsByMonth, statusDistribution, budgetCategories, recentActivity } = mapBudgetDashboardData(stats);
 
   return (
     <div className="p-6 lg:p-8 min-h-screen bg-bg-secondary">
@@ -35,7 +35,7 @@ export default function BudgetManagerDashboard() {
         statusDistribution={statusDistribution}
         budgetCategories={budgetCategories}
       />
-      <RecentActivity />
+      <RecentActivity activities={recentActivity} />
     </div>
   );
 }

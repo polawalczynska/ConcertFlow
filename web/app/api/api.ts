@@ -235,6 +235,7 @@ export interface BudgetManagerStatsResponse {
     'budgetCategories'?: Array<BudgetCategoryChartData>;
     'budgetsByMonth'?: Array<BudgetsByMonthChartData>;
     'statusDistribution'?: Array<BudgetStatusDistribution>;
+    'recentActivity'?: Array<RecentBudgetActivity>;
     'lastUpdated'?: string;
 }
 export interface BudgetStatistics {
@@ -479,8 +480,8 @@ export interface PageBudgetApprovalDashboardResponse {
     'content'?: Array<BudgetApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'pageable'?: PageableObject;
     'numberOfElements'?: number;
+    'pageable'?: PageableObject;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -492,8 +493,8 @@ export interface PageTechnicalApprovalDashboardResponse {
     'content'?: Array<TechnicalApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'pageable'?: PageableObject;
     'numberOfElements'?: number;
+    'pageable'?: PageableObject;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -501,10 +502,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageNumber'?: number;
-    'pageSize'?: number;
     'paged'?: boolean;
     'unpaged'?: boolean;
+    'pageNumber'?: number;
+    'pageSize'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -513,6 +514,13 @@ export interface ProblemDetail {
     'detail'?: string;
     'instance'?: string;
     'properties'?: { [key: string]: object; };
+}
+export interface RecentBudgetActivity {
+    'concertName'?: string;
+    'artistName'?: string;
+    'budgetStatus'?: string;
+    'approvedAmount'?: number;
+    'lastUpdated'?: string;
 }
 export interface RecentConcert {
     'name'?: string;

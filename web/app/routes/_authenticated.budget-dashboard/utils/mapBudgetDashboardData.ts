@@ -1,11 +1,20 @@
 import type { BudgetManagerStatsResponse } from "~/api";
 
+interface RecentBudgetActivityItem {
+  concertName?: string;
+  artistName?: string;
+  budgetStatus?: string;
+  approvedAmount?: number;
+  lastUpdated?: string;
+}
+
 export function mapBudgetDashboardData(stats: BudgetManagerStatsResponse | undefined) {
   if (!stats) {
     return {
       budgetsByMonth: [],
       statusDistribution: [],
       budgetCategories: [],
+      recentActivity: [],
     };
   }
 
@@ -26,10 +35,20 @@ export function mapBudgetDashboardData(stats: BudgetManagerStatsResponse | undef
     color: item.color || "#8B5CF6",
   }));
 
+  const recentActivityData = (stats as BudgetManagerStatsResponse & { recentActivity?: RecentBudgetActivityItem[] }).recentActivity || [];
+  const recentActivity = recentActivityData.map((item: RecentBudgetActivityItem) => ({
+    concertName: item.concertName || "",
+    artistName: item.artistName || "",
+    budgetStatus: item.budgetStatus || "",
+    approvedAmount: item.approvedAmount,
+    lastUpdated: item.lastUpdated || "",
+  }));
+
   return {
     budgetsByMonth,
     statusDistribution,
     budgetCategories,
+    recentActivity,
   };
 }
 
