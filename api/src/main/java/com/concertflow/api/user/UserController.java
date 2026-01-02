@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -35,6 +36,12 @@ public class UserController {
     @PreAuthorize("hasRole('COORDINATOR')")
     public List<UserResponse> getTechnicalManagers() {
         return userService.getTechnicalManagers();
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public UserResponse searchUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email);
     }
 }
 
