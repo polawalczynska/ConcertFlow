@@ -19,7 +19,7 @@ export function BudgetsByMonthChart({ data }: BudgetsByMonthChartProps) {
     <Card className="border-0 shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg">Approved Budgets by Month</CardTitle>
-        <CardDescription>Sum of approved budgets for last 6 months</CardDescription>
+        <CardDescription>Sum of approved budgets for next 6 months</CardDescription>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={250}>
