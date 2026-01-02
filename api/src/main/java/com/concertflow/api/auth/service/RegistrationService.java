@@ -1,13 +1,12 @@
 package com.concertflow.api.auth.service;
 
+import com.concertflow.api.auth.builder.UserBuilder;
 import com.concertflow.api.auth.dto.RegisterRequest;
-import com.concertflow.api.exceptions.ErrorMessage;
-import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
+import com.concertflow.api.auth.validator.RegistrationValidator;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.entity.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,23 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RegistrationService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final RegistrationValidator validator;
+    private final UserBuilder userBuilder;
 
     public void register(RegisterRequest registerRequest) {
-        if (userRepository.existsByEmail(registerRequest.email())) {
-            throw new EmailAlreadyExistsException(ErrorMessage.EMAIL_EXISTS.message());
-        }
-
-        User user = User.builder()
-            .email(registerRequest.email())
-            .password(passwordEncoder.encode(registerRequest.password()))
-            .firstName(registerRequest.firstName())
-            .lastName(registerRequest.lastName())
-            .phone(registerRequest.phone())
-            .role(registerRequest.role())
-            .active(true)
-            .build();
-
+        validator.validate(registerRequest);
+        User user = userBuilder.buildFromRegistration(registerRequest);
         userRepository.save(user);
     }
 }
