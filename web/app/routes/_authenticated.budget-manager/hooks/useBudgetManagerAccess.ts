@@ -14,6 +14,8 @@ export function useBudgetManagerAccess() {
       if (user.role !== "BUDGET_MANAGER") {
         if (user.role === "COORDINATOR") {
           navigate("/manage", { replace: true });
+        } else if (user.role === "TECHNICAL_MANAGER") {
+          navigate("/technical-dashboard", { replace: true });
         } else {
           navigate("/dashboard", { replace: true });
         }

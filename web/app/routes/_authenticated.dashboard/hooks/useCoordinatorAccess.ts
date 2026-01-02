@@ -13,7 +13,9 @@ export function useCoordinatorAccess() {
       }
       if (user.role !== "COORDINATOR") {
         if (user.role === "BUDGET_MANAGER") {
-          navigate("/budget", { replace: true });
+          navigate("/budget-dashboard", { replace: true });
+        } else if (user.role === "TECHNICAL_MANAGER") {
+          navigate("/technical-dashboard", { replace: true });
         } else {
           navigate("/dashboard", { replace: true });
         }
