@@ -17,11 +17,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("SELECT COUNT(n) FROM Notification n WHERE n.user.id = :userId AND n.read = false")
     Long countUnreadByUser_Id(@Param("userId") Long userId);
     
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.read = true WHERE n.user.id = :userId AND n.read = false")
     int markAllAsReadByUser_Id(@Param("userId") Long userId);
     
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.read = true WHERE n.id = :id AND n.user.id = :userId")
     int markAsReadByIdAndUser_Id(@Param("id") Long id, @Param("userId") Long userId);
     

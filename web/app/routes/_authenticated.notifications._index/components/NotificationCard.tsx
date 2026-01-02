@@ -17,7 +17,11 @@ export function NotificationCard({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onMarkAsRead(notification.id);
+    
+    if (!notification.read) {
+      onMarkAsRead(notification.id);
+    }
+    
     if (notification.type === "team" && notification.invitationId) {
       navigate(`/notifications/team-invitation/${notification.invitationId}`, {
         replace: false,

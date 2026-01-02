@@ -235,6 +235,16 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
+    @Transactional
+    public void markAsRead(Long notificationId, Long userId) {
+        notificationRepository.markAsReadByIdAndUser_Id(notificationId, userId);
+    }
+
+    @Transactional
+    public void markAllAsRead(Long userId) {
+        notificationRepository.markAllAsReadByUser_Id(userId);
+    }
+
     private String formatStatus(ConcertStatus status) {
         return status.name().charAt(0) + status.name().substring(1).toLowerCase().replace("_", " ");
     }
