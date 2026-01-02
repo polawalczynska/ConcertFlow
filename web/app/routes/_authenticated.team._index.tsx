@@ -20,13 +20,23 @@ export default function TeamPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMemberResponse | null>(null);
 
-  const { data: user } = useUser();
+  const { data: user, isLoading: isLoadingUser } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
   const { data: teamMembers = [], isLoading: isLoadingMembers } = useTeamMembers();
   const { data: pendingInvitations = [], isLoading: isLoadingInvitations } = useTeamInvitations();
   const { data: isTeamMember = false, isLoading: isLoadingMembership } = useCheckTeamMembership();
   const inviteMutation = useInviteTeamMember();
   const removeMutation = useRemoveTeamMember();
+
+  if (isLoadingUser) {
+    return (
+      <AuthGuard>
+        <div className="p-8 min-h-screen bg-bg-secondary">
+          <div className="h-64 animate-pulse rounded-xl bg-bg-card border border-border-light" />
+        </div>
+      </AuthGuard>
+    );
+  }
 
   const filteredMembers = useMemo(() => {
     if (!searchQuery) return teamMembers;
