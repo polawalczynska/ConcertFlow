@@ -4,7 +4,8 @@ import com.concertflow.api.user.entity.Role;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoleAdapter {
+public class RoleAdapter implements RoleAdapterInterface {
+    @Override
     public String adapt(Role role) {
         if (role == null) {
             return "User";
@@ -14,16 +15,15 @@ public class RoleAdapter {
             case COORDINATOR -> "Coordinator";
             case BUDGET_MANAGER -> "Budget Manager";
             case TECHNICAL_MANAGER -> "Technical Manager";
-            case ADMIN -> "Administrator";
         };
     }
 
+    @Override
     public String adaptSnakeCase(String roleName) {
         if (roleName == null || roleName.isEmpty()) {
             return "User";
         }
 
-        // Convert SNAKE_CASE to Title Case
         String[] parts = roleName.split("_");
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < parts.length; i++) {

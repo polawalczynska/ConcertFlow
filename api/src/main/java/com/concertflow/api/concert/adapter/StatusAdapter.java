@@ -6,7 +6,8 @@ import com.concertflow.api.concert.entity.TechnicalStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatusAdapter {
+public class StatusAdapter implements StatusAdapterInterface {
+    @Override
     public String adapt(ConcertStatus status) {
         if (status == null) {
             return "Unknown";
@@ -20,27 +21,31 @@ public class StatusAdapter {
         };
     }
 
+    @Override
     public String adapt(BudgetStatus status) {
         if (status == null) {
             return "Unknown";
         }
 
         return switch (status) {
-            case DRAFT -> "Draft";
+            case PENDING -> "Pending";
             case SUBMITTED -> "Submitted";
             case UNDER_REVIEW -> "Under Review";
             case APPROVED -> "Approved";
+            case REJECTED -> "Rejected";
             case REVISION_REQUESTED -> "Revision Requested";
+            case ARCHIVED -> "Archived";
         };
     }
 
+    @Override
     public String adapt(TechnicalStatus status) {
         if (status == null) {
             return "Unknown";
         }
 
         return switch (status) {
-            case DRAFT -> "Draft";
+            case PENDING -> "Pending";
             case SUBMITTED -> "Submitted";
             case APPROVED -> "Approved";
             case REVISION_REQUESTED -> "Revision Requested";

@@ -163,13 +163,12 @@ public class NotificationService {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Async
-    @Transactional
+    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRES_NEW)
     public void handleTeamInvitationCreated(TeamInvitationCreatedEvent event) {
         var invitation = event.invitation();
         Long invitationId = invitation.getId();
         
-        // After commit, fetch the invitation fresh from database to access lazy-loaded relationships
-        TeamInvitation freshInvitation = teamInvitationRepository.findById(invitationId)
+        TeamInvitation freshInvitation = teamInvitationRepository.findByIdWithRelations(invitationId)
             .orElse(null);
         
         if (freshInvitation == null) {
