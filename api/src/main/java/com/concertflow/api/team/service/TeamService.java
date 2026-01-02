@@ -55,4 +55,14 @@ public class TeamService {
     public List<ConcertResponse> getAssignedConcerts(Long userId) {
         return assignedConcertsService.getAssignedConcerts(userId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean isTeamMember(Long userId, Long coordinatorId) {
+        return teamMemberService.isTeamMember(userId, coordinatorId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasAcceptedInvitation(Long userId) {
+        return teamMemberService.hasAcceptedInvitation(userId);
+    }
 }

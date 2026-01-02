@@ -1,5 +1,6 @@
 import { Badge } from "~/components/ui/Badge";
 import type { TeamInvitationResponse } from "~/api";
+import { formatRole } from "~/lib/role-utils";
 
 interface PendingInvitationItemProps {
   invitation: TeamInvitationResponse;
@@ -14,7 +15,7 @@ export function PendingInvitationItem({ invitation }: PendingInvitationItemProps
           <p className="font-medium text-text-primary">{invitation.email || "Unknown"}</p>
           {invitation.role && (
             <Badge className="bg-orange-100 text-orange-800 border-orange-200">
-              {invitation.role}
+              {formatRole(invitation.role)}
             </Badge>
           )}
           <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">

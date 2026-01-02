@@ -92,5 +92,12 @@ public class TeamController {
     public List<ConcertResponse> getAssignedConcerts(@PathVariable Long id) {
         return teamService.getAssignedConcerts(id);
     }
+
+    @GetMapping("/check-membership")
+    @RequireAuthenticated
+    public ResponseEntity<Boolean> checkTeamMembership(@AuthenticationPrincipal User user) {
+        boolean isMember = teamService.hasAcceptedInvitation(user.getId());
+        return ResponseEntity.ok(isMember);
+    }
 }
 

@@ -1,4 +1,5 @@
 import type { TeamMemberResponse } from "~/api";
+import { formatRole } from "~/lib/role-utils";
 
 interface TeamMemberCardHeaderProps {
   member: TeamMemberResponse;
@@ -14,7 +15,7 @@ export function TeamMemberCardHeader({ member }: TeamMemberCardHeaderProps) {
         </div>
         <div>
           <h3 className="font-semibold text-text-primary">{member.name || "Unknown"}</h3>
-          <p className="text-sm text-text-secondary">{member.role || "N/A"}</p>
+          <p className="text-sm text-text-secondary">{formatRole(member.role)}</p>
         </div>
       </div>
     </div>

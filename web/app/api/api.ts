@@ -446,10 +446,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'unpaged'?: boolean;
-    'paged'?: boolean;
     'pageNumber'?: number;
     'pageSize'?: number;
+    'unpaged'?: boolean;
+    'paged'?: boolean;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -2821,6 +2821,42 @@ export const TeamControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
+         * @param {number} coordinatorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkTeamMembership: async (coordinatorId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'coordinatorId' is not null or undefined
+            assertParamExists('checkTeamMembership', 'coordinatorId', coordinatorId)
+            const localVarPath = `/api/team/check-membership`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (coordinatorId !== undefined) {
+                localVarQueryParameter['coordinatorId'] = coordinatorId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3100,6 +3136,18 @@ export const TeamControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} coordinatorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async checkTeamMembership(coordinatorId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkTeamMembership(coordinatorId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TeamControllerApi.checkTeamMembership']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3212,6 +3260,15 @@ export const TeamControllerApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
+         * @param {number} coordinatorId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        checkTeamMembership(coordinatorId: number, options?: RawAxiosRequestConfig): AxiosPromise<boolean> {
+            return localVarFp.checkTeamMembership(coordinatorId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3295,6 +3352,16 @@ export class TeamControllerApi extends BaseAPI {
      */
     public acceptInvitation(id: number, options?: RawAxiosRequestConfig) {
         return TeamControllerApiFp(this.configuration).acceptInvitation(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} coordinatorId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public checkTeamMembership(coordinatorId: number, options?: RawAxiosRequestConfig) {
+        return TeamControllerApiFp(this.configuration).checkTeamMembership(coordinatorId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

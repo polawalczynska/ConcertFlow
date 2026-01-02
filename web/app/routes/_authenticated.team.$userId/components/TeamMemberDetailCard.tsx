@@ -3,6 +3,7 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { Trash2 } from "lucide-react";
 import { useUser } from "~/hooks/useUser";
 import type { TeamMemberResponse } from "~/api";
+import { formatRole } from "~/lib/role-utils";
 import { TeamMemberContactInfo } from "./TeamMemberContactInfo";
 
 interface TeamMemberDetailCardProps {
@@ -25,7 +26,7 @@ export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardP
             </div>
             <div>
               <h1 className="text-3xl font-bold text-text-primary">{member.name || "Unknown"}</h1>
-              <p className="mt-1 text-lg text-text-secondary">{member.role || "N/A"}</p>
+              <p className="mt-1 text-lg text-text-secondary">{formatRole(member.role)}</p>
             </div>
           </div>
           {isCoordinator && (

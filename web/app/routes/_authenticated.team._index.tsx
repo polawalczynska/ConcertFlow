@@ -5,10 +5,13 @@ import { TeamSearch } from "~/routes/_authenticated.team/components/TeamSearch";
 import { TeamList } from "~/routes/_authenticated.team/components/TeamList";
 import { InviteTeamMemberDialog } from "~/routes/_authenticated.team/components/InviteTeamMemberDialog";
 import { DeleteTeamMemberDialog } from "~/routes/_authenticated.team/components/DeleteTeamMemberDialog";
+import { TeamNotMemberMessage } from "~/routes/_authenticated.team/components/TeamNotMemberMessage";
 import { useTeamMembers } from "~/hooks/useTeamMembers";
 import { useTeamInvitations } from "~/hooks/useTeamInvitations";
 import { useInviteTeamMember } from "~/hooks/useInviteTeamMember";
 import { useRemoveTeamMember } from "~/hooks/useRemoveTeamMember";
+import { useCheckTeamMembership } from "~/hooks/useCheckTeamMembership";
+import { useUser } from "~/hooks/useUser";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
 
 export default function TeamPage() {
@@ -17,8 +20,11 @@ export default function TeamPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMemberResponse | null>(null);
 
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
   const { data: teamMembers = [], isLoading: isLoadingMembers } = useTeamMembers();
   const { data: pendingInvitations = [], isLoading: isLoadingInvitations } = useTeamInvitations();
+  const { data: isTeamMember = false, isLoading: isLoadingMembership } = useCheckTeamMembership();
   const inviteMutation = useInviteTeamMember();
   const removeMutation = useRemoveTeamMember();
 
@@ -58,33 +64,72 @@ export default function TeamPage() {
     }
   };
 
+  if (isCoordinator) {
+    return (
+      <AuthGuard>
+        <div className="p-8 min-h-screen bg-bg-secondary">
+          <TeamHeader onInviteMember={() => setIsInviteDialogOpen(true)} />
+          <TeamSearch searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+          <TeamList
+            members={filteredMembers}
+            pendingInvitations={pendingInvitations}
+            searchQuery={searchQuery}
+            onDeleteMember={handleDeleteMember}
+            isLoading={isLoadingMembers || isLoadingInvitations}
+          />
+        </div>
+
+        <InviteTeamMemberDialog
+          isOpen={isInviteDialogOpen}
+          onOpenChange={setIsInviteDialogOpen}
+          onInvite={handleInviteMember}
+        />
+
+        <DeleteTeamMemberDialog
+          isOpen={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+          member={selectedMember}
+          isDeleting={removeMutation.isPending}
+          onConfirm={confirmDelete}
+        />
+      </AuthGuard>
+    );
+  }
+
+  if (isLoadingMembership) {
+    return (
+      <AuthGuard>
+        <div className="p-8 min-h-screen bg-bg-secondary">
+          <div className="h-64 animate-pulse rounded-xl bg-bg-card border border-border-light" />
+        </div>
+      </AuthGuard>
+    );
+  }
+
+  if (!isTeamMember) {
+    return (
+      <AuthGuard>
+        <div className="p-8 min-h-screen bg-bg-secondary">
+          <TeamNotMemberMessage />
+        </div>
+      </AuthGuard>
+    );
+  }
+
   return (
     <AuthGuard>
       <div className="p-8 min-h-screen bg-bg-secondary">
         <TeamHeader onInviteMember={() => setIsInviteDialogOpen(true)} />
         <TeamSearch searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <TeamList
-          members={filteredMembers}
-          pendingInvitations={pendingInvitations}
+          members={[]}
+          pendingInvitations={[]}
           searchQuery={searchQuery}
           onDeleteMember={handleDeleteMember}
-          isLoading={isLoadingMembers || isLoadingInvitations}
+          isLoading={false}
         />
       </div>
 
-      <InviteTeamMemberDialog
-        isOpen={isInviteDialogOpen}
-        onOpenChange={setIsInviteDialogOpen}
-        onInvite={handleInviteMember}
-      />
-
-      <DeleteTeamMemberDialog
-        isOpen={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        member={selectedMember}
-        isDeleting={removeMutation.isPending}
-        onConfirm={confirmDelete}
-      />
     </AuthGuard>
   );
 }
