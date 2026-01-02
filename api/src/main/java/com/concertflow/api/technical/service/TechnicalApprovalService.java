@@ -1,23 +1,20 @@
 package com.concertflow.api.technical.service;
 
+import com.concertflow.api.approval.chain.ApprovalChainService;
+import com.concertflow.api.approval.chain.ApprovalRequest;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
-import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
-import com.concertflow.api.notification.event.TechnicalApprovedEvent;
-import com.concertflow.api.notification.event.TechnicalRevisionRequestedEvent;
 import com.concertflow.api.technical.dto.*;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,10 +27,8 @@ public class TechnicalApprovalService {
     private final TechnicalApprovalRepository technicalApprovalRepository;
     private final TechnicalMapper technicalMapper;
     private final TechnicalAccessValidator accessValidator;
-    private final TechnicalApprovalRecordService approvalRecordService;
     private final TechnicalRequirementsService technicalRequirementsService;
-    private final TechnicalRevisionCommentBuilder revisionCommentBuilder;
-    private final ApplicationEventPublisher eventPublisher;
+    private final ApprovalChainService approvalChainService;
 
     @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
     public Page<TechnicalApprovalDashboardResponse> getPendingTechnicalApprovals(
@@ -80,40 +75,14 @@ public class TechnicalApprovalService {
         accessValidator.validateTechnicalManagerAccess(concert, approver);
         accessValidator.validateTechnicalForApproval(concert);
 
-        TechnicalRequirements requirements = technicalRequirementsService.getOrCreateTechnicalRequirements(concert);
+        ApprovalRequest approvalRequest = ApprovalRequest.builder()
+            .concert(concert)
+            .user(approver)
+            .action(ApprovalRequest.ApprovalAction.APPROVE_TECHNICAL)
+            .requestData(request)
+            .build();
 
-        if (!requirements.getVersion().equals(request.technicalVersion())) {
-            throw new com.concertflow.api.exceptions.types.TechnicalVersionConflictException(
-                "Technical requirements have been modified. Please refresh.");
-        }
-
-        concert.setTechnicalStatus(TechnicalStatus.APPROVED);
-        requirements.setStatus(TechnicalStatus.APPROVED);
-        requirements.setApprovedAt(LocalDateTime.now());
-        requirements.setApprovedById(approver.getId());
-
-        if (concert.getBudgetStatus() == BudgetStatus.APPROVED) {
-            concert.setStatus(ConcertStatus.APPROVED);
-            log.info("Concert status set to APPROVED (both budget and technical requirements approved)");
-        }
-
-        TechnicalApproval approval = approvalRecordService.createApprovalRecord(
-            concert,
-            approver,
-            ApprovalDecision.APPROVED,
-            null
-        );
-        concert.getTechnicalApprovals().add(approval);
-
-        technicalRequirementsRepository.save(requirements);
-        ConcertStatus oldStatus = concert.getStatus();
-        concertRepository.save(concert);
-        
-        eventPublisher.publishEvent(new TechnicalApprovedEvent(concert, approver));
-        
-        if (concert.getStatus() == ConcertStatus.APPROVED && oldStatus != ConcertStatus.APPROVED) {
-            eventPublisher.publishEvent(new ConcertStatusChangedEvent(concert, oldStatus, ConcertStatus.APPROVED));
-        }
+        approvalChainService.process(approvalRequest);
 
         log.info("Technical requirements approved for concert: {}", concertId);
     }
@@ -125,24 +94,14 @@ public class TechnicalApprovalService {
         Concert concert = findConcertById(concertId);
         accessValidator.validateTechnicalManagerAccess(concert, requester);
 
-        concert.setTechnicalStatus(TechnicalStatus.REVISION_REQUESTED);
-        TechnicalRequirements requirements = technicalRequirementsService.getOrCreateTechnicalRequirements(concert);
-        requirements.setStatus(TechnicalStatus.REVISION_REQUESTED);
+        ApprovalRequest approvalRequest = ApprovalRequest.builder()
+            .concert(concert)
+            .user(requester)
+            .action(ApprovalRequest.ApprovalAction.REQUEST_TECHNICAL_REVISION)
+            .requestData(request)
+            .build();
 
-        String comments = revisionCommentBuilder.buildRevisionComments(request);
-        TechnicalApproval revisionRequest = approvalRecordService.createApprovalRecord(
-            concert,
-            requester,
-            ApprovalDecision.RETURNED_FOR_REVISION,
-            comments
-        );
-        revisionRequest.setRequiresRevision(true);
-        concert.getTechnicalApprovals().add(revisionRequest);
-
-        technicalRequirementsRepository.save(requirements);
-        concertRepository.save(concert);
-        
-        eventPublisher.publishEvent(new TechnicalRevisionRequestedEvent(concert, requester));
+        approvalChainService.process(approvalRequest);
 
         log.info("Technical revision requested for concert: {}", concertId);
     }
