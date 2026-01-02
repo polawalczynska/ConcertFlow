@@ -14,7 +14,9 @@ import com.concertflow.api.concert.service.EntityFinderService;
 import com.concertflow.api.concert.service.UserFinderService;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.ConcertMapper;
+import com.concertflow.api.team.service.TeamMemberService;
 import com.concertflow.api.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,7 @@ public class ConcertService {
     private final BudgetManagerChangeHandler budgetManagerChangeHandler;
     private final EntityFinderService entityFinder;
     private final UserFinderService userFinder;
+    private final TeamMemberService teamMemberService;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -80,6 +83,14 @@ public class ConcertService {
         User technicalManager = request.technicalManagerId() != null
             ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
+        
+        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
+        }
+        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
+        }
+        
         Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager, technicalManager);
 
         concert = concertRepository.save(concert);
@@ -101,6 +112,12 @@ public class ConcertService {
         User technicalManager = request.technicalManagerId() != null
             ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
+        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
+        }
+        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
+            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
+        }
         
         budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
         

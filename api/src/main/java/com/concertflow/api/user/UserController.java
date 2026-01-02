@@ -28,14 +28,14 @@ public class UserController {
 
     @GetMapping("/budget-managers")
     @PreAuthorize("hasRole('COORDINATOR')")
-    public List<UserResponse> getBudgetManagers() {
-        return userService.getBudgetManagers();
+    public List<UserResponse> getBudgetManagers(@AuthenticationPrincipal User coordinator) {
+        return userService.getBudgetManagersByTeam(coordinator.getId());
     }
 
     @GetMapping("/technical-managers")
     @PreAuthorize("hasRole('COORDINATOR')")
-    public List<UserResponse> getTechnicalManagers() {
-        return userService.getTechnicalManagers();
+    public List<UserResponse> getTechnicalManagers(@AuthenticationPrincipal User coordinator) {
+        return userService.getTechnicalManagersByTeam(coordinator.getId());
     }
 
     @GetMapping("/search")

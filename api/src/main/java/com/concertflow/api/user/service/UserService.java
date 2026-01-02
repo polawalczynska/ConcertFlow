@@ -26,6 +26,14 @@ public class UserService {
         return queryService.getTechnicalManagers();
     }
 
+    public List<UserResponse> getBudgetManagersByTeam(Long coordinatorId) {
+        return queryService.getBudgetManagersByTeam(coordinatorId);
+    }
+
+    public List<UserResponse> getTechnicalManagersByTeam(Long coordinatorId) {
+        return queryService.getTechnicalManagersByTeam(coordinatorId);
+    }
+
     public UserResponse getUserByEmail(String email) {
         return searchService.getUserByEmail(email);
     }

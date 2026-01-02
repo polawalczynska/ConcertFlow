@@ -552,8 +552,8 @@ export interface SaveTechnicalRequirementsRequest {
 }
 export interface SortObject {
     'empty'?: boolean;
-    'unsorted'?: boolean;
     'sorted'?: boolean;
+    'unsorted'?: boolean;
 }
 export interface StatusDistribution {
     'status'?: string;

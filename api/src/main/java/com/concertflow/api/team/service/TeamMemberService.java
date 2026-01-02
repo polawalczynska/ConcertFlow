@@ -49,6 +49,9 @@ public class TeamMemberService {
     }
     
     public boolean isTeamMember(Long userId, Long coordinatorId) {
+        if (userId.equals(coordinatorId)) {
+            return true;
+        }
         List<TeamInvitation> acceptedInvitations = teamInvitationRepository
                 .findByInvitedUser_IdAndStatus(userId, InvitationStatus.ACCEPTED);
         return acceptedInvitations.stream()
