@@ -1,22 +1,25 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
+import { useNotifications as useNotificationsQuery, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from "~/hooks/useNotifications";
+import { mapNotificationResponseToNotification } from "../utils/notificationMapper";
 import type { Notification } from "../types";
 
-export function useNotifications(initialNotifications: Notification[]) {
-  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
+export function useNotifications() {
+  const { data: notificationsResponse = [], isLoading } = useNotificationsQuery();
+  const { data: unreadCount = 0 } = useUnreadNotificationCount();
+  const markAllAsReadMutation = useMarkAllNotificationsAsRead();
+  const markAsReadMutation = useMarkNotificationAsRead();
 
-  const unreadCount = useMemo(
-    () => notifications.filter((n) => !n.read).length,
-    [notifications]
+  const notifications = useMemo(
+    () => notificationsResponse.map(mapNotificationResponseToNotification),
+    [notificationsResponse]
   );
 
   const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, read: true })));
+    markAllAsReadMutation.mutate();
   };
 
   const handleMarkAsRead = (id: number) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    markAsReadMutation.mutate(id);
   };
 
   const getFilteredNotifications = (activeTab: string): Notification[] => {
@@ -36,8 +39,8 @@ export function useNotifications(initialNotifications: Notification[]) {
 
   return {
     notifications,
-    setNotifications,
     unreadCount,
+    isLoading,
     handleMarkAllAsRead,
     handleMarkAsRead,
     getFilteredNotifications,

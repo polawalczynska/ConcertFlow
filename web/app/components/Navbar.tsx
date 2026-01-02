@@ -2,12 +2,14 @@ import { Link, useLocation } from "@remix-run/react";
 import { Music, Calendar, Settings, LogOut, Users, Bell } from "lucide-react";
 import { useLogout } from "~/hooks/useAuth";
 import { useUser } from "~/hooks/useUser";
+import { useUnreadNotificationCount } from "~/hooks/useNotifications";
 import { cn } from "~/lib/utils";
 
 export function Navbar() {
   const location = useLocation();
   const logout = useLogout();
   const { data: user, isLoading } = useUser();
+  const { data: unreadCount = 0 } = useUnreadNotificationCount();
 
   const concertsLink =
     user?.role === "BUDGET_MANAGER" ? "/budget" : user?.role === "TECHNICAL_MANAGER" ? "/technical" : "/manage";
@@ -104,9 +106,11 @@ export function Navbar() {
               )}
             >
               <Bell className="h-5 w-5" />
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
-                3
-              </span>
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
             </Link>
             <button
               onClick={() => logout.mutate()}
