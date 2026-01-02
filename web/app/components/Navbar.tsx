@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@remix-run/react";
-import { Music, Calendar, Settings, LogOut } from "lucide-react";
+import { Music, Calendar, Settings, LogOut, Users, Bell } from "lucide-react";
 import { useLogout } from "~/hooks/useAuth";
 import { useUser } from "~/hooks/useUser";
 import { cn } from "~/lib/utils";
@@ -19,6 +19,11 @@ export function Navbar() {
       icon: Music,
     },
     {
+      name: "Team",
+      href: "/team/",
+      icon: Users,
+    },
+    {
       name: "Concerts",
       href: concertsLink,
       icon: Calendar,
@@ -34,7 +39,6 @@ export function Navbar() {
     return location.pathname === href || location.pathname.startsWith(`${href}/`);
   };
 
-  // Determine home page based on user role
   const homePage =
     user?.role === "BUDGET_MANAGER" ? "/budget" : user?.role === "TECHNICAL_MANAGER" ? "/technical" : "/dashboard";
 
@@ -92,6 +96,18 @@ export function Navbar() {
                 </span>
               </div>
             ) : null}
+            <Link
+              to="/notifications/"
+              className={cn(
+                "relative flex items-center justify-center rounded-lg p-2 text-text-secondary transition-colors hover:bg-bg-secondary hover:text-text-primary",
+                isActive("/notifications/") && "bg-bg-secondary text-text-primary"
+              )}
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
+                3
+              </span>
+            </Link>
             <button
               onClick={() => logout.mutate()}
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary hover:text-text-primary"
