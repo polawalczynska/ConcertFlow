@@ -1,5 +1,6 @@
 package com.concertflow.api.technical.dto;
 
+import com.concertflow.api.approval.chain.ApprovalRequestData;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,5 +23,5 @@ public record RequestTechnicalRevisionRequest(
 
     @NotNull(message = "Revision deadline is required")
     LocalDateTime deadline
-) {}
+) implements ApprovalRequestData {}
 

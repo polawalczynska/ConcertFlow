@@ -1,5 +1,6 @@
 package com.concertflow.api.technical.dto;
 
+import com.concertflow.api.approval.chain.ApprovalRequestData;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -10,5 +11,5 @@ public record ApproveTechnicalRequest(
 
     @NotNull(message = "Technical version is required")
     Integer technicalVersion
-) {}
+) implements ApprovalRequestData {}
 

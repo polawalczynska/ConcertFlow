@@ -1,26 +1,20 @@
 package com.concertflow.api.budget.service;
 
+import com.concertflow.api.approval.chain.ApprovalChainService;
+import com.concertflow.api.approval.chain.ApprovalRequest;
 import com.concertflow.api.budget.dto.*;
 import com.concertflow.api.concert.entity.*;
-import com.concertflow.api.exceptions.types.BudgetVersionConflictException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.BudgetMapper;
-import com.concertflow.api.notification.event.BudgetApprovedEvent;
-import com.concertflow.api.notification.event.BudgetRevisionRequestedEvent;
-import com.concertflow.api.notification.event.BudgetSubmittedEvent;
-import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,13 +24,10 @@ import java.util.List;
 public class BudgetApprovalService {
     private final ConcertRepository concertRepository;
     private final BudgetValidationService validationService;
-    private final ApplicationEventPublisher eventPublisher;
     private final BudgetMapper budgetMapper;
     private final BudgetFlagService flagService;
     private final BudgetAccessValidator accessValidator;
-    private final BudgetApprovalRecordService approvalRecordService;
-    private final BudgetItemService budgetItemService;
-    private final BudgetRevisionNoteBuilder revisionNoteBuilder;
+    private final ApprovalChainService approvalChainService;
 
     @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
@@ -81,42 +72,14 @@ public class BudgetApprovalService {
         accessValidator.validateBudgetManagerAccess(concert, approver);
         accessValidator.validateBudgetForApproval(concert);
 
-        if (!concert.getBudgetVersion().equals(request.budgetVersion())) {
-            throw new BudgetVersionConflictException("Budget has been modified. Please refresh.");
-        }
+        ApprovalRequest approvalRequest = ApprovalRequest.builder()
+            .concert(concert)
+            .user(approver)
+            .action(ApprovalRequest.ApprovalAction.APPROVE_BUDGET)
+            .requestData(request)
+            .build();
 
-        if (request.itemApprovals() != null && !request.itemApprovals().isEmpty()) {
-            budgetItemService.approveBudgetItems(concert, request.itemApprovals());
-        }
-
-        concert.setBudgetStatus(BudgetStatus.APPROVED);
-        concert.setBudgetApprovedAt(LocalDateTime.now());
-        concert.setBudgetApprovedById(approver.getId());
-
-        BigDecimal approvedBudget = request.approvedBudget();
-        concert.setBudget(approvedBudget);
-
-        if (concert.getTechnicalStatus() == TechnicalStatus.APPROVED) {
-            concert.setStatus(ConcertStatus.APPROVED);
-            log.info("Concert status set to APPROVED (both budget and technical requirements approved)");
-        }
-
-        BudgetApproval approval = approvalRecordService.createApprovalRecord(
-            concert,
-            approver,
-            ApprovalDecision.APPROVED,
-            null
-        );
-        concert.getBudgetApprovals().add(approval);
-
-        ConcertStatus oldStatus = concert.getStatus();
-        concertRepository.save(concert);
-        
-        eventPublisher.publishEvent(new BudgetApprovedEvent(concert, approver));
-        
-        if (concert.getStatus() == ConcertStatus.APPROVED && oldStatus != ConcertStatus.APPROVED) {
-            eventPublisher.publishEvent(new ConcertStatusChangedEvent(concert, oldStatus, ConcertStatus.APPROVED));
-        }
+        approvalChainService.process(approvalRequest);
 
         log.info("Budget approved for concert: {}", concertId);
     }
@@ -128,35 +91,14 @@ public class BudgetApprovalService {
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetManagerAccess(concert, requester);
 
-        concert.setBudgetStatus(BudgetStatus.REVISION_REQUESTED);
+        ApprovalRequest approvalRequest = ApprovalRequest.builder()
+            .concert(concert)
+            .user(requester)
+            .action(ApprovalRequest.ApprovalAction.REQUEST_BUDGET_REVISION)
+            .requestData(request)
+            .build();
 
-        for (var revisionItem : request.requiredChanges()) {
-            BudgetItem item = concert.getBudgetItems().stream()
-                .filter(bi -> bi.getId().equals(revisionItem.itemId()))
-                .findFirst()
-                .orElse(null);
-            
-            if (item != null) {
-                String revisionNote = revisionNoteBuilder.buildItemRevisionNote(revisionItem);
-                revisionNoteBuilder.applyRevisionNoteToItem(item, revisionNote);
-            }
-        }
-
-        String comments = revisionNoteBuilder.buildRevisionComments(request);
-        BudgetApproval revisionRequest = approvalRecordService.createApprovalRecord(
-            concert,
-            requester,
-            ApprovalDecision.RETURNED_FOR_REVISION,
-            comments
-        );
-        revisionRequest.setRequiresRevision(true);
-        concert.getBudgetApprovals().add(revisionRequest);
-
-        String revisionNotes = revisionNoteBuilder.buildRevisionSummaryNotes(request);
-        concert.setBudgetRejectionReason(revisionNotes);
-
-        concertRepository.save(concert);
-        eventPublisher.publishEvent(new BudgetRevisionRequestedEvent(concert, requester));
+        approvalChainService.process(approvalRequest);
 
         log.info("Budget revision requested for concert: {}", concertId);
     }
@@ -168,12 +110,14 @@ public class BudgetApprovalService {
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetForSubmission(concert);
 
-        concert.setSubmittedBudget(concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
-        concert.setBudgetStatus(BudgetStatus.SUBMITTED);
-        concert.setBudgetVersion(concert.getBudgetVersion() + 1);
+        ApprovalRequest approvalRequest = ApprovalRequest.builder()
+            .concert(concert)
+            .user(submitter)
+            .action(ApprovalRequest.ApprovalAction.SUBMIT_BUDGET)
+            .requestData(request)
+            .build();
 
-        concertRepository.save(concert);
-        eventPublisher.publishEvent(new BudgetSubmittedEvent(concert, submitter));
+        approvalChainService.process(approvalRequest);
 
         log.info("Budget submitted for approval, concert: {}", concertId);
     }
