@@ -2825,6 +2825,39 @@ export const TeamControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getAssignedConcerts: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getAssignedConcerts', 'id', id)
+            const localVarPath = `/api/team/members/{id}/concerts`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getInvitation: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getInvitation', 'id', id)
@@ -3071,6 +3104,18 @@ export const TeamControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getAssignedConcerts(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ConcertResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAssignedConcerts(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TeamControllerApi.getAssignedConcerts']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getInvitation(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TeamInvitationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getInvitation(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -3171,6 +3216,15 @@ export const TeamControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getAssignedConcerts(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<ConcertResponse>> {
+            return localVarFp.getAssignedConcerts(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getInvitation(id: number, options?: RawAxiosRequestConfig): AxiosPromise<TeamInvitationResponse> {
             return localVarFp.getInvitation(id, options).then((request) => request(axios, basePath));
         },
@@ -3241,6 +3295,16 @@ export class TeamControllerApi extends BaseAPI {
      */
     public acceptInvitation(id: number, options?: RawAxiosRequestConfig) {
         return TeamControllerApiFp(this.configuration).acceptInvitation(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getAssignedConcerts(id: number, options?: RawAxiosRequestConfig) {
+        return TeamControllerApiFp(this.configuration).getAssignedConcerts(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

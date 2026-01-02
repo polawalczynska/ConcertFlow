@@ -1,5 +1,6 @@
 package com.concertflow.api.team;
 
+import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.security.annotation.RequireAuthenticated;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
@@ -84,6 +85,12 @@ public class TeamController {
             @AuthenticationPrincipal User user) {
         TeamInvitationResponse response = teamService.rejectInvitation(id, user);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/members/{id}/concerts")
+    @RequireAuthenticated
+    public List<ConcertResponse> getAssignedConcerts(@PathVariable Long id) {
+        return teamService.getAssignedConcerts(id);
     }
 }
 
