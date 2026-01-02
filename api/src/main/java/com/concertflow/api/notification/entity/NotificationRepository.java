@@ -24,5 +24,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying
     @Query("UPDATE Notification n SET n.read = true WHERE n.id = :id AND n.user.id = :userId")
     int markAsReadByIdAndUser_Id(@Param("id") Long id, @Param("userId") Long userId);
+    
+    @Modifying
+    @Query("DELETE FROM Notification n WHERE n.invitationId = :invitationId")
+    void deleteByInvitationId(@Param("invitationId") Long invitationId);
 }
 

@@ -3,6 +3,7 @@ package com.concertflow.api.team.service;
 import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
 import com.concertflow.api.exceptions.types.UserNotFoundException;
+import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
@@ -32,6 +33,7 @@ public class TeamInvitationService {
     private final TeamMapper teamMapper;
     private final TeamInvitationValidator validator;
     private final ApplicationEventPublisher eventPublisher;
+    private final NotificationRepository notificationRepository;
 
     public List<TeamInvitationResponse> getPendingInvitations(Long coordinatorId) {
         List<TeamInvitation> invitations = teamInvitationRepository
@@ -91,10 +93,11 @@ public class TeamInvitationService {
         validator.validateInvitationIsPending(invitation.getStatus());
         validator.validateCoordinatorOwnership(invitation, coordinator);
 
-        updateInvitationStatus(invitation, InvitationStatus.CANCELLED);
-        teamInvitationRepository.save(invitation);
+        String invitedUserEmail = invitation.getInvitedUser().getEmail();
+        notificationRepository.deleteByInvitationId(invitationId);
+        teamInvitationRepository.delete(invitation);
 
-        log.info("Team invitation cancelled: {} by coordinator {}", invitation.getInvitedUser().getEmail(), coordinator.getEmail());
+        log.info("Team invitation cancelled and deleted: {} by coordinator {}", invitedUserEmail, coordinator.getEmail());
     }
 
     private TeamInvitation findInvitationById(Long invitationId) {
