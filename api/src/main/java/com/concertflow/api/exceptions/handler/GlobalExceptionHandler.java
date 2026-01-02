@@ -6,6 +6,10 @@ import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertValidationException;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
+import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
+import com.concertflow.api.exceptions.types.PendingInvitationExistsException;
+import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
+import com.concertflow.api.exceptions.types.UserNotFoundException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
@@ -115,6 +119,38 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleIllegalStateException(IllegalStateException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         pd.setTitle("ILLEGAL_STATE");
+        return pd;
+    }
+
+    @ExceptionHandler(TeamInvitationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleTeamInvitationNotFoundException(TeamInvitationNotFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        pd.setTitle("TEAM_INVITATION_NOT_FOUND");
+        return pd;
+    }
+
+    @ExceptionHandler(PendingInvitationExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handlePendingInvitationExistsException(PendingInvitationExistsException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("PENDING_INVITATION_EXISTS");
+        return pd;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleUserNotFoundException(UserNotFoundException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        pd.setTitle("USER_NOT_FOUND");
+        return pd;
+    }
+
+    @ExceptionHandler(InvalidInvitationStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleInvalidInvitationStatusException(InvalidInvitationStatusException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("INVALID_INVITATION_STATUS");
         return pd;
     }
 }

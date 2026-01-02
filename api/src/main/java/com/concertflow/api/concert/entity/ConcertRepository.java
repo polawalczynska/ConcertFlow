@@ -95,4 +95,10 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     );
 
     List<Concert> findByCoordinatorId(Long coordinatorId);
+
+    @Query("SELECT c FROM Concert c WHERE c.budgetManager.id = :budgetManagerId")
+    List<Concert> findByBudgetManagerId(@Param("budgetManagerId") Long budgetManagerId);
+
+    @Query("SELECT c FROM Concert c WHERE c.technicalManager.id = :technicalManagerId")
+    List<Concert> findByTechnicalManagerId(@Param("technicalManagerId") Long technicalManagerId);
 }
