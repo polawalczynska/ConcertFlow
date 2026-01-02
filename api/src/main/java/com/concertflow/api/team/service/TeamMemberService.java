@@ -62,6 +62,18 @@ public class TeamMemberService {
         return teamInvitationRepository.existsByInvitedUser_IdAndStatus(userId, InvitationStatus.ACCEPTED);
     }
 
+    public boolean isOnAnotherTeam(Long userId, Long coordinatorId) {
+        List<TeamInvitation> acceptedInvitations = teamInvitationRepository
+                .findByInvitedUser_IdAndStatus(userId, InvitationStatus.ACCEPTED);
+        
+        if (acceptedInvitations.isEmpty()) {
+            return false;
+        }
+        
+        return acceptedInvitations.stream()
+                .anyMatch(invitation -> !invitation.getInvitedBy().getId().equals(coordinatorId));
+    }
+
     public TeamMemberResponse getTeamMember(Long memberId) {
         User user = userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));

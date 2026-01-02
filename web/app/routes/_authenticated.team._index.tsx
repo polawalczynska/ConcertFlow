@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { AuthGuard } from "~/components/AuthGuard";
 import { TeamHeader } from "~/routes/_authenticated.team/components/TeamHeader";
 import { TeamSearch } from "~/routes/_authenticated.team/components/TeamSearch";
@@ -40,6 +40,29 @@ export default function TeamPage() {
     );
   }, [teamMembers, searchQuery]);
 
+  useEffect(() => {
+    if (inviteMutation.isSuccess) {
+      setIsInviteDialogOpen(false);
+      inviteMutation.reset();
+    }
+  }, [inviteMutation.isSuccess, inviteMutation]);
+
+  useEffect(() => {
+    if (!isInviteDialogOpen) {
+      inviteMutation.reset();
+    }
+  }, [isInviteDialogOpen, inviteMutation]);
+
+  const handleInviteMember = async (email: string) => {
+    try {
+      await inviteMutation.mutateAsync({ email });
+      setIsInviteDialogOpen(false);
+    } catch (error) {
+      // Error will be handled by displaying appropriate info in the dialog
+      console.error("Failed to invite team member:", error);
+    }
+  };
+
   if (isLoadingUser) {
     return (
       <AuthGuard>
@@ -49,15 +72,6 @@ export default function TeamPage() {
       </AuthGuard>
     );
   }
-
-  const handleInviteMember = async (email: string) => {
-    try {
-      await inviteMutation.mutateAsync({ email });
-      setIsInviteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to invite team member:", error);
-    }
-  };
 
   const handleDeleteMember = (member: TeamMemberResponse) => {
     setSelectedMember(member);
@@ -107,6 +121,11 @@ export default function TeamPage() {
           isOpen={isInviteDialogOpen}
           onOpenChange={setIsInviteDialogOpen}
           onInvite={handleInviteMember}
+          isInviting={inviteMutation.isPending}
+          teamMembers={teamMembers}
+          pendingInvitations={pendingInvitations}
+          inviteError={inviteMutation.error}
+          onClearError={() => inviteMutation.reset()}
         />
 
         <DeleteTeamMemberDialog

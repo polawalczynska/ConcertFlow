@@ -70,6 +70,11 @@ public class TeamService {
         return teamMemberService.hasAcceptedInvitation(userId);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isOnAnotherTeam(Long userId, Long coordinatorId) {
+        return teamMemberService.isOnAnotherTeam(userId, coordinatorId);
+    }
+
     @Transactional
     public void cancelInvitation(Long invitationId, User coordinator) {
         teamInvitationService.cancelInvitation(invitationId, coordinator);

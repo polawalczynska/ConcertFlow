@@ -115,5 +115,15 @@ public class TeamController {
         boolean isMember = teamService.hasAcceptedInvitation(user.getId());
         return ResponseEntity.ok(isMember);
     }
+
+    @GetMapping("/check-other-team/{userId}")
+    @RequireAuthenticated
+    @PreAuthorize("hasRole('COORDINATOR')")
+    public ResponseEntity<Boolean> checkIfUserOnAnotherTeam(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal User coordinator) {
+        boolean isOnAnotherTeam = teamService.isOnAnotherTeam(userId, coordinator.getId());
+        return ResponseEntity.ok(isOnAnotherTeam);
+    }
 }
 
