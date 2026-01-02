@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import NameInput from "~/routes/signup/components/NameInput";
 import EmailInput from "~/components/auth/EmailInput";
+import PhoneInput from "~/components/auth/PhoneInput";
 import RoleSelect from "~/routes/signup/components/RoleSelect";
 import PasswordInput from "~/components/auth/PasswordInput";
 import SubmitButton from "~/components/auth/SubmitButton";
@@ -24,6 +25,7 @@ export default function SignupForm({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState<"" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER">("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,6 +41,7 @@ export default function SignupForm({
       firstName,
       lastName,
       email,
+      phone: phone || undefined,
       role,
       password,
       confirmPassword,
@@ -109,6 +112,15 @@ export default function SignupForm({
             clearFieldError("email");
           }}
           error={allErrors.email}
+        />
+
+        <PhoneInput
+          value={phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+            clearFieldError("phone");
+          }}
+          error={allErrors.phone}
         />
 
         <RoleSelect

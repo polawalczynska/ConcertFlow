@@ -27,6 +27,7 @@ public class RegistrationService {
             .password(passwordEncoder.encode(registerRequest.password()))
             .firstName(registerRequest.firstName())
             .lastName(registerRequest.lastName())
+            .phone(registerRequest.phone())
             .role(registerRequest.role())
             .active(true)
             .build();
