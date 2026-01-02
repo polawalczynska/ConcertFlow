@@ -25,6 +25,10 @@ export function DeleteTeamMemberDialog({
   isDeleting,
   onConfirm,
 }: DeleteTeamMemberDialogProps) {
+  const handleCancel = () => {
+    onOpenChange(false);
+  };
+
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -40,7 +44,7 @@ export function DeleteTeamMemberDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={handleCancel} disabled={isDeleting}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} className="bg-red-600 hover:bg-red-700" disabled={isDeleting}>
             {isDeleting ? "Removing..." : "Remove"}
           </AlertDialogAction>

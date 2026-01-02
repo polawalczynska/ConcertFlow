@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/Button";
+import { useUser } from "~/hooks/useUser";
 import type { TeamMember } from "./types";
 
 interface TeamMemberCardDeleteButtonProps {
@@ -8,6 +9,13 @@ interface TeamMemberCardDeleteButtonProps {
 }
 
 export function TeamMemberCardDeleteButton({ member, onDelete }: TeamMemberCardDeleteButtonProps) {
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
+
+  if (!isCoordinator) {
+    return null;
+  }
+
   return (
     <Button
       variant="ghost"

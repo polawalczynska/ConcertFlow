@@ -1,6 +1,7 @@
 import { Button } from "~/components/ui/Button";
 import { Card, CardContent } from "~/components/ui/Card";
 import { Trash2 } from "lucide-react";
+import { useUser } from "~/hooks/useUser";
 import type { TeamMember } from "~/routes/_authenticated.team/types";
 import { TeamMemberContactInfo } from "./TeamMemberContactInfo";
 
@@ -10,6 +11,9 @@ interface TeamMemberDetailCardProps {
 }
 
 export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardProps) {
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
+
   return (
     <Card className="mb-8">
       <CardContent className="p-8">
@@ -23,14 +27,16 @@ export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardP
               <p className="mt-1 text-lg text-text-secondary">{member.role}</p>
             </div>
           </div>
-          <Button
-            variant="outline"
-            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-            onClick={onDelete}
-          >
-            <Trash2 className="h-4 w-4" />
-            Remove
-          </Button>
+          {isCoordinator && (
+            <Button
+              variant="outline"
+              className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={onDelete}
+            >
+              <Trash2 className="h-4 w-4" />
+              Remove
+            </Button>
+          )}
         </div>
         <TeamMemberContactInfo member={member} />
       </CardContent>

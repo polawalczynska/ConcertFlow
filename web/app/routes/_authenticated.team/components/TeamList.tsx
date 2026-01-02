@@ -1,5 +1,6 @@
 import { TeamMemberCard } from "./card/TeamMemberCard";
 import { PendingInvitations } from "./PendingInvitations";
+import { useUser } from "~/hooks/useUser";
 import type { TeamMember, TeamInvitation } from "../types";
 
 interface TeamListProps {
@@ -10,11 +11,13 @@ interface TeamListProps {
 }
 
 export function TeamList({ members, pendingInvitations, onDeleteMember }: TeamListProps) {
+  const { data: user } = useUser();
+  const isCoordinator = user?.role === "COORDINATOR";
   const pendingInvites = pendingInvitations.filter((inv) => inv.status === "pending");
 
   return (
     <div className="space-y-6">
-      {pendingInvites.length > 0 && (
+      {isCoordinator && pendingInvites.length > 0 && (
         <PendingInvitations invitations={pendingInvites} />
       )}
       
