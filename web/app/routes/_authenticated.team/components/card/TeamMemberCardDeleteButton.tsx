@@ -1,11 +1,11 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/Button";
 import { useUser } from "~/hooks/useUser";
-import type { TeamMember } from "./types";
+import type { TeamMemberResponse } from "~/api";
 
 interface TeamMemberCardDeleteButtonProps {
-  member: TeamMember;
-  onDelete: (member: TeamMember) => void;
+  member: TeamMemberResponse;
+  onDelete: (member: TeamMemberResponse) => void;
 }
 
 export function TeamMemberCardDeleteButton({ member, onDelete }: TeamMemberCardDeleteButtonProps) {

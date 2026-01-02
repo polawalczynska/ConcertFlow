@@ -1,10 +1,11 @@
-import type { TeamInvitation } from "../types";
+import type { TeamInvitationResponse } from "~/api";
 
 interface TeamInvitationInfoProps {
-  invitation: TeamInvitation;
+  invitation: TeamInvitationResponse;
 }
 
 export function TeamInvitationInfo({ invitation }: TeamInvitationInfoProps) {
+  const invitedDate = invitation.invitedAt ? new Date(invitation.invitedAt).toLocaleDateString() : "Unknown";
   return (
     <div className="rounded-lg border border-border-light bg-bg-secondary p-4">
       <div className="space-y-3">
@@ -17,7 +18,7 @@ export function TeamInvitationInfo({ invitation }: TeamInvitationInfoProps) {
         <div>
           <p className="text-xs text-text-secondary">Invited on</p>
           <p className="font-semibold text-text-primary">
-            {new Date(invitation.invitedAt).toLocaleDateString()}
+            {invitedDate}
           </p>
         </div>
       </div>

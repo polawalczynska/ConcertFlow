@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { userApi } from "~/lib/api-client";
 import type { UserResponse } from "~/api";
 
 export function useUserSearch() {
@@ -18,18 +19,8 @@ export function useUserSearch() {
     setError(null);
     
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      
-      const mockUser: UserResponse = {
-        id: 1,
-        email: searchEmail,
-        firstName: "John",
-        lastName: "Doe",
-        role: "BUDGET_MANAGER" as const,
-        active: true,
-      };
-      
-      setFoundUser(mockUser);
+      const response = await userApi.searchUserByEmail(searchEmail);
+      setFoundUser(response.data);
     } catch (err) {
       setError("User not found. Please check the email address.");
       setFoundUser(null);

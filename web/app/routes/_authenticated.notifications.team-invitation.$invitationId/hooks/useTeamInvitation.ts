@@ -1,37 +1,44 @@
-import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import type { TeamInvitation } from "../types";
+import { useTeamInvitation as useTeamInvitationQuery } from "~/hooks/useTeamInvitation";
+import { useAcceptTeamInvitation } from "~/hooks/useAcceptTeamInvitation";
+import { useRejectTeamInvitation } from "~/hooks/useRejectTeamInvitation";
 
-export function useTeamInvitation(initialInvitation: TeamInvitation) {
+export function useTeamInvitation(invitationId: number | null) {
   const navigate = useNavigate();
-  const [invitation, setInvitation] = useState<TeamInvitation>(initialInvitation);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { data: invitation, isLoading } = useTeamInvitationQuery(invitationId);
+  const acceptMutation = useAcceptTeamInvitation();
+  const rejectMutation = useRejectTeamInvitation();
 
   const handleAccept = async () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setInvitation({ ...invitation, status: "accepted" });
-      setIsProcessing(false);
-      setTimeout(() => {
-        navigate("/team/");
-      }, 1000);
-    }, 500);
+    if (invitationId) {
+      try {
+        await acceptMutation.mutateAsync(invitationId);
+        setTimeout(() => {
+          navigate("/team/");
+        }, 1000);
+      } catch (error) {
+        console.error("Failed to accept invitation:", error);
+      }
+    }
   };
 
   const handleReject = async () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setInvitation({ ...invitation, status: "rejected" });
-      setIsProcessing(false);
-      setTimeout(() => {
-        navigate("/notifications/");
-      }, 1000);
-    }, 500);
+    if (invitationId) {
+      try {
+        await rejectMutation.mutateAsync(invitationId);
+        setTimeout(() => {
+          navigate("/notifications/");
+        }, 1000);
+      } catch (error) {
+        console.error("Failed to reject invitation:", error);
+      }
+    }
   };
 
   return {
-    invitation,
-    isProcessing,
+    invitation: invitation || null,
+    isLoading,
+    isProcessing: acceptMutation.isPending || rejectMutation.isPending,
     handleAccept,
     handleReject,
   };

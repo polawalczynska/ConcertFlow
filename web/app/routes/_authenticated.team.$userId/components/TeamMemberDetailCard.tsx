@@ -2,17 +2,18 @@ import { Button } from "~/components/ui/Button";
 import { Card, CardContent } from "~/components/ui/Card";
 import { Trash2 } from "lucide-react";
 import { useUser } from "~/hooks/useUser";
-import type { TeamMember } from "~/routes/_authenticated.team/types";
+import type { TeamMemberResponse } from "~/api";
 import { TeamMemberContactInfo } from "./TeamMemberContactInfo";
 
 interface TeamMemberDetailCardProps {
-  member: TeamMember;
+  member: TeamMemberResponse;
   onDelete: () => void;
 }
 
 export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardProps) {
   const { data: user } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
+  const initial = member.name?.charAt(0) || "?";
 
   return (
     <Card className="mb-8">
@@ -20,11 +21,11 @@ export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardP
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-purple-100 text-3xl font-semibold text-purple-600">
-              {member.name.charAt(0)}
+              {initial}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-text-primary">{member.name}</h1>
-              <p className="mt-1 text-lg text-text-secondary">{member.role}</p>
+              <h1 className="text-3xl font-bold text-text-primary">{member.name || "Unknown"}</h1>
+              <p className="mt-1 text-lg text-text-secondary">{member.role || "N/A"}</p>
             </div>
           </div>
           {isCoordinator && (

@@ -8,12 +8,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/AlertDialog";
-import type { TeamMember } from "../types";
+import type { TeamMemberResponse } from "~/api";
 
 interface DeleteTeamMemberDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  member: TeamMember | null;
+  member: TeamMemberResponse | null;
   isDeleting: boolean;
   onConfirm: () => void;
 }
@@ -35,10 +35,10 @@ export function DeleteTeamMemberDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove <strong>{member?.name}</strong> from the team? This action cannot be undone.
-            {member && member.assignedConcerts > 0 && (
+            Are you sure you want to remove <strong>{member?.name || "this member"}</strong> from the team? This action cannot be undone.
+            {member && (member.assignedConcerts || 0) > 0 && (
               <span className="block mt-2 text-orange-600">
-                Warning: This member is assigned to {member.assignedConcerts} {member.assignedConcerts === 1 ? "concert" : "concerts"}.
+                Warning: This member is assigned to {member.assignedConcerts} {(member.assignedConcerts || 0) === 1 ? "concert" : "concerts"}.
               </span>
             )}
           </AlertDialogDescription>

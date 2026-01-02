@@ -1,19 +1,30 @@
 import { TeamMemberCard } from "./card/TeamMemberCard";
 import { PendingInvitations } from "./PendingInvitations";
 import { useUser } from "~/hooks/useUser";
-import type { TeamMember, TeamInvitation } from "../types";
+import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
 
 interface TeamListProps {
-  members: TeamMember[];
-  pendingInvitations: TeamInvitation[];
+  members: TeamMemberResponse[];
+  pendingInvitations: TeamInvitationResponse[];
   searchQuery: string;
-  onDeleteMember: (member: TeamMember) => void;
+  onDeleteMember: (member: TeamMemberResponse) => void;
+  isLoading?: boolean;
 }
 
-export function TeamList({ members, pendingInvitations, onDeleteMember }: TeamListProps) {
+export function TeamList({ members, pendingInvitations, onDeleteMember, isLoading }: TeamListProps) {
   const { data: user } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
-  const pendingInvites = pendingInvitations.filter((inv) => inv.status === "pending");
+  const pendingInvites = pendingInvitations.filter((inv) => inv.status === "PENDING");
+
+  if (isLoading) {
+    return (
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-48 animate-pulse rounded-xl bg-bg-card border border-border-light" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

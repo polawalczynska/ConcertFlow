@@ -1,16 +1,16 @@
 import { CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
 import { Users } from "lucide-react";
-import type { TeamInvitation } from "../types";
+import type { TeamInvitationResponse } from "~/api";
 
 interface TeamInvitationCardHeaderProps {
-  invitation: TeamInvitation;
+  invitation: TeamInvitationResponse;
 }
 
 export function TeamInvitationCardHeader({
   invitation,
 }: TeamInvitationCardHeaderProps) {
-  const isPending = invitation.status === "pending";
+  const isPending = invitation.status === "PENDING";
 
   return (
     <CardHeader>
@@ -23,7 +23,7 @@ export function TeamInvitationCardHeader({
           <p className="mt-1 text-sm text-text-secondary">
             {isPending
               ? "You have been invited to join a team"
-              : invitation.status === "accepted"
+              : invitation.status === "ACCEPTED"
               ? "Invitation accepted"
               : "Invitation rejected"}
           </p>
@@ -31,12 +31,12 @@ export function TeamInvitationCardHeader({
         {!isPending && (
           <Badge
             className={
-              invitation.status === "accepted"
+              invitation.status === "ACCEPTED"
                 ? "bg-green-100 text-green-800 border-green-200"
                 : "bg-red-100 text-red-800 border-red-200"
             }
           >
-            {invitation.status === "accepted" ? "Accepted" : "Rejected"}
+            {invitation.status === "ACCEPTED" ? "Accepted" : "Rejected"}
           </Badge>
         )}
       </div>

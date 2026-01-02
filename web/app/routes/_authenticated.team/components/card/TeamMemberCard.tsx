@@ -2,11 +2,11 @@ import { useNavigate } from "@remix-run/react";
 import { TeamMemberCardHeader } from "./TeamMemberCardHeader";
 import { TeamMemberCardInfo } from "./TeamMemberCardInfo";
 import { TeamMemberCardDeleteButton } from "./TeamMemberCardDeleteButton";
-import type { TeamMember } from "./types";
+import type { TeamMemberResponse } from "~/api";
 
 interface TeamMemberCardProps {
-  member: TeamMember;
-  onDelete: (member: TeamMember) => void;
+  member: TeamMemberResponse;
+  onDelete: (member: TeamMemberResponse) => void;
 }
 
 export function TeamMemberCard({ member, onDelete }: TeamMemberCardProps) {
@@ -14,7 +14,9 @@ export function TeamMemberCard({ member, onDelete }: TeamMemberCardProps) {
 
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate(`/team/${member.id}`);
+    if (member.id) {
+      navigate(`/team/${member.id}`);
+    }
   };
 
   return (

@@ -2,10 +2,10 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { PendingInvitationsHeader } from "./pending-invitations/PendingInvitationsHeader";
 import { PendingInvitationItem } from "./pending-invitations/PendingInvitationItem";
 import { PendingInvitationsFooter } from "./pending-invitations/PendingInvitationsFooter";
-import type { TeamInvitation } from "../types";
+import type { TeamInvitationResponse } from "~/api";
 
 interface PendingInvitationsProps {
-  invitations: TeamInvitation[];
+  invitations: TeamInvitationResponse[];
 }
 
 export function PendingInvitations({ invitations }: PendingInvitationsProps) {

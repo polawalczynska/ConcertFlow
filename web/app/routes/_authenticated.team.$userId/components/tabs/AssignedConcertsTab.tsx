@@ -2,13 +2,16 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { AssignedConcertsTabHeader } from "./assigned-concerts/AssignedConcertsTabHeader";
 import { AssignedConcertsEmptyState } from "./assigned-concerts/AssignedConcertsEmptyState";
 import { AssignedConcertItem } from "./assigned-concerts/AssignedConcertItem";
-import type { AssignedConcert } from "../../types";
 
 interface AssignedConcertsTabProps {
-  concerts: AssignedConcert[];
+  memberId: number | null;
 }
 
-export function AssignedConcertsTab({ concerts }: AssignedConcertsTabProps) {
+export function AssignedConcertsTab({ memberId }: AssignedConcertsTabProps) {
+  // TODO: Implement API call to fetch assigned concerts for this member
+  // For now, show empty state
+  const concerts: any[] = [];
+
   return (
     <Card>
       <CardContent className="p-6">
