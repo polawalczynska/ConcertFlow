@@ -7,7 +7,7 @@ interface SearchStatusProps {
   foundUser: UserResponse | null;
 }
 
-export function SearchStatus({ isSearching, error, foundUser }: SearchStatusProps) {
+export function SearchStatus({ isSearching, error, foundUser: _foundUser }: SearchStatusProps) {
   if (isSearching) {
     return <p className="text-xs text-text-secondary">Searching for user...</p>;
   }

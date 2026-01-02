@@ -8,7 +8,6 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState("all");
 
   const {
-    notifications,
     unreadCount,
     isLoading,
     handleMarkAllAsRead,

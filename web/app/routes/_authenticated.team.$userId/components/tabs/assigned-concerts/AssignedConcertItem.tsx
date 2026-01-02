@@ -1,6 +1,4 @@
 import { Link } from "@remix-run/react";
-import { Badge } from "~/components/ui/Badge";
-import { Calendar } from "lucide-react";
 import { AssignedConcertInfo } from "./AssignedConcertInfo";
 import { AssignedConcertStatusBadge } from "./AssignedConcertStatusBadge";
 import type { AssignedConcert } from "../../../types";
