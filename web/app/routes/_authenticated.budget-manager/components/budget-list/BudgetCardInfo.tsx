@@ -1,5 +1,5 @@
 import type { BudgetApprovalDashboardResponse } from "~/api";
-import { parseLocalDateTime } from "~/lib/date-utils";
+import { formatDateOnly } from "~/lib/date-utils";
 
 interface BudgetCardInfoProps {
   budget: BudgetApprovalDashboardResponse;
@@ -14,25 +14,16 @@ export function BudgetCardInfo({ budget }: BudgetCardInfoProps) {
       <div>
         <p className="text-text-secondary">Concert Date</p>
         <p className="font-medium text-text-primary">
-          {budget.concertDate 
-            ? (() => {
-                const date = parseLocalDateTime(budget.concertDate);
-                return date ? date.toLocaleDateString() : "N/A";
-              })()
-            : "N/A"}
+          {formatDateOnly(budget.concertDate)}
         </p>
         {(budget.daysUntilConcert ?? 0) < 7 && (
           <p className="text-red-600">{budget.daysUntilConcert} days left</p>
         )}
-        {isRevisionRequested && budget.submittedAt && (() => {
-          const date = parseLocalDateTime(budget.submittedAt);
-          if (!date) return null;
-          return (
-            <p className="text-orange-600 mt-1">
-              Submitted: {date.toLocaleDateString()}
-            </p>
-          );
-        })()}
+        {isRevisionRequested && budget.submittedAt && (
+          <p className="text-orange-600 mt-1">
+            Submitted: {formatDateOnly(budget.submittedAt)}
+          </p>
+        )}
       </div>
       <div>
         <p className="text-text-secondary">Requested</p>

@@ -65,3 +65,35 @@ export function formatLocalDateTime(
   return date.toLocaleString(undefined, { ...defaultOptions, ...options });
 }
 
+export function formatDateOnly(dateString?: string | null): string {
+  if (!dateString) return "N/A";
+  try {
+    let date = parseLocalDateTime(dateString);
+    
+    if (!date) {
+      const dateOnlyMatch = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (dateOnlyMatch) {
+        const [, year, month, day] = dateOnlyMatch.map(Number);
+        date = new Date(year, month - 1, day);
+      } else {
+        date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+          return dateString;
+        }
+      }
+    }
+    
+    if (!date || isNaN(date.getTime())) {
+      return dateString;
+    }
+    
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
+}
+
