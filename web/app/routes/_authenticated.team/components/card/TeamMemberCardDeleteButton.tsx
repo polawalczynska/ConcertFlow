@@ -11,8 +11,9 @@ interface TeamMemberCardDeleteButtonProps {
 export function TeamMemberCardDeleteButton({ member, onDelete }: TeamMemberCardDeleteButtonProps) {
   const { data: user } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
+  const isCurrentUser = member.id === user?.id;
 
-  if (!isCoordinator) {
+  if (!isCoordinator || isCurrentUser) {
     return null;
   }
 

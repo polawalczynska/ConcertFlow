@@ -5,15 +5,20 @@ import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class ConcertAssignmentCounter {
     private final ConcertRepository concertRepository;
 
     public Integer countAssignedConcerts(User user) {
-        long budgetManagerCount = concertRepository.findByBudgetManagerId(user.getId()).size();
-        long technicalManagerCount = concertRepository.findByTechnicalManagerId(user.getId()).size();
-        return (int) (budgetManagerCount + technicalManagerCount);
+        Set<Long> concertIds = new java.util.HashSet<>();
+        concertRepository.findByCoordinatorId(user.getId()).forEach(c -> concertIds.add(c.getId()));
+        concertRepository.findByBudgetManagerId(user.getId()).forEach(c -> concertIds.add(c.getId()));
+        concertRepository.findByTechnicalManagerId(user.getId()).forEach(c -> concertIds.add(c.getId()));
+        
+        return concertIds.size();
     }
 }
 

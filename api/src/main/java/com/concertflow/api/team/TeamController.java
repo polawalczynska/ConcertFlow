@@ -25,9 +25,13 @@ public class TeamController {
 
     @GetMapping("/members")
     @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
-    public List<TeamMemberResponse> getTeamMembers(@AuthenticationPrincipal User coordinator) {
-        return teamService.getTeamMembers(coordinator.getId());
+    public List<TeamMemberResponse> getTeamMembers(@AuthenticationPrincipal User user) {
+        // If user is a coordinator, return their team members
+        if (user.getRole().name().equals("COORDINATOR")) {
+            return teamService.getTeamMembers(user.getId());
+        }
+        // If user is a manager who is a team member, return their team members
+        return teamService.getTeamMembersForManager(user);
     }
 
     @GetMapping("/members/{id}")
@@ -56,8 +60,10 @@ public class TeamController {
     @DeleteMapping("/members/{id}")
     @RequireAuthenticated
     @PreAuthorize("hasRole('COORDINATOR')")
-    public ResponseEntity<Void> removeTeamMember(@PathVariable Long id) {
-        teamService.removeTeamMember(id);
+    public ResponseEntity<Void> removeTeamMember(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User coordinator) {
+        teamService.removeTeamMember(id, coordinator);
         return ResponseEntity.noContent().build();
     }
 

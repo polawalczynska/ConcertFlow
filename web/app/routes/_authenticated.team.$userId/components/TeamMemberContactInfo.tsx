@@ -9,11 +9,13 @@ export function TeamMemberContactInfo({ member }: TeamMemberContactInfoProps) {
   const assignedConcerts = member.assignedConcerts || 0;
   return (
     <div className="mt-8 grid gap-6 md:grid-cols-3">
-      <div className="flex items-center gap-3 rounded-lg bg-bg-secondary p-4">
-        <Mail className="h-5 w-5 text-purple-600" />
-        <div>
+      <div className="flex items-center gap-3 rounded-lg bg-bg-secondary p-4 md:col-span-2">
+        <Mail className="h-5 w-5 text-purple-600 flex-shrink-0" />
+        <div className="min-w-0 flex-1">
           <p className="text-xs text-text-secondary">Email</p>
-          <p className="font-semibold text-text-primary">{member.email || "N/A"}</p>
+          <p className="font-semibold text-text-primary truncate" title={member.email || "N/A"}>
+            {member.email || "N/A"}
+          </p>
         </div>
       </div>
       {member.phone && (

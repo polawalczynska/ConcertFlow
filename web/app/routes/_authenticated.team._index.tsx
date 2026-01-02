@@ -30,16 +30,6 @@ export default function TeamPage() {
   const removeMutation = useRemoveTeamMember();
   const cancelInvitationMutation = useCancelTeamInvitation();
 
-  if (isLoadingUser) {
-    return (
-      <AuthGuard>
-        <div className="p-8 min-h-screen bg-bg-secondary">
-          <div className="h-64 animate-pulse rounded-xl bg-bg-card border border-border-light" />
-        </div>
-      </AuthGuard>
-    );
-  }
-
   const filteredMembers = useMemo(() => {
     if (!searchQuery) return teamMembers;
     return teamMembers.filter(
@@ -49,6 +39,16 @@ export default function TeamPage() {
         member.role?.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [teamMembers, searchQuery]);
+
+  if (isLoadingUser) {
+    return (
+      <AuthGuard>
+        <div className="p-8 min-h-screen bg-bg-secondary">
+          <div className="h-64 animate-pulse rounded-xl bg-bg-card border border-border-light" />
+        </div>
+      </AuthGuard>
+    );
+  }
 
   const handleInviteMember = async (email: string) => {
     try {
@@ -146,14 +146,13 @@ export default function TeamPage() {
         <TeamHeader onInviteMember={() => setIsInviteDialogOpen(true)} />
         <TeamSearch searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         <TeamList
-          members={[]}
+          members={filteredMembers}
           pendingInvitations={[]}
           searchQuery={searchQuery}
           onDeleteMember={handleDeleteMember}
-          isLoading={false}
+          isLoading={isLoadingMembers}
         />
       </div>
-
     </AuthGuard>
   );
 }

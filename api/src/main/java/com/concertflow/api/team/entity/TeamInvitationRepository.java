@@ -25,5 +25,12 @@ public interface TeamInvitationRepository extends JpaRepository<TeamInvitation, 
            "LEFT JOIN FETCH ti.invitedBy " +
            "WHERE ti.id = :id")
     Optional<TeamInvitation> findByIdWithRelations(@Param("id") Long id);
+    
+    @Query("SELECT ti FROM TeamInvitation ti " +
+           "LEFT JOIN FETCH ti.invitedBy " +
+           "WHERE ti.invitedUser.id = :userId AND ti.status = :status")
+    List<TeamInvitation> findByInvitedUser_IdAndStatusWithCoordinator(
+            @Param("userId") Long userId, 
+            @Param("status") InvitationStatus status);
 }
 

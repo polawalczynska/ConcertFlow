@@ -14,6 +14,7 @@ interface TeamMemberDetailCardProps {
 export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardProps) {
   const { data: user } = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
+  const isCurrentUser = member.id === user?.id;
   const initial = member.name?.charAt(0) || "?";
 
   return (
@@ -29,7 +30,7 @@ export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardP
               <p className="mt-1 text-lg text-text-secondary">{formatRole(member.role)}</p>
             </div>
           </div>
-          {isCoordinator && (
+          {isCoordinator && !isCurrentUser && (
             <Button
               variant="outline"
               className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"

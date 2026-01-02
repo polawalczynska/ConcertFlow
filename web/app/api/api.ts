@@ -453,8 +453,8 @@ export interface PageBudgetApprovalDashboardResponse {
     'content'?: Array<BudgetApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'pageable'?: PageableObject;
     'numberOfElements'?: number;
+    'pageable'?: PageableObject;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -466,8 +466,8 @@ export interface PageTechnicalApprovalDashboardResponse {
     'content'?: Array<TechnicalApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'pageable'?: PageableObject;
     'numberOfElements'?: number;
+    'pageable'?: PageableObject;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -475,10 +475,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'unpaged'?: boolean;
-    'paged'?: boolean;
     'pageNumber'?: number;
     'pageSize'?: number;
+    'unpaged'?: boolean;
+    'paged'?: boolean;
 }
 export interface ProblemDetail {
     'type'?: string;

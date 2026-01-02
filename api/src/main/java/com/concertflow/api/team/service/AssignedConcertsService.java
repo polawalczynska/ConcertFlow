@@ -21,11 +21,18 @@ public class AssignedConcertsService {
     private final ConcertMapper concertMapper;
 
     public List<ConcertResponse> getAssignedConcerts(Long userId) {
+        List<Concert> coordinatorConcerts = concertRepository.findByCoordinatorId(userId);
         List<Concert> budgetManagerConcerts = concertRepository.findByBudgetManagerId(userId);
         List<Concert> technicalManagerConcerts = concertRepository.findByTechnicalManagerId(userId);
 
         Set<Long> seenIds = new java.util.HashSet<>();
         List<Concert> allConcerts = new ArrayList<>();
+
+        for (Concert concert : coordinatorConcerts) {
+            if (seenIds.add(concert.getId())) {
+                allConcerts.add(concert);
+            }
+        }
 
         for (Concert concert : budgetManagerConcerts) {
             if (seenIds.add(concert.getId())) {

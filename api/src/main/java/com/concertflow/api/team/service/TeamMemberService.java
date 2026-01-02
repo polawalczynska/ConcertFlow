@@ -34,6 +34,8 @@ public class TeamMemberService {
                 .map(invitation -> invitation.getInvitedUser().getId())
                 .collect(Collectors.toSet());
         
+        teamMemberIds.add(coordinatorId);
+        
         List<User> teamMembers = userRepository.findAllById(teamMemberIds).stream()
                 .filter(User::getActive)
                 .collect(Collectors.toList());
@@ -67,13 +69,12 @@ public class TeamMemberService {
 
     public Long findCoordinatorIdForTeamMember(Long userId) {
         List<TeamInvitation> acceptedInvitations = teamInvitationRepository
-                .findByInvitedUser_IdAndStatus(userId, InvitationStatus.ACCEPTED);
+                .findByInvitedUser_IdAndStatusWithCoordinator(userId, InvitationStatus.ACCEPTED);
         
         if (acceptedInvitations.isEmpty()) {
             return null;
         }
         
-        // Return the coordinator who invited this user (assuming one coordinator per team member)
         return acceptedInvitations.get(0).getInvitedBy().getId();
     }
 
@@ -87,10 +88,12 @@ public class TeamMemberService {
 
     @Transactional
     public void removeTeamMember(Long memberId, Long coordinatorId) {
+        if (memberId.equals(coordinatorId)) {
+            throw new IllegalStateException("You cannot remove yourself from the team");
+        }
+        
         User user = userRepository.findById(memberId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        
-        // Find and delete all accepted invitations for this user from this coordinator
         List<TeamInvitation> acceptedInvitations = teamInvitationRepository
                 .findByInvitedUser_IdAndStatus(memberId, InvitationStatus.ACCEPTED);
         
