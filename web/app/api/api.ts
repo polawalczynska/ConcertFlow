@@ -145,6 +145,11 @@ export interface BudgetApprovalResponse {
     'approvalLevel'?: number;
     'requiresRevision'?: boolean;
 }
+export interface BudgetCategoryChartData {
+    'category'?: string;
+    'amount'?: number;
+    'color'?: string;
+}
 export interface BudgetDetailResponse {
     'concertId'?: number;
     'concertName'?: string;
@@ -220,6 +225,19 @@ export interface BudgetItemResponse {
     'requiresAttention'?: boolean;
     'approvals'?: Array<BudgetItemApprovalResponse>;
 }
+export interface BudgetManagerStatsResponse {
+    'totalBudgets'?: number;
+    'pendingReview'?: number;
+    'approved'?: number;
+    'revisionRequested'?: number;
+    'totalAmount'?: number;
+    'upcomingDeadlines'?: number;
+    'budgetCategories'?: Array<BudgetCategoryChartData>;
+    'budgetsByMonth'?: Array<BudgetsByMonthChartData>;
+    'statusDistribution'?: Array<BudgetStatusDistribution>;
+    'recentActivity'?: Array<RecentBudgetActivity>;
+    'lastUpdated'?: string;
+}
 export interface BudgetStatistics {
     'totalItems'?: number;
     'approvedItems'?: number;
@@ -232,12 +250,21 @@ export interface BudgetStatistics {
     'variance'?: number;
     'categoryBreakdown'?: Array<CategoryBreakdown>;
 }
+export interface BudgetStatusDistribution {
+    'status'?: string;
+    'count'?: number;
+    'color'?: string;
+}
 export interface BudgetValidation {
     'code'?: string;
     'message'?: string;
     'severity'?: string;
     'passed'?: boolean;
     'details'?: string;
+}
+export interface BudgetsByMonthChartData {
+    'month'?: string;
+    'approvedAmount'?: number;
 }
 export interface CancelConcertRequest {
     'cancellationReason': string;
@@ -475,10 +502,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageNumber'?: number;
-    'pageSize'?: number;
     'paged'?: boolean;
     'unpaged'?: boolean;
+    'pageNumber'?: number;
+    'pageSize'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -487,6 +514,13 @@ export interface ProblemDetail {
     'detail'?: string;
     'instance'?: string;
     'properties'?: { [key: string]: object; };
+}
+export interface RecentBudgetActivity {
+    'concertName'?: string;
+    'artistName'?: string;
+    'budgetStatus'?: string;
+    'approvedAmount'?: number;
+    'lastUpdated'?: string;
 }
 export interface RecentConcert {
     'name'?: string;
@@ -552,8 +586,8 @@ export interface SaveTechnicalRequirementsRequest {
 }
 export interface SortObject {
     'empty'?: boolean;
-    'sorted'?: boolean;
     'unsorted'?: boolean;
+    'sorted'?: boolean;
 }
 export interface StatusDistribution {
     'status'?: string;
@@ -2730,6 +2764,35 @@ export const DashboardControllerApiAxiosParamCreator = function (configuration?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagerStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/dashboard/budget-manager/stats`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCoordinatorStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/dashboard/coordinator/stats`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -2768,6 +2831,17 @@ export const DashboardControllerApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getBudgetManagerStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BudgetManagerStatsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBudgetManagerStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DashboardControllerApi.getBudgetManagerStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async getCoordinatorStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CoordinatorStatsResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCoordinatorStats(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
@@ -2788,6 +2862,14 @@ export const DashboardControllerApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getBudgetManagerStats(options?: RawAxiosRequestConfig): AxiosPromise<BudgetManagerStatsResponse> {
+            return localVarFp.getBudgetManagerStats(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getCoordinatorStats(options?: RawAxiosRequestConfig): AxiosPromise<CoordinatorStatsResponse> {
             return localVarFp.getCoordinatorStats(options).then((request) => request(axios, basePath));
         },
@@ -2798,6 +2880,15 @@ export const DashboardControllerApiFactory = function (configuration?: Configura
  * DashboardControllerApi - object-oriented interface
  */
 export class DashboardControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getBudgetManagerStats(options?: RawAxiosRequestConfig) {
+        return DashboardControllerApiFp(this.configuration).getBudgetManagerStats(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.

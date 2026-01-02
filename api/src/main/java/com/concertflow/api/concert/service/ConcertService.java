@@ -129,7 +129,9 @@ public class ConcertService {
     public void deleteConcert(Long id, User coordinator) {
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
+        
         concertRepository.delete(concert);
+        concertRepository.flush();
     }
 
     @CacheEvict(value = "dashboardStats", allEntries = true)

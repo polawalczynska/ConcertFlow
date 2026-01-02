@@ -1,5 +1,6 @@
 import { Calendar, MapPin } from "lucide-react";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
+import { formatDateOnly } from "~/lib/date-utils";
 
 interface TechnicalApprovalCardInfoProps {
   approval: TechnicalApproval;
@@ -11,7 +12,7 @@ export function TechnicalApprovalCardInfo({ approval }: TechnicalApprovalCardInf
       <div className="flex items-center gap-4 text-xs text-text-secondary mb-3">
         <div className="flex items-center gap-1">
           <Calendar className="h-3 w-3" />
-          <span>{approval.date}</span>
+          <span>{formatDateOnly(approval.date)}</span>
         </div>
         <div className="flex items-center gap-1">
           <MapPin className="h-3 w-3" />

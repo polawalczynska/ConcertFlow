@@ -11,10 +11,10 @@ import {
 
 function getRedirectPathForRole(role?: string): string {
   if (role === "BUDGET_MANAGER") {
-    return "/budget";
+    return "/budget-dashboard";
   }
   if (role === "TECHNICAL_MANAGER") {
-    return "/technical";
+    return "/technical-dashboard";
   }
   return "/dashboard";
 }
