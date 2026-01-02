@@ -3,6 +3,7 @@ package com.concertflow.api.technical.service;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.notification.service.NotificationService;
 import com.concertflow.api.technical.dto.*;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class TechnicalApprovalService {
     private final TechnicalApprovalRecordService approvalRecordService;
     private final TechnicalRequirementsService technicalRequirementsService;
     private final TechnicalRevisionCommentBuilder revisionCommentBuilder;
+    private final NotificationService notificationService;
 
     @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
     public Page<TechnicalApprovalDashboardResponse> getPendingTechnicalApprovals(
@@ -102,6 +104,16 @@ public class TechnicalApprovalService {
 
         technicalRequirementsRepository.save(requirements);
         concertRepository.save(concert);
+        
+        notificationService.sendTechnicalApprovedNotification(concert, approver);
+        
+        if (concert.getStatus() == ConcertStatus.APPROVED) {
+            notificationService.sendConcertStatusChangedNotification(
+                concert, 
+                ConcertStatus.PLANNING, 
+                ConcertStatus.APPROVED
+            );
+        }
 
         log.info("Technical requirements approved for concert: {}", concertId);
     }
@@ -129,6 +141,8 @@ public class TechnicalApprovalService {
 
         technicalRequirementsRepository.save(requirements);
         concertRepository.save(concert);
+        
+        notificationService.sendTechnicalRevisionRequestedNotification(concert, requester);
 
         log.info("Technical revision requested for concert: {}", concertId);
     }

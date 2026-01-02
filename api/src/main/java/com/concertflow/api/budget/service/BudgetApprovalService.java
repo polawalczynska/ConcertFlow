@@ -105,8 +105,17 @@ public class BudgetApprovalService {
         );
         concert.getBudgetApprovals().add(approval);
 
+        ConcertStatus oldStatus = concert.getStatus();
         concertRepository.save(concert);
         notificationService.sendBudgetApprovedNotification(concert, approver);
+        
+        if (concert.getStatus() == ConcertStatus.APPROVED && oldStatus != ConcertStatus.APPROVED) {
+            notificationService.sendConcertStatusChangedNotification(
+                concert, 
+                oldStatus, 
+                ConcertStatus.APPROVED
+            );
+        }
 
         log.info("Budget approved for concert: {}", concertId);
     }

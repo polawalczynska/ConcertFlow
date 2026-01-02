@@ -4,6 +4,7 @@ import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.notification.service.NotificationService;
 import com.concertflow.api.technical.dto.SaveTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.SubmitTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.TechnicalDetailResponse;
@@ -26,6 +27,7 @@ public class TechnicalRequirementsService {
     private final TechnicalMapper technicalMapper;
     private final TechnicalAccessValidator accessValidator;
     private final TechnicalRequirementsJsonService jsonService;
+    private final NotificationService notificationService;
 
     @PreAuthorize("hasRole('COORDINATOR')")
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
@@ -64,6 +66,8 @@ public class TechnicalRequirementsService {
 
         technicalRequirementsRepository.save(requirements);
         concertRepository.save(concert);
+        
+        notificationService.sendTechnicalSubmittedNotification(concert, submitter);
 
         log.info("Technical requirements submitted for approval, concert: {}", concertId);
     }

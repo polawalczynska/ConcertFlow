@@ -3,6 +3,7 @@ package com.concertflow.api.team.service;
 import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
 import com.concertflow.api.exceptions.types.UserNotFoundException;
+import com.concertflow.api.notification.service.NotificationService;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
 import com.concertflow.api.team.entity.InvitationStatus;
@@ -29,6 +30,7 @@ public class TeamInvitationService {
     private final UserRepository userRepository;
     private final TeamMapper teamMapper;
     private final TeamInvitationValidator validator;
+    private final NotificationService notificationService;
 
     public List<TeamInvitationResponse> getPendingInvitations(Long coordinatorId) {
         List<TeamInvitation> invitations = teamInvitationRepository
@@ -46,6 +48,8 @@ public class TeamInvitationService {
 
         TeamInvitation invitation = createInvitation(invitedUser, coordinator);
         invitation = teamInvitationRepository.save(invitation);
+        
+        notificationService.sendTeamInvitationNotification(invitation);
         
         log.info("Team invitation created: {} invited by {}", invitedUser.getEmail(), coordinator.getEmail());
         return teamMapper.toTeamInvitationResponse(invitation);
