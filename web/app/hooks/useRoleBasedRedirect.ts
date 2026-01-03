@@ -7,7 +7,7 @@ function getRedirectPathForRole(role?: string): string {
     return "/budget-dashboard";
   }
   if (role === "TECHNICAL_MANAGER") {
-    return "/technical";
+    return "/technical-dashboard";
   }
   if (role === "COORDINATOR") {
     return "/manage";

@@ -42,7 +42,7 @@ export function Navbar() {
   };
 
   const homePage =
-    user?.role === "BUDGET_MANAGER" ? "/budget-dashboard" : user?.role === "TECHNICAL_MANAGER" ? "/technical" : "/dashboard";
+    user?.role === "BUDGET_MANAGER" ? "/budget-dashboard" : user?.role === "TECHNICAL_MANAGER" ? "/technical-dashboard" : "/dashboard";
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border-light bg-bg-main">
