@@ -16,11 +16,6 @@ export function Navbar() {
 
   const menuItems = [
     {
-      name: "Artists",
-      href: "/artists",
-      icon: Music,
-    },
-    {
       name: "Team",
       href: "/team/",
       icon: Users,
@@ -29,6 +24,11 @@ export function Navbar() {
       name: "Concerts",
       href: concertsLink,
       icon: Calendar,
+    },
+    {
+      name: "Artists",
+      href: "/artists",
+      icon: Music,
     },
     {
       name: "Settings",
