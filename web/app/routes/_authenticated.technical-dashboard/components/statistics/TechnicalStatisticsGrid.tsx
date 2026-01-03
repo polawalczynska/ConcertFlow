@@ -1,14 +1,9 @@
 import { FileText, Clock, CheckCircle2, AlertCircle, CalendarIcon } from "lucide-react";
 import { StatisticsCard } from "../../../_authenticated.dashboard/components/statistics/StatisticsCard";
+import type { TechnicalManagerStatsResponse } from "~/api";
 
 interface TechnicalStatisticsGridProps {
-  stats: {
-    totalReviews: number;
-    pendingReview: number;
-    approved: number;
-    revisionRequested: number;
-    upcomingDeadlines: number;
-  };
+  stats: TechnicalManagerStatsResponse;
 }
 
 export function TechnicalStatisticsGrid({ stats }: TechnicalStatisticsGridProps) {

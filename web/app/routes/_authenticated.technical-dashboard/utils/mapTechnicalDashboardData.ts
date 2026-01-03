@@ -1,21 +1,6 @@
-interface TechnicalDashboardStats {
-  totalReviews: number;
-  pendingReview: number;
-  approved: number;
-  revisionRequested: number;
-  upcomingDeadlines: number;
-  approvedByMonth: Array<{ month: string; approvedCount: number }>;
-  statusDistribution: Array<{ name: string; value: number; color: string }>;
-  technicalAreas: Array<{ area: string; count: number; color: string }>;
-  recentActivity: Array<{
-    concertName: string;
-    artistName: string;
-    technicalStatus: string;
-    lastUpdated: string;
-  }>;
-}
+import type { TechnicalManagerStatsResponse } from "~/api";
 
-export function mapTechnicalDashboardData(stats: TechnicalDashboardStats | undefined) {
+export function mapTechnicalDashboardData(stats: TechnicalManagerStatsResponse | undefined) {
   if (!stats) {
     return {
       approvedByMonth: [],
@@ -31,8 +16,8 @@ export function mapTechnicalDashboardData(stats: TechnicalDashboardStats | undef
   }));
 
   const statusDistribution = (stats.statusDistribution || []).map(item => ({
-    name: item.name || "",
-    value: item.value || 0,
+    name: item.status || "",
+    value: item.count || 0,
     color: item.color || "#8B5CF6",
   }));
 

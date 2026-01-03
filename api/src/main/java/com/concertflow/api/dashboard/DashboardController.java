@@ -2,6 +2,7 @@ package com.concertflow.api.dashboard;
 
 import com.concertflow.api.dashboard.dto.BudgetManagerStatsResponse;
 import com.concertflow.api.dashboard.dto.CoordinatorStatsResponse;
+import com.concertflow.api.dashboard.dto.TechnicalManagerStatsResponse;
 import com.concertflow.api.dashboard.service.DashboardService;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,12 @@ public class DashboardController {
     @PreAuthorize("hasRole('BUDGET_MANAGER')")
     public BudgetManagerStatsResponse getBudgetManagerStats(@AuthenticationPrincipal User budgetManager) {
         return dashboardService.getBudgetManagerStats(budgetManager);
+    }
+
+    @GetMapping("/technical-manager/stats")
+    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    public TechnicalManagerStatsResponse getTechnicalManagerStats(@AuthenticationPrincipal User technicalManager) {
+        return dashboardService.getTechnicalManagerStats(technicalManager);
     }
 }
 

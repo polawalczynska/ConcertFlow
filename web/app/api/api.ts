@@ -60,6 +60,10 @@ export interface ApproveTechnicalRequest {
     'concertId': number;
     'technicalVersion': number;
 }
+export interface ApprovedTechnicalByMonthChartData {
+    'month'?: string;
+    'approvedCount'?: number;
+}
 export interface ArtistRequest {
     'name': string;
     'email': string;
@@ -480,8 +484,8 @@ export interface PageBudgetApprovalDashboardResponse {
     'content'?: Array<BudgetApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'numberOfElements'?: number;
     'pageable'?: PageableObject;
+    'numberOfElements'?: number;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -493,8 +497,8 @@ export interface PageTechnicalApprovalDashboardResponse {
     'content'?: Array<TechnicalApprovalDashboardResponse>;
     'number'?: number;
     'sort'?: SortObject;
-    'numberOfElements'?: number;
     'pageable'?: PageableObject;
+    'numberOfElements'?: number;
     'first'?: boolean;
     'last'?: boolean;
     'empty'?: boolean;
@@ -502,10 +506,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'paged'?: boolean;
-    'unpaged'?: boolean;
     'pageNumber'?: number;
     'pageSize'?: number;
+    'unpaged'?: boolean;
+    'paged'?: boolean;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -526,6 +530,12 @@ export interface RecentConcert {
     'name'?: string;
     'artist'?: string;
     'status'?: string;
+}
+export interface RecentTechnicalActivity {
+    'concertName'?: string;
+    'artistName'?: string;
+    'technicalStatus'?: string;
+    'lastUpdated'?: string;
 }
 export interface RefreshTokenRequest {
     'refreshToken': string;
@@ -654,6 +664,11 @@ export interface TechnicalApprovalResponse {
     'approvalLevel'?: number;
     'requiresRevision'?: boolean;
 }
+export interface TechnicalAreaChartData {
+    'area'?: string;
+    'count'?: number;
+    'color'?: string;
+}
 export interface TechnicalDetailResponse {
     'concertId'?: number;
     'concertName'?: string;
@@ -684,10 +699,27 @@ export const TechnicalDetailResponseTechnicalStatusEnum = {
 
 export type TechnicalDetailResponseTechnicalStatusEnum = typeof TechnicalDetailResponseTechnicalStatusEnum[keyof typeof TechnicalDetailResponseTechnicalStatusEnum];
 
+export interface TechnicalManagerStatsResponse {
+    'totalReviews'?: number;
+    'pendingReview'?: number;
+    'approved'?: number;
+    'revisionRequested'?: number;
+    'upcomingDeadlines'?: number;
+    'approvedByMonth'?: Array<ApprovedTechnicalByMonthChartData>;
+    'statusDistribution'?: Array<TechnicalStatusDistribution>;
+    'technicalAreas'?: Array<TechnicalAreaChartData>;
+    'recentActivity'?: Array<RecentTechnicalActivity>;
+    'lastUpdated'?: string;
+}
 export interface TechnicalRevisionItem {
     'areaId': string;
     'changeReason': string;
     'notes'?: string;
+}
+export interface TechnicalStatusDistribution {
+    'status'?: string;
+    'count'?: number;
+    'color'?: string;
 }
 export interface UpcomingEvent {
     'id'?: number;
@@ -2817,6 +2849,35 @@ export const DashboardControllerApiAxiosParamCreator = function (configuration?:
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalManagerStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/dashboard/technical-manager/stats`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -2848,6 +2909,17 @@ export const DashboardControllerApiFp = function(configuration?: Configuration) 
             const localVarOperationServerBasePath = operationServerMap['DashboardControllerApi.getCoordinatorStats']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTechnicalManagerStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TechnicalManagerStatsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTechnicalManagerStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DashboardControllerApi.getTechnicalManagerStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -2873,6 +2945,14 @@ export const DashboardControllerApiFactory = function (configuration?: Configura
         getCoordinatorStats(options?: RawAxiosRequestConfig): AxiosPromise<CoordinatorStatsResponse> {
             return localVarFp.getCoordinatorStats(options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTechnicalManagerStats(options?: RawAxiosRequestConfig): AxiosPromise<TechnicalManagerStatsResponse> {
+            return localVarFp.getTechnicalManagerStats(options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -2896,6 +2976,15 @@ export class DashboardControllerApi extends BaseAPI {
      */
     public getCoordinatorStats(options?: RawAxiosRequestConfig) {
         return DashboardControllerApiFp(this.configuration).getCoordinatorStats(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getTechnicalManagerStats(options?: RawAxiosRequestConfig) {
+        return DashboardControllerApiFp(this.configuration).getTechnicalManagerStats(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
