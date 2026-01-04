@@ -28,6 +28,7 @@ export function mapNotificationResponseToNotification(response: NotificationResp
   return {
     id: response.id ?? 0,
     type: (response.category as "concert" | "team" | "budget" | "technical" | "calendar") ?? "concert",
+    notificationType: response.type,
     title: response.title ?? "",
     description: response.description ?? "",
     time: response.relativeTime ?? "Recently",

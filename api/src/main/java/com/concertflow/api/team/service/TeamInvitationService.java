@@ -1,9 +1,9 @@
 package com.concertflow.api.team.service;
 
-import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
 import com.concertflow.api.exceptions.types.UserNotFoundException;
 import com.concertflow.api.notification.entity.NotificationRepository;
+import com.concertflow.api.notification.event.TeamInvitationAcceptedEvent;
 import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
@@ -37,11 +37,11 @@ public class TeamInvitationService {
 
     public List<TeamInvitationResponse> getPendingInvitations(Long coordinatorId) {
         List<TeamInvitation> invitations = teamInvitationRepository
-                .findByInvitedBy_IdAndStatus(coordinatorId, InvitationStatus.PENDING);
-        
+            .findByInvitedBy_IdAndStatus(coordinatorId, InvitationStatus.PENDING);
+
         return invitations.stream()
-                .map(teamMapper::toTeamInvitationResponse)
-                .collect(Collectors.toList());
+            .map(teamMapper::toTeamInvitationResponse)
+            .collect(Collectors.toList());
     }
 
     @Transactional
@@ -53,9 +53,9 @@ public class TeamInvitationService {
 
         TeamInvitation invitation = createInvitation(invitedUser, coordinator);
         invitation = teamInvitationRepository.save(invitation);
-        
+
         eventPublisher.publishEvent(new TeamInvitationCreatedEvent(invitation));
-        
+
         log.info("Team invitation created: {} invited by {}", invitedUser.getEmail(), coordinator.getEmail());
         return teamMapper.toTeamInvitationResponse(invitation);
     }
@@ -72,6 +72,8 @@ public class TeamInvitationService {
 
         updateInvitationStatus(invitation, InvitationStatus.ACCEPTED);
         invitation = teamInvitationRepository.save(invitation);
+
+        eventPublisher.publishEvent(new TeamInvitationAcceptedEvent(invitation));
 
         log.info("Team invitation accepted: {} by {}", invitation.getInvitedUser().getEmail(), user.getEmail());
         return teamMapper.toTeamInvitationResponse(invitation);
@@ -104,33 +106,33 @@ public class TeamInvitationService {
 
     private TeamInvitation findInvitationById(Long invitationId) {
         return teamInvitationRepository.findByIdWithRelations(invitationId)
-                .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
+            .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+            .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
 
     private TeamInvitation findInvitationByIdAndUser(Long invitationId, Long userId) {
         TeamInvitation invitation = teamInvitationRepository
-                .findByIdWithRelations(invitationId)
-                .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
-        
+            .findByIdWithRelations(invitationId)
+            .orElseThrow(() -> new TeamInvitationNotFoundException("Invitation not found"));
+
         if (!invitation.getInvitedUser().getId().equals(userId)) {
             throw new TeamInvitationNotFoundException("Invitation not found");
         }
-        
+
         return invitation;
     }
 
     private TeamInvitation createInvitation(User invitedUser, User coordinator) {
         return TeamInvitation.builder()
-                .invitedUser(invitedUser)
-                .invitedBy(coordinator)
-                .status(InvitationStatus.PENDING)
-                .invitedAt(LocalDateTime.now())
-                .build();
+            .invitedUser(invitedUser)
+            .invitedBy(coordinator)
+            .status(InvitationStatus.PENDING)
+            .invitedAt(LocalDateTime.now())
+            .build();
     }
 
     private void updateInvitationStatus(TeamInvitation invitation, InvitationStatus status) {

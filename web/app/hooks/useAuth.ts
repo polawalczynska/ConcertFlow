@@ -66,13 +66,50 @@ export function useLogin() {
 
 export function useRegister() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (registerRequest: RegisterRequest): Promise<void> => {
+    mutationFn: async (registerRequest: RegisterRequest): Promise<AuthResponse> => {
       await authApi.register(registerRequest);
+      
+      const loginRequest: LoginRequest = {
+        email: registerRequest.email,
+        password: registerRequest.password,
+        rememberMe: false,
+      };
+      const response = await authApi.login(loginRequest);
+      return response.data;
     },
-    onSuccess: () => {
-      navigate("/login");
+    onSuccess: async (data) => {
+      if (data.accessToken) {
+        setAccessToken(data.accessToken);
+      }
+      if (data.refreshToken) {
+        setRefreshToken(data.refreshToken);
+      }
+      if (data.rememberMeToken) {
+        setRememberMeToken(data.rememberMeToken);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      
+      try {
+        const userResponse = await queryClient.fetchQuery({
+          queryKey: ["user", "me"],
+          queryFn: async () => {
+            const { userApi } = await import("~/lib/api-client");
+            const response = await userApi.getCurrentUser();
+            return response.data;
+          },
+        });
+        
+        const redirectPath = getRedirectPathForRole(userResponse?.role);
+        navigate(redirectPath);
+      } catch (error) {
+        console.error("Failed to fetch user after registration:", error);
+        const redirectPath = getRedirectPathForRole(data.role);
+        navigate(redirectPath);
+      }
     },
     onError: (error: unknown) => {
       console.error("Registration error:", error);

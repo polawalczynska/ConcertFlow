@@ -32,5 +32,7 @@ public interface TeamInvitationRepository extends JpaRepository<TeamInvitation, 
     List<TeamInvitation> findByInvitedUser_IdAndStatusWithCoordinator(
             @Param("userId") Long userId, 
             @Param("status") InvitationStatus status);
+    
+    List<TeamInvitation> findByInvitedBy_Id(Long coordinatorId);
 }
 

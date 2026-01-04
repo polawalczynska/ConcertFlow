@@ -1,11 +1,12 @@
 import type { TeamInvitationResponse } from "~/api";
+import { formatDateOnly } from "~/lib/date-utils";
 
 interface TeamInvitationInfoProps {
   invitation: TeamInvitationResponse;
 }
 
 export function TeamInvitationInfo({ invitation }: TeamInvitationInfoProps) {
-  const invitedDate = invitation.invitedAt ? new Date(invitation.invitedAt).toLocaleDateString() : "Unknown";
+  const invitedDate = invitation.invitedAt ? formatDateOnly(invitation.invitedAt) : "Unknown";
   return (
     <div className="rounded-lg border border-border-light bg-bg-secondary p-4">
       <div className="space-y-3">

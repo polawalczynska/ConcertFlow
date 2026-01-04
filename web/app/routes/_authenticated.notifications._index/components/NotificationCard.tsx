@@ -22,7 +22,9 @@ export function NotificationCard({
       onMarkAsRead(notification.id);
     }
     
-    if (notification.type === "team" && notification.invitationId) {
+    if (notification.notificationType === "TEAM_MEMBER_JOINED") {
+      navigate("/team/", { replace: false });
+    } else if (notification.type === "team" && notification.invitationId) {
       navigate(`/notifications/team-invitation/${notification.invitationId}`, {
         replace: false,
       });
