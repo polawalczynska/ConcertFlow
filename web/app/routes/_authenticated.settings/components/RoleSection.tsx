@@ -1,0 +1,48 @@
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
+import { Label } from "~/components/ui/Label";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "~/components/ui/Select";
+import { formatRole } from "~/lib/role-utils";
+
+interface RoleSectionProps {
+  role: "" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER";
+  onRoleChange: (value: "" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER") => void;
+}
+
+const roleOptions = [
+  { value: "COORDINATOR", label: "Coordinator" },
+  { value: "BUDGET_MANAGER", label: "Budget Manager" },
+  { value: "TECHNICAL_MANAGER", label: "Technical Manager" },
+];
+
+export function RoleSection({ role, onRoleChange }: RoleSectionProps) {
+  const selectedRoleLabel = role ? formatRole(role) : "";
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Role</CardTitle>
+        <CardDescription>Your current role in the system</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <Label htmlFor="role">Role</Label>
+          <Select value={role} onValueChange={(value) => onRoleChange(value as typeof role)}>
+            <SelectTrigger id="role">
+              <SelectValue placeholder="Select a role">
+                {selectedRoleLabel || "Select a role"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {roleOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
