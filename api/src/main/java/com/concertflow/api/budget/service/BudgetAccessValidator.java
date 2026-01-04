@@ -40,7 +40,8 @@ public class BudgetAccessValidator {
 
     public void validateBudgetForApproval(Concert concert) {
         if (concert.getBudgetStatus() != BudgetStatus.SUBMITTED &&
-            concert.getBudgetStatus() != BudgetStatus.UNDER_REVIEW) {
+            concert.getBudgetStatus() != BudgetStatus.UNDER_REVIEW &&
+            concert.getBudgetStatus() != BudgetStatus.REVISION_REQUESTED) {
             throw new InvalidBudgetStatusException("Budget is not in approvable state");
         }
 
