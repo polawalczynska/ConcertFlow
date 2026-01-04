@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class NotificationIconAdapter implements NotificationAdapterInterface {
     public String adapt(NotificationType type) {
         return switch (type) {
-            case TEAM_INVITATION -> "Users";
+            case TEAM_INVITATION, TEAM_MEMBER_JOINED -> "Users";
             case BUDGET_REVISION_REQUESTED, BUDGET_SUBMITTED -> "DollarSign";
             case BUDGET_APPROVED -> "CheckCircle2";
             case TECHNICAL_REVISION_REQUESTED, TECHNICAL_SUBMITTED -> "Wrench";

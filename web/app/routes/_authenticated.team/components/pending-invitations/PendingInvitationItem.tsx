@@ -3,6 +3,7 @@ import { Button } from "~/components/ui/Button";
 import { X } from "lucide-react";
 import type { TeamInvitationResponse } from "~/api";
 import { formatRole } from "~/lib/role-utils";
+import { formatDateOnly } from "~/lib/date-utils";
 
 interface PendingInvitationItemProps {
   invitation: TeamInvitationResponse;
@@ -15,7 +16,7 @@ export function PendingInvitationItem({
   onCancel, 
   isCancelling = false 
 }: PendingInvitationItemProps) {
-  const invitedDate = invitation.invitedAt ? new Date(invitation.invitedAt).toLocaleDateString() : "Unknown";
+  const invitedDate = invitation.invitedAt ? formatDateOnly(invitation.invitedAt) : "Unknown";
   
   return (
     <div className="flex items-center justify-between rounded-lg border border-orange-200 bg-white p-4">

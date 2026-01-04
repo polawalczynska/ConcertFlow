@@ -3,6 +3,7 @@ package com.concertflow.api.notification.entity;
 public enum NotificationType {
     CONCERT_STATUS_CHANGED,
     TEAM_INVITATION,
+    TEAM_MEMBER_JOINED,
     BUDGET_REVISION_REQUESTED,
     TECHNICAL_REVISION_REQUESTED,
     UPCOMING_CONCERT_REMINDER,

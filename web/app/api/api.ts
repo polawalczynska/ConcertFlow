@@ -475,6 +475,7 @@ export interface NotificationResponse {
 export const NotificationResponseTypeEnum = {
     ConcertStatusChanged: 'CONCERT_STATUS_CHANGED',
     TeamInvitation: 'TEAM_INVITATION',
+    TeamMemberJoined: 'TEAM_MEMBER_JOINED',
     BudgetRevisionRequested: 'BUDGET_REVISION_REQUESTED',
     TechnicalRevisionRequested: 'TECHNICAL_REVISION_REQUESTED',
     UpcomingConcertReminder: 'UPCOMING_CONCERT_REMINDER',

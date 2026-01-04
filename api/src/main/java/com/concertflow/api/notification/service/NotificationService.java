@@ -198,6 +198,44 @@ public class NotificationService {
         }
     }
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Async
+    @Transactional(propagation = org.springframework.transaction.annotation.Propagation.REQUIRES_NEW)
+    public void handleTeamInvitationAccepted(TeamInvitationAcceptedEvent event) {
+        var invitation = event.invitation();
+        Long invitationId = invitation.getId();
+        
+        TeamInvitation freshInvitation = teamInvitationRepository.findByIdWithRelations(invitationId)
+            .orElse(null);
+        
+        if (freshInvitation == null) {
+            log.warn("Team invitation not found for notification: {}", invitationId);
+            return;
+        }
+        
+        try {
+            User invitedUser = freshInvitation.getInvitedUser();
+            User coordinator = freshInvitation.getInvitedBy();
+            if (invitedUser != null && coordinator != null) {
+                createNotification(
+                    coordinator,
+                    NotificationType.TEAM_MEMBER_JOINED,
+                    "Team member joined",
+                    String.format("%s %s has accepted your team invitation and joined your team", 
+                        invitedUser.getFirstName(), 
+                        invitedUser.getLastName()),
+                    null,
+                    freshInvitation.getId()
+                );
+                log.info("Team member joined notification sent to coordinator for invitation: {}", invitationId);
+            } else {
+                log.warn("Team member joined notification failed - missing user data for invitation: {}", invitationId);
+            }
+        } catch (Exception e) {
+            log.error("Error creating team member joined notification for invitation: {}", invitationId, e);
+        }
+    }
+
     public void sendUpcomingConcertReminder(Concert concert) {
         User coordinator = concert.getCoordinator();
         if (coordinator != null) {
