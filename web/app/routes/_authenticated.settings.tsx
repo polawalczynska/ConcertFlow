@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "~/hooks/useUser";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { SettingsHeader } from "./_authenticated.settings/components/SettingsHeader";
@@ -10,9 +11,14 @@ import { RoleSection } from "./_authenticated.settings/components/RoleSection";
 import { DangerZoneSection } from "./_authenticated.settings/components/DangerZoneSection";
 import { DeleteAccountDialog } from "./_authenticated.settings/components/DeleteAccountDialog";
 import { settingsSchema, type SettingsFormData } from "~/lib/validations/auth";
+import { userApi } from "~/lib/api-client";
+import { extractApiError } from "~/lib/error-utils";
+import type { UpdateUserRequest, UserResponse, UserResponseRoleEnum } from "~/api";
+import { clearTokens } from "~/lib/token-storage";
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useUser();
+  const queryClient = useQueryClient();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -25,13 +31,14 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState<Partial<Record<keyof SettingsFormData, string>>>({});
+  const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName || "");
       setLastName(user.lastName || "");
       setEmail(user.email || "");
-      setPhone("");
+      setPhone(user.phone || "");
       setRole(user.role || "");
       setCurrentPassword("");
       setNewPassword("");
@@ -44,10 +51,41 @@ export default function SettingsPage() {
     if (validationErrors[field]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+    setApiError(null);
   };
+
+  const updateUserMutation = useMutation<UserResponse, Error, UpdateUserRequest>({
+    mutationFn: async (request: UpdateUserRequest): Promise<UserResponse> => {
+      const response = await userApi.updateCurrentUser(request);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(["user", "me"], data);
+      queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+      
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setApiError(null);
+      
+      console.log("Settings updated successfully");
+    },
+    onError: (error) => {
+      const apiError = extractApiError(error);
+      if (apiError?.field) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          [apiError.field as keyof SettingsFormData]: apiError.message || "Validation error",
+        }));
+      } else {
+        setApiError(apiError?.message || "Failed to update settings. Please try again.");
+      }
+    },
+  });
 
   const handleSave = () => {
     setValidationErrors({});
+    setApiError(null);
 
     const result = settingsSchema.safeParse({
       firstName,
@@ -71,23 +109,43 @@ export default function SettingsPage() {
       return;
     }
 
-    console.log("Saving settings:", { 
-      firstName, 
-      lastName, 
-      email, 
-      phone, 
-      role,
-      ...(newPassword && { password: newPassword })
-    });
+    const request: UpdateUserRequest = {
+      firstName: result.data.firstName,
+      lastName: result.data.lastName,
+      email: result.data.email,
+      phone: result.data.phone,
+      role: result.data.role as UserResponseRoleEnum,
+      currentPassword: result.data.currentPassword || undefined,
+      newPassword: result.data.newPassword || undefined,
+      confirmPassword: result.data.confirmPassword || undefined,
+    };
+
+    updateUserMutation.mutate(request);
   };
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: async (): Promise<void> => {
+      await userApi.deleteAccount();
+    },
+    onSuccess: () => {
+      // Clear tokens and redirect to login with full page reload
+      clearTokens();
+      queryClient.clear();
+      // Use window.location for a complete sign-out and page reload
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    },
+    onError: (error) => {
+      console.error("Failed to delete account:", error);
+      setIsDeleting(false);
+      // You can add error handling here if needed
+    },
+  });
 
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
-    console.log("Deleting account...");
-    setTimeout(() => {
-      setIsDeleting(false);
-      setIsDeleteDialogOpen(false);
-    }, 2000);
+    deleteAccountMutation.mutate();
   };
 
   if (isLoading) {
@@ -111,6 +169,11 @@ export default function SettingsPage() {
       <SettingsHeader />
       
       <div className="max-w-4xl mx-auto space-y-6 mt-6">
+        {apiError && (
+          <div className="rounded-lg border border-red-500 bg-red-50 p-3 text-sm text-red-700">
+            {apiError}
+          </div>
+        )}
         <PersonalInfoSection
           firstName={firstName}
           lastName={lastName}
@@ -182,8 +245,12 @@ export default function SettingsPage() {
         />
 
         <div className="flex justify-end">
-          <Button onClick={handleSave} className="bg-purple-main hover:bg-purple-main/90">
-            Save Changes
+          <Button 
+            onClick={handleSave} 
+            className="bg-purple-main hover:bg-purple-main/90"
+            disabled={updateUserMutation.isPending}
+          >
+            {updateUserMutation.isPending ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </div>

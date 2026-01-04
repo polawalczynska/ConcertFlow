@@ -10,6 +10,7 @@ public record UserResponse(
     String email,
     String firstName,
     String lastName,
+    String phone,
     Role role,
     Boolean active,
     LocalDateTime createdAt
@@ -20,6 +21,7 @@ public record UserResponse(
             user.getEmail(),
             user.getFirstName(),
             user.getLastName(),
+            user.getPhone(),
             user.getRole(),
             user.getActive(),
             user.getCreatedAt()

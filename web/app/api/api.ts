@@ -310,7 +310,7 @@ export interface ConcertResponse {
     'technicalManagerId'?: number;
     'technicalManagerName'?: string;
     'budgetStatus'?: ConcertResponseBudgetStatusEnum;
-    'technicalStatus'?: string;
+    'technicalStatus'?: ConcertResponseTechnicalStatusEnum;
     'approvals'?: Array<ApprovalResponse>;
     'createdAt'?: string;
 }
@@ -334,6 +334,14 @@ export const ConcertResponseBudgetStatusEnum = {
 } as const;
 
 export type ConcertResponseBudgetStatusEnum = typeof ConcertResponseBudgetStatusEnum[keyof typeof ConcertResponseBudgetStatusEnum];
+export const ConcertResponseTechnicalStatusEnum = {
+    Pending: 'PENDING',
+    Submitted: 'SUBMITTED',
+    Approved: 'APPROVED',
+    RevisionRequested: 'REVISION_REQUESTED'
+} as const;
+
+export type ConcertResponseTechnicalStatusEnum = typeof ConcertResponseTechnicalStatusEnum[keyof typeof ConcertResponseTechnicalStatusEnum];
 
 export interface ConcertsByMonth {
     'month'?: ConcertsByMonthMonth;
@@ -507,10 +515,10 @@ export interface PageTechnicalApprovalDashboardResponse {
 export interface PageableObject {
     'offset'?: number;
     'sort'?: SortObject;
-    'pageNumber'?: number;
-    'pageSize'?: number;
     'unpaged'?: boolean;
     'paged'?: boolean;
+    'pageSize'?: number;
+    'pageNumber'?: number;
 }
 export interface ProblemDetail {
     'type'?: string;
@@ -737,11 +745,31 @@ export interface UpdateBudgetItemRequest {
     'isMandatory'?: boolean;
     'notes'?: string;
 }
+export interface UpdateUserRequest {
+    'firstName': string;
+    'lastName': string;
+    'email': string;
+    'phone'?: string;
+    'role': UpdateUserRequestRoleEnum;
+    'currentPassword'?: string;
+    'newPassword'?: string;
+    'confirmPassword'?: string;
+}
+
+export const UpdateUserRequestRoleEnum = {
+    Coordinator: 'COORDINATOR',
+    BudgetManager: 'BUDGET_MANAGER',
+    TechnicalManager: 'TECHNICAL_MANAGER'
+} as const;
+
+export type UpdateUserRequestRoleEnum = typeof UpdateUserRequestRoleEnum[keyof typeof UpdateUserRequestRoleEnum];
+
 export interface UserResponse {
     'id'?: number;
     'email'?: string;
     'firstName'?: string;
     'lastName'?: string;
+    'phone'?: string;
     'role'?: UserResponseRoleEnum;
     'active'?: boolean;
     'createdAt'?: string;
@@ -4613,6 +4641,35 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        deleteAccount: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user/me`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getBudgetManagers: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/budget-managers`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -4731,6 +4788,41 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {UpdateUserRequest} updateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCurrentUser: async (updateUserRequest: UpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'updateUserRequest' is not null or undefined
+            assertParamExists('updateCurrentUser', 'updateUserRequest', updateUserRequest)
+            const localVarPath = `/api/user/me`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateUserRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -4740,6 +4832,17 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
 export const UserControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = UserControllerApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteAccount(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteAccount(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.deleteAccount']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * 
          * @param {*} [options] Override http request option.
@@ -4785,6 +4888,18 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserControllerApi.searchUserByEmail']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {UpdateUserRequest} updateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCurrentUser(updateUserRequest: UpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCurrentUser(updateUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.updateCurrentUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -4794,6 +4909,14 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
 export const UserControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserControllerApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteAccount(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteAccount(options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {*} [options] Override http request option.
@@ -4827,6 +4950,15 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         searchUserByEmail(email: string, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
             return localVarFp.searchUserByEmail(email, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {UpdateUserRequest} updateUserRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCurrentUser(updateUserRequest: UpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
+            return localVarFp.updateCurrentUser(updateUserRequest, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -4834,6 +4966,15 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
  * UserControllerApi - object-oriented interface
  */
 export class UserControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public deleteAccount(options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).deleteAccount(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.
@@ -4869,6 +5010,16 @@ export class UserControllerApi extends BaseAPI {
      */
     public searchUserByEmail(email: string, options?: RawAxiosRequestConfig) {
         return UserControllerApiFp(this.configuration).searchUserByEmail(email, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UpdateUserRequest} updateUserRequest 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public updateCurrentUser(updateUserRequest: UpdateUserRequest, options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).updateCurrentUser(updateUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
