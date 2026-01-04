@@ -83,7 +83,6 @@ export const settingsSchema = z
     confirmPassword: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    // If any password field is filled, all password fields are required
     const hasAnyPassword = data.currentPassword || data.newPassword || data.confirmPassword;
     
     if (hasAnyPassword) {
