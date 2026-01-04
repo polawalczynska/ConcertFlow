@@ -1,5 +1,11 @@
+import { json } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { ErrorPage } from "~/components/ErrorPage";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  throw json({ message: "Page not found" }, { status: 404 });
+}
 
 export function ErrorBoundary() {
   const error = useRouteError();
