@@ -48,6 +48,8 @@ export function ApproveTechnicalDialog({
       });
       await queryClient.invalidateQueries({ queryKey: ["technical-approvals", user.id] });
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
+      await queryClient.invalidateQueries({ queryKey: ["technical-details-manager", concertId] });
+      await queryClient.invalidateQueries({ queryKey: ["technical-details", concertId] });
       setCertified(false);
       onOpenChange(false);
     } catch (error) {

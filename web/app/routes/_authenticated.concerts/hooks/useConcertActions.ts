@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "@remix-run/react";
 import type { ConcertResponse } from "~/api";
 import { useDeleteConcert, useCancelConcert } from "~/hooks/useConcerts";
 import { useSubmitBudget } from "~/hooks/useSubmitBudget";
 
 export function useConcertActions() {
+  const navigate = useNavigate();
   const [selectedConcert, setSelectedConcert] = useState<ConcertResponse | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isSubmitBudgetDialogOpen, setIsSubmitBudgetDialogOpen] = useState(false);
 
   const deleteConcert = useDeleteConcert();
@@ -44,14 +45,8 @@ export function useConcertActions() {
   };
 
   const handleView = (concert: ConcertResponse) => {
-    setSelectedConcert(concert);
-    setIsViewDialogOpen(true);
-  };
-
-  const closeViewDialog = (open: boolean) => {
-    if (!open) {
-      setIsViewDialogOpen(false);
-      setSelectedConcert(null);
+    if (concert.id) {
+      navigate(`/concerts/${concert.id}`);
     }
   };
 
@@ -100,7 +95,6 @@ export function useConcertActions() {
     selectedConcert,
     isDeleteDialogOpen,
     isCancelDialogOpen,
-    isViewDialogOpen,
     isSubmitBudgetDialogOpen,
     handleDelete,
     confirmDelete,
@@ -109,7 +103,6 @@ export function useConcertActions() {
     handleView,
     handleSubmitBudget,
     confirmSubmitBudget,
-    closeViewDialog,
     closeDeleteDialog,
     closeCancelDialog,
     closeSubmitBudgetDialog,

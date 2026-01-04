@@ -53,8 +53,6 @@ public class BudgetApprovalService {
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
         Concert concert = findConcertById(concertId);
-        accessValidator.validateBudgetManagerAccessById(concert, budgetManagerId);
-
 
         List<BudgetValidation> validations = validationService.validateBudget(concert);
         boolean isEligible = validations.stream()

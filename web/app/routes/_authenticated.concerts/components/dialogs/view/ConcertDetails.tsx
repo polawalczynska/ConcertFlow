@@ -29,6 +29,13 @@ export function ConcertDetails({ concert }: ConcertDetailsProps) {
         <p className="mt-1 text-base text-text-primary">${concert.budget?.toLocaleString() || "0"}</p>
       </div>
 
+      {concert.coordinatorName && (
+        <div>
+          <Label className="text-sm font-medium text-text-secondary">Coordinator</Label>
+          <p className="mt-1 text-base text-text-primary">{concert.coordinatorName}</p>
+        </div>
+      )}
+
       {concert.budgetManagerName && (
         <div>
           <Label className="text-sm font-medium text-text-secondary">Budget Manager</Label>

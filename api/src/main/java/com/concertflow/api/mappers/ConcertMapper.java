@@ -35,6 +35,7 @@ public class ConcertMapper {
                 ? concert.getTechnicalManager().getFirstName() + " " + concert.getTechnicalManager().getLastName()
                 : null,
             concert.getBudgetStatus(),
+            concert.getTechnicalStatus(),
             mapApprovals(concert),
             concert.getCreatedAt()
         );
