@@ -310,6 +310,7 @@ export interface ConcertResponse {
     'technicalManagerId'?: number;
     'technicalManagerName'?: string;
     'budgetStatus'?: ConcertResponseBudgetStatusEnum;
+    'technicalStatus'?: string;
     'approvals'?: Array<ApprovalResponse>;
     'createdAt'?: string;
 }

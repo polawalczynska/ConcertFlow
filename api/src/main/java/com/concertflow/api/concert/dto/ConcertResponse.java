@@ -3,6 +3,7 @@ package com.concertflow.api.concert.dto;
 import com.concertflow.api.approval.dto.ApprovalResponse;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.concert.entity.TechnicalStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public record ConcertResponse(
     Long technicalManagerId,
     String technicalManagerName,
     BudgetStatus budgetStatus,
+    TechnicalStatus technicalStatus,
     List<ApprovalResponse> approvals,
     LocalDateTime createdAt
 ) {

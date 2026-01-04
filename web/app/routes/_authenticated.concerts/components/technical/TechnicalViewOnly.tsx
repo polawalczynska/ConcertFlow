@@ -11,11 +11,13 @@ import { TechnicalActionButtons } from "./TechnicalActionButtons";
 interface TechnicalViewOnlyProps {
   concertId: number;
   concertName: string;
+  technicalStatus?: string;
 }
 
 export function TechnicalViewOnly({ 
   concertId, 
   concertName,
+  technicalStatus,
 }: TechnicalViewOnlyProps) {
   const { data: currentUser } = useUser();
   const technicalManagerId = currentUser?.id;
@@ -29,18 +31,20 @@ export function TechnicalViewOnly({
         return response.data;
       } catch (error) {
         const status = (error as { response?: { status?: number } })?.response?.status;
+        const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
+        
+        if (errorMessage.includes("not been submitted") || 
+            errorMessage.includes("PENDING") ||
+            errorMessage.includes("have not been submitted") ||
+            errorMessage.includes("only visible after submission")) {
+          return null;
+        }
+        
         if (status === 404) {
           return null;
         }
         if (status === 403 || status === 401) {
-          // Manager is not assigned, but we still want to show details if available
-          // For now, return null - the backend will need to allow viewing without assignment
           return null;
-        }
-        // If status is 400 or 500, it might be because requirements haven't been submitted yet
-        const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
-        if (errorMessage.includes("not been submitted") || errorMessage.includes("PENDING")) {
-          return null; // Treat as not available yet
         }
         throw error;
       }
@@ -48,12 +52,12 @@ export function TechnicalViewOnly({
     enabled: !!technicalManagerId && !!concertId,
   });
 
-  const technicalStatus = technicalDetails?.technicalStatus || "PENDING";
+  const detailsTechnicalStatus = technicalDetails?.technicalStatus || "PENDING";
   const approvalHistory = technicalDetails?.approvalHistory;
   const latestApproval = approvalHistory?.[(approvalHistory?.length ?? 1) - 1];
-  const isApproved = technicalStatus === "APPROVED";
-  const isRevisionRequested = technicalStatus === "REVISION_REQUESTED";
-  const isSubmitted = technicalStatus === "SUBMITTED";
+  const isApproved = detailsTechnicalStatus === "APPROVED";
+  const isRevisionRequested = detailsTechnicalStatus === "REVISION_REQUESTED";
+  const isSubmitted = detailsTechnicalStatus === "SUBMITTED";
   const canApproveOrRequestRevision = isSubmitted || isRevisionRequested;
 
   if (isLoading) {
@@ -66,12 +70,15 @@ export function TechnicalViewOnly({
     );
   }
 
+  const isPending = technicalStatus === "PENDING" || technicalStatus === undefined;
   const errorMessage = error 
     ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || ""
     : "";
-  const isNotSubmitted = errorMessage.includes("not been submitted") || 
+  const isNotSubmitted = isPending || 
+                        errorMessage.includes("not been submitted") || 
                         errorMessage.includes("PENDING") ||
-                        errorMessage.includes("have not been submitted");
+                        errorMessage.includes("have not been submitted") ||
+                        errorMessage.includes("only visible after submission");
 
   if (error && !isNotSubmitted) {
     return (
@@ -105,7 +112,7 @@ export function TechnicalViewOnly({
         </CardHeader>
         <CardContent className="space-y-4">
           <TechnicalStatusHeader 
-            technicalStatus={technicalStatus} 
+            technicalStatus={detailsTechnicalStatus} 
             technicalDetails={technicalDetails} 
           />
           {latestApproval && (

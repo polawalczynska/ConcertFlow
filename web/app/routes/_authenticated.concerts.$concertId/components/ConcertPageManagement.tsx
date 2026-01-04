@@ -44,6 +44,7 @@ export function ConcertPageManagement({
         <TechnicalViewOnly 
           concertId={concertId}
           concertName={concertName}
+          technicalStatus={concert?.technicalStatus}
         />
       )}
     </>
