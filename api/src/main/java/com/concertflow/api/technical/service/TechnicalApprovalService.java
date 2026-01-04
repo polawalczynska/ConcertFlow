@@ -40,8 +40,14 @@ public class TechnicalApprovalService {
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
-        Page<Concert> concerts = concertRepository.findByTechnicalManagerId(
+        List<TechnicalStatus> allowedStatuses = List.of(
+            TechnicalStatus.SUBMITTED,
+            TechnicalStatus.REVISION_REQUESTED,
+            TechnicalStatus.APPROVED
+        );
+        Page<Concert> concerts = concertRepository.findByTechnicalManagerIdWithSubmittedStatus(
             technicalManagerId,
+            allowedStatuses,
             pageable
         );
 
@@ -62,7 +68,11 @@ public class TechnicalApprovalService {
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
         Concert concert = findConcertById(concertId);
-        accessValidator.validateTechnicalManagerAccessById(concert, technicalManagerId);
+        
+        TechnicalStatus status = concert.getTechnicalStatus();
+        if (status == TechnicalStatus.PENDING) {
+            throw new IllegalStateException("Technical requirements have not been submitted yet. They are only visible after submission.");
+        }
 
         return technicalMapper.toDetailResponse(concert);
     }
