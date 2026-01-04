@@ -14,8 +14,8 @@ export function DangerZoneSection({ onDeleteAccount }: DangerZoneSectionProps) {
         <CardDescription>Irreversible and destructive actions</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex-1">
             <h3 className="text-lg font-semibold text-text-primary">Delete Account</h3>
             <p className="text-sm text-text-secondary mt-1">
               Once you delete your account, there is no going back. Please be certain.
@@ -24,7 +24,7 @@ export function DangerZoneSection({ onDeleteAccount }: DangerZoneSectionProps) {
           <Button
             variant="outline"
             onClick={onDeleteAccount}
-            className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+            className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 w-full sm:w-auto whitespace-nowrap"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             Delete Account
