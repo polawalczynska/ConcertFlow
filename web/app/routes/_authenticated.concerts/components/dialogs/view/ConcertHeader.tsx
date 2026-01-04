@@ -9,11 +9,6 @@ interface ConcertHeaderProps {
 export function ConcertHeader({ concert }: ConcertHeaderProps) {
   return (
     <>
-      <div className="sm:col-span-2">
-        <Label className="text-sm font-medium text-text-secondary">Concert Name</Label>
-        <p className="mt-1 text-base font-semibold text-text-primary">{concert.name}</p>
-      </div>
-
       <div>
         <Label className="text-sm font-medium text-text-secondary">Artist</Label>
         <p className="mt-1 text-base text-text-primary">{concert.artistName || "N/A"}</p>

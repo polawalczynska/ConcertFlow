@@ -76,7 +76,12 @@ export function CancelConcertDialog({
           {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isCancelling}>No, keep it</AlertDialogCancel>
+          <AlertDialogCancel 
+            onClick={() => handleOpenChange(false)}
+            disabled={isCancelling}
+          >
+            No, keep it
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             className="bg-orange-600 hover:bg-orange-700"

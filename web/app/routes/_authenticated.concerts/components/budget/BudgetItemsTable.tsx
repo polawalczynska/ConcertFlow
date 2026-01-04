@@ -13,9 +13,10 @@ interface BudgetItemsTableProps {
   concertId: number;
   budgetItems: BudgetItemResponse[];
   budgetStatus?: BudgetDetailResponseBudgetStatusEnum;
+  readOnly?: boolean;
 }
 
-export function BudgetItemsTable({ concertId, budgetItems, budgetStatus }: BudgetItemsTableProps) {
+export function BudgetItemsTable({ concertId, budgetItems, budgetStatus, readOnly = false }: BudgetItemsTableProps) {
   const [editingItem, setEditingItem] = useState<BudgetItemResponse | null>(null);
   const [deletingItem, setDeletingItem] = useState<BudgetItemResponse | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -23,7 +24,7 @@ export function BudgetItemsTable({ concertId, budgetItems, budgetStatus }: Budge
   const deleteItem = useDeleteBudgetItem(concertId);
 
   const isApproved = budgetStatus === "APPROVED";
-  const canEdit = !isApproved;
+  const canEdit = !isApproved && !readOnly;
 
   const handleEdit = (item: BudgetItemResponse) => {
     if (!canEdit) return;

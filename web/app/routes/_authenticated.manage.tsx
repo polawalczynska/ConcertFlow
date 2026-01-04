@@ -12,7 +12,6 @@ import { ConcertsEmptyState } from "~/routes/_authenticated.concerts/components/
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
 import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
 import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
-import { ViewConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/ViewConcertDialog";
 import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
@@ -140,16 +139,6 @@ export default function ConcertsManagePage() {
           concert={concertActions.selectedConcert}
           isCancelling={concertActions.isCancelling}
           onConfirm={concertActions.confirmCancel}
-        />
-        <ViewConcertDialog
-          isOpen={concertActions.isViewDialogOpen}
-          onOpenChange={concertActions.closeViewDialog}
-          concert={concertActions.selectedConcert}
-          onSubmitBudget={() => {
-            if (concertActions.selectedConcert) {
-              concertActions.handleSubmitBudget(concertActions.selectedConcert);
-            }
-          }}
         />
         <SubmitBudgetDialog
           isOpen={concertActions.isSubmitBudgetDialogOpen}
