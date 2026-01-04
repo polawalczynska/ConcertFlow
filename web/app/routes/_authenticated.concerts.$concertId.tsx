@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "@remix-run/react";
 import { useConcert } from "~/hooks/useConcerts";
 import { useUser } from "~/hooks/useUser";
@@ -9,6 +10,7 @@ import { AuthGuard } from "~/components/AuthGuard";
 import { ConcertPageHeader } from "./_authenticated.concerts.$concertId/components/ConcertPageHeader";
 import { ConcertPageContent } from "./_authenticated.concerts.$concertId/components/ConcertPageContent";
 import { ConcertPageManagement } from "./_authenticated.concerts.$concertId/components/ConcertPageManagement";
+import { ConcertPageActions } from "./_authenticated.concerts.$concertId/components/ConcertPageActions";
 import { ConcertPageDialogs } from "./_authenticated.concerts.$concertId/components/ConcertPageDialogs";
 import { ConcertPageLoading } from "./_authenticated.concerts.$concertId/components/ConcertPageLoading";
 import { ConcertPageError } from "./_authenticated.concerts.$concertId/components/ConcertPageError";
@@ -26,9 +28,15 @@ export default function ConcertPage() {
   const { data: technicalManagers = [] } = useTechnicalManagers();
 
   const isCoordinator = currentUser?.role === UserResponseRoleEnum.Coordinator;
+  const isBudgetManager = currentUser?.role === UserResponseRoleEnum.BudgetManager;
+  const isTechnicalManager = currentUser?.role === UserResponseRoleEnum.TechnicalManager;
 
   const concertForm = useConcertForm();
   const concertActions = useConcertActions();
+  const [isApproveTechnicalDialogOpen, setIsApproveTechnicalDialogOpen] = useState(false);
+  const [isRequestTechnicalRevisionDialogOpen, setIsRequestTechnicalRevisionDialogOpen] = useState(false);
+  const [isApproveBudgetDialogOpen, setIsApproveBudgetDialogOpen] = useState(false);
+  const [isRequestBudgetRevisionDialogOpen, setIsRequestBudgetRevisionDialogOpen] = useState(false);
 
   if (isLoading) {
     return <ConcertPageLoading />;
@@ -54,10 +62,23 @@ export default function ConcertPage() {
           <ConcertPageContent concert={concert} />
 
           {concert.id && (
-            <ConcertPageManagement
-              concertId={concert.id}
-              userRole={currentUser?.role}
-            />
+            <>
+              <ConcertPageManagement
+                concertId={concert.id}
+                concertName={concert.name || ""}
+                concert={concert}
+                userRole={currentUser?.role}
+              />
+              <ConcertPageActions
+                concertId={concert.id}
+                concert={concert}
+                userRole={currentUser?.role}
+                onApproveTechnical={() => setIsApproveTechnicalDialogOpen(true)}
+                onRequestTechnicalRevision={() => setIsRequestTechnicalRevisionDialogOpen(true)}
+                onApproveBudget={() => setIsApproveBudgetDialogOpen(true)}
+                onRequestBudgetRevision={() => setIsRequestBudgetRevisionDialogOpen(true)}
+              />
+            </>
           )}
         </div>
 
@@ -92,6 +113,82 @@ export default function ConcertPage() {
             budgetManagers={budgetManagers}
             technicalManagers={technicalManagers}
             onDeleteSuccess={() => navigate("/manage")}
+          />
+        )}
+        {isBudgetManager && concert.id && currentUser?.id && (
+          <ConcertPageDialogs
+            concertForm={{
+              isFormOpen: false,
+              selectedConcert: null,
+              formData: {} as any,
+              fieldErrors: {},
+              generalError: null,
+              isSubmitting: false,
+              setFormData: () => {},
+              handleSubmit: () => {},
+              closeForm: () => {},
+            }}
+            concertActions={{
+              isDeleteDialogOpen: false,
+              isCancelDialogOpen: false,
+              selectedConcert: null,
+              isDeleting: false,
+              isCancelling: false,
+              closeDeleteDialog: () => {},
+              closeCancelDialog: () => {},
+              confirmDelete: () => {},
+              confirmCancel: () => {},
+            }}
+            artists={[]}
+            budgetManagers={[]}
+            technicalManagers={[]}
+            budgetDialogs={{
+              isApproveDialogOpen: isApproveBudgetDialogOpen,
+              isRequestRevisionDialogOpen: isRequestBudgetRevisionDialogOpen,
+              concertId: concert.id,
+              concertName: concert.name || "",
+              budgetManagerId: currentUser.id,
+              onApproveDialogChange: setIsApproveBudgetDialogOpen,
+              onRequestRevisionDialogChange: setIsRequestBudgetRevisionDialogOpen,
+            }}
+          />
+        )}
+        {isTechnicalManager && concert.id && currentUser?.id && (
+          <ConcertPageDialogs
+            concertForm={{
+              isFormOpen: false,
+              selectedConcert: null,
+              formData: {} as any,
+              fieldErrors: {},
+              generalError: null,
+              isSubmitting: false,
+              setFormData: () => {},
+              handleSubmit: () => {},
+              closeForm: () => {},
+            }}
+            concertActions={{
+              isDeleteDialogOpen: false,
+              isCancelDialogOpen: false,
+              selectedConcert: null,
+              isDeleting: false,
+              isCancelling: false,
+              closeDeleteDialog: () => {},
+              closeCancelDialog: () => {},
+              confirmDelete: () => {},
+              confirmCancel: () => {},
+            }}
+            artists={[]}
+            budgetManagers={[]}
+            technicalManagers={[]}
+            technicalDialogs={{
+              isApproveDialogOpen: isApproveTechnicalDialogOpen,
+              isRequestRevisionDialogOpen: isRequestTechnicalRevisionDialogOpen,
+              concertId: concert.id,
+              concertName: concert.name || "",
+              technicalManagerId: currentUser.id,
+              onApproveDialogChange: setIsApproveTechnicalDialogOpen,
+              onRequestRevisionDialogChange: setIsRequestTechnicalRevisionDialogOpen,
+            }}
           />
         )}
       </div>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { technicalApi } from "~/lib/api-client";
@@ -5,12 +6,17 @@ import { useUser } from "~/hooks/useUser";
 import { TechnicalStatusHeader } from "./status/TechnicalStatusHeader";
 import { TechnicalLatestResponse } from "./status/TechnicalLatestResponse";
 import { TechnicalRequirementsView } from "./TechnicalRequirementsView";
+import { TechnicalActionButtons } from "./TechnicalActionButtons";
 
 interface TechnicalViewOnlyProps {
   concertId: number;
+  concertName: string;
 }
 
-export function TechnicalViewOnly({ concertId }: TechnicalViewOnlyProps) {
+export function TechnicalViewOnly({ 
+  concertId, 
+  concertName,
+}: TechnicalViewOnlyProps) {
   const { data: currentUser } = useUser();
   const technicalManagerId = currentUser?.id;
 
@@ -22,8 +28,19 @@ export function TechnicalViewOnly({ concertId }: TechnicalViewOnlyProps) {
         const response = await technicalApi.getTechnicalDetails(concertId, technicalManagerId);
         return response.data;
       } catch (error) {
-        if ((error as { response?: { status?: number } })?.response?.status === 404) {
+        const status = (error as { response?: { status?: number } })?.response?.status;
+        if (status === 404) {
           return null;
+        }
+        if (status === 403 || status === 401) {
+          // Manager is not assigned, but we still want to show details if available
+          // For now, return null - the backend will need to allow viewing without assignment
+          return null;
+        }
+        // If status is 400 or 500, it might be because requirements haven't been submitted yet
+        const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
+        if (errorMessage.includes("not been submitted") || errorMessage.includes("PENDING")) {
+          return null; // Treat as not available yet
         }
         throw error;
       }
@@ -34,6 +51,10 @@ export function TechnicalViewOnly({ concertId }: TechnicalViewOnlyProps) {
   const technicalStatus = technicalDetails?.technicalStatus || "PENDING";
   const approvalHistory = technicalDetails?.approvalHistory;
   const latestApproval = approvalHistory?.[(approvalHistory?.length ?? 1) - 1];
+  const isApproved = technicalStatus === "APPROVED";
+  const isRevisionRequested = technicalStatus === "REVISION_REQUESTED";
+  const isSubmitted = technicalStatus === "SUBMITTED";
+  const canApproveOrRequestRevision = isSubmitted || isRevisionRequested;
 
   if (isLoading) {
     return (
@@ -45,7 +66,14 @@ export function TechnicalViewOnly({ concertId }: TechnicalViewOnlyProps) {
     );
   }
 
-  if (error) {
+  const errorMessage = error 
+    ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || ""
+    : "";
+  const isNotSubmitted = errorMessage.includes("not been submitted") || 
+                        errorMessage.includes("PENDING") ||
+                        errorMessage.includes("have not been submitted");
+
+  if (error && !isNotSubmitted) {
     return (
       <Card className="mt-6">
         <CardContent className="p-6">
@@ -55,8 +83,18 @@ export function TechnicalViewOnly({ concertId }: TechnicalViewOnlyProps) {
     );
   }
 
-  if (!technicalDetails) {
-    return null;
+  if (!technicalDetails || isNotSubmitted) {
+    const message = isNotSubmitted
+      ? "No technical information provided yet. The coordinator needs to create and submit the technical requirements first."
+      : "Unable to load technical requirements. Please try again.";
+
+    return (
+      <Card className="mt-6">
+        <CardContent className="p-6">
+          <p className="text-text-secondary">{message}</p>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
