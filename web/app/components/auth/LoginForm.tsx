@@ -10,7 +10,7 @@ interface LoginFormProps {
   isLoading?: boolean;
   errors?: Partial<Record<keyof LoginFormData, string>>;
   generalError?: string | null;
-  onFieldChange?: () => void;
+  onFieldChange?: (field?: keyof LoginFormData) => void;
 }
 
 export default function LoginForm({
@@ -57,7 +57,7 @@ export default function LoginForm({
     if (validationErrors.email) {
       setValidationErrors((prev) => ({ ...prev, email: undefined }));
     }
-    onFieldChange?.();
+    onFieldChange?.("email");
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +65,7 @@ export default function LoginForm({
     if (validationErrors.password) {
       setValidationErrors((prev) => ({ ...prev, password: undefined }));
     }
-    onFieldChange?.();
+    onFieldChange?.("password");
   };
 
   return (

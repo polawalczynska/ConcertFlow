@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BrandHeader from "~/components/auth/BrandHeader";
 import AuthCard from "~/components/auth/AuthCard";
 import AuthFormHeader from "~/components/auth/AuthFormHeader";
@@ -12,35 +12,53 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const loginMutation = useLogin();
+  const lastErrorIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (loginMutation.error) {
-      const apiError = extractApiError(loginMutation.error);
-      if (apiError) {
-        if (apiError.field) {
-          setErrors((prev) => ({
-            ...prev,
-            [apiError.field as keyof LoginFormData]: apiError.message,
-          }));
+      const errorId = JSON.stringify(loginMutation.error);
+      if (errorId !== lastErrorIdRef.current) {
+        lastErrorIdRef.current = errorId;
+        const apiError = extractApiError(loginMutation.error);
+        if (apiError) {
+          if (apiError.field) {
+            setErrors((prev) => ({
+              ...prev,
+              [apiError.field as keyof LoginFormData]: apiError.message,
+            }));
+            setGeneralError(null);
+          } else {
+            setGeneralError(apiError.message);
+            setErrors({});
+          }
         } else {
-          setGeneralError(apiError.message);
-          setErrors({});
+          setGeneralError("An unexpected error occurred. Please try again.");
         }
-      } else {
-        setGeneralError("An unexpected error occurred. Please try again.");
       }
     }
-  }, [loginMutation.error]);
+    
+    if (loginMutation.isSuccess) {
+      setErrors({});
+      setGeneralError(null);
+      lastErrorIdRef.current = null;
+    }
+  }, [loginMutation.error, loginMutation.isSuccess]);
 
   const handleSubmit = (data: LoginFormData) => {
     setErrors({});
     setGeneralError(null);
+    lastErrorIdRef.current = null;
     loginMutation.mutate(data);
   };
 
-  const handleFieldChange = () => {
-    setErrors({});
-    setGeneralError(null);
+  const handleFieldChange = (field?: keyof LoginFormData) => {
+    if (field) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
   };
 
   return (
