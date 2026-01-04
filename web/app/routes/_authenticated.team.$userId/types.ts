@@ -4,5 +4,6 @@ export interface AssignedConcert {
   date: string;
   venue: string;
   status: "upcoming" | "completed";
+  concertStatus?: string;
 }
 

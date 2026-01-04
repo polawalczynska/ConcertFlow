@@ -20,13 +20,32 @@ function mapConcertToAssignedConcert(concert: ConcertResponse) {
     date: concert.date || new Date().toISOString(),
     venue: concert.venue || "Unknown",
     status: isCompleted ? ("completed" as const) : ("upcoming" as const),
+    concertStatus: concert.status,
   };
 }
 
 export function AssignedConcertsTab({ memberId }: AssignedConcertsTabProps) {
   const { data: concerts = [], isLoading } = useAssignedConcerts(memberId);
 
-  const assignedConcerts = concerts.map(mapConcertToAssignedConcert);
+  const assignedConcerts = concerts
+    .map(mapConcertToAssignedConcert)
+    .sort((a, b) => {
+      const aIsActive = a.concertStatus === "PLANNING" || a.concertStatus === "APPROVED";
+      const bIsActive = b.concertStatus === "PLANNING" || b.concertStatus === "APPROVED";
+      
+      if (aIsActive && !bIsActive) return -1;
+      if (!aIsActive && bIsActive) return 1;
+      
+      if (aIsActive && bIsActive) {
+        const aDate = new Date(a.date).getTime();
+        const bDate = new Date(b.date).getTime();
+        return aDate - bDate;
+      }
+      
+      const aDate = new Date(a.date).getTime();
+      const bDate = new Date(b.date).getTime();
+      return bDate - aDate;
+    });
 
   if (isLoading) {
     return (
