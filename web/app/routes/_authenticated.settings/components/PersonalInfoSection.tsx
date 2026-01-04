@@ -7,6 +7,10 @@ interface PersonalInfoSectionProps {
   lastName: string;
   onFirstNameChange: (value: string) => void;
   onLastNameChange: (value: string) => void;
+  errors?: {
+    firstName?: string;
+    lastName?: string;
+  };
 }
 
 export function PersonalInfoSection({
@@ -14,6 +18,7 @@ export function PersonalInfoSection({
   lastName,
   onFirstNameChange,
   onLastNameChange,
+  errors,
 }: PersonalInfoSectionProps) {
   return (
     <Card>
@@ -30,7 +35,11 @@ export function PersonalInfoSection({
               value={firstName}
               onChange={(e) => onFirstNameChange(e.target.value)}
               placeholder="Enter your first name"
+              className={errors?.firstName ? "border-red-500 focus:border-red-500" : ""}
             />
+            {errors?.firstName && (
+              <p className="text-sm text-red-500">{errors.firstName}</p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="lastName">Last Name</Label>
@@ -39,7 +48,11 @@ export function PersonalInfoSection({
               value={lastName}
               onChange={(e) => onLastNameChange(e.target.value)}
               placeholder="Enter your last name"
+              className={errors?.lastName ? "border-red-500 focus:border-red-500" : ""}
             />
+            {errors?.lastName && (
+              <p className="text-sm text-red-500">{errors.lastName}</p>
+            )}
           </div>
         </div>
       </CardContent>

@@ -12,6 +12,11 @@ interface PasswordSectionProps {
   onCurrentPasswordChange: (value: string) => void;
   onNewPasswordChange: (value: string) => void;
   onConfirmPasswordChange: (value: string) => void;
+  errors?: {
+    currentPassword?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+  };
 }
 
 export function PasswordSection({
@@ -21,6 +26,7 @@ export function PasswordSection({
   onCurrentPasswordChange,
   onNewPasswordChange,
   onConfirmPasswordChange,
+  errors,
 }: PasswordSectionProps) {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -42,7 +48,7 @@ export function PasswordSection({
               value={currentPassword}
               onChange={(e) => onCurrentPasswordChange(e.target.value)}
               placeholder="Enter your current password"
-              className="pr-10"
+              className={`pr-10 ${errors?.currentPassword ? "border-red-500 focus:border-red-500" : ""}`}
             />
             <button
               type="button"
@@ -56,6 +62,9 @@ export function PasswordSection({
               )}
             </button>
           </div>
+          {errors?.currentPassword && (
+            <p className="text-sm text-red-500">{errors.currentPassword}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="newPassword">New Password</Label>
@@ -66,7 +75,7 @@ export function PasswordSection({
               value={newPassword}
               onChange={(e) => onNewPasswordChange(e.target.value)}
               placeholder="Enter your new password"
-              className="pr-10"
+              className={`pr-10 ${errors?.newPassword ? "border-red-500 focus:border-red-500" : ""}`}
             />
             <button
               type="button"
@@ -80,6 +89,9 @@ export function PasswordSection({
               )}
             </button>
           </div>
+          {errors?.newPassword && (
+            <p className="text-sm text-red-500">{errors.newPassword}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="confirmPassword">Confirm New Password</Label>
@@ -90,7 +102,7 @@ export function PasswordSection({
               value={confirmPassword}
               onChange={(e) => onConfirmPasswordChange(e.target.value)}
               placeholder="Confirm your new password"
-              className="pr-10"
+              className={`pr-10 ${errors?.confirmPassword ? "border-red-500 focus:border-red-500" : ""}`}
             />
             <button
               type="button"
@@ -104,6 +116,9 @@ export function PasswordSection({
               )}
             </button>
           </div>
+          {errors?.confirmPassword && (
+            <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+          )}
         </div>
       </CardContent>
     </Card>

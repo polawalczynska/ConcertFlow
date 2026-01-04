@@ -6,6 +6,7 @@ import { formatRole } from "~/lib/role-utils";
 interface RoleSectionProps {
   role: "" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER";
   onRoleChange: (value: "" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER") => void;
+  error?: string;
 }
 
 const roleOptions = [
@@ -14,7 +15,7 @@ const roleOptions = [
   { value: "TECHNICAL_MANAGER", label: "Technical Manager" },
 ];
 
-export function RoleSection({ role, onRoleChange }: RoleSectionProps) {
+export function RoleSection({ role, onRoleChange, error }: RoleSectionProps) {
   const selectedRoleLabel = role ? formatRole(role) : "";
 
   return (
@@ -27,7 +28,7 @@ export function RoleSection({ role, onRoleChange }: RoleSectionProps) {
         <div className="space-y-2">
           <Label htmlFor="role">Role</Label>
           <Select value={role} onValueChange={(value) => onRoleChange(value as typeof role)}>
-            <SelectTrigger id="role">
+            <SelectTrigger id="role" className={error ? "border-red-500 focus:border-red-500" : ""}>
               <SelectValue placeholder="Select a role">
                 {selectedRoleLabel || "Select a role"}
               </SelectValue>
@@ -40,6 +41,9 @@ export function RoleSection({ role, onRoleChange }: RoleSectionProps) {
               ))}
             </SelectContent>
           </Select>
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
         </div>
       </CardContent>
     </Card>
