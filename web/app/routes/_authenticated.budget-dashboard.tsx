@@ -6,14 +6,27 @@ import { BudgetChartsSection } from "./_authenticated.budget-dashboard/component
 import { RecentActivity } from "./_authenticated.budget-dashboard/components/RecentActivity";
 import { BudgetDashboardLoading } from "./_authenticated.budget-dashboard/components/BudgetDashboardLoading";
 import { BudgetDashboardError } from "./_authenticated.budget-dashboard/components/BudgetDashboardError";
+import { ErrorPage } from "~/components/ErrorPage";
 import { mapBudgetDashboardData } from "./_authenticated.budget-dashboard/utils/mapBudgetDashboardData";
 
 export default function BudgetManagerDashboard() {
   const { user, userLoading, isBudgetManager } = useBudgetManagerAccess();
   const { data: stats, isLoading: statsLoading } = useBudgetManagerStats();
 
-  if (userLoading || !user || !isBudgetManager) {
+  if (userLoading) {
     return null;
+  }
+
+  if (!user || !isBudgetManager) {
+    return (
+      <ErrorPage
+        statusCode={403}
+        title="Access Denied"
+        message="You don't have permission to access this page. Budget Manager role is required."
+        showHomeButton={true}
+        showBackButton={true}
+      />
+    );
   }
 
   if (statsLoading) {

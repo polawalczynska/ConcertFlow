@@ -16,6 +16,7 @@ import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
 import { useCoordinatorAccess } from "~/routes/_authenticated.dashboard/hooks/useCoordinatorAccess";
+import { ErrorPage } from "~/components/ErrorPage";
 
 export default function ConcertsManagePage() {
   const { user, userLoading, isCoordinator, error: userError } = useCoordinatorAccess();
@@ -71,7 +72,15 @@ export default function ConcertsManagePage() {
   }
 
   if (!isCoordinator) {
-    return null;
+    return (
+      <ErrorPage
+        statusCode={403}
+        title="Access Denied"
+        message="You don't have permission to access this page. Coordinator role is required."
+        showHomeButton={true}
+        showBackButton={true}
+      />
+    );
   }
 
   return (

@@ -6,6 +6,7 @@ import { TechnicalDetailView } from "./_authenticated.technical-manager/componen
 import { TechnicalFilters } from "./_authenticated.technical-manager/components/TechnicalFilters";
 import { ApproveTechnicalDialog } from "./_authenticated.technical-manager/components/ApproveTechnicalDialog";
 import { RequestTechnicalRevisionDialog } from "./_authenticated.technical-manager/components/RequestTechnicalRevisionDialog";
+import { ErrorPage } from "~/components/ErrorPage";
 
 export default function TechnicalPage() {
   const { user, userLoading, isTechnicalManager, error: userError } = useTechnicalManagerAccess();
@@ -54,9 +55,13 @@ export default function TechnicalPage() {
 
   if (!isTechnicalManager) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-text-secondary">Access denied. Technical Manager role required.</p>
-      </div>
+      <ErrorPage
+        statusCode={403}
+        title="Access Denied"
+        message="You don't have permission to access this page. Technical Manager role is required."
+        showHomeButton={true}
+        showBackButton={true}
+      />
     );
   }
 

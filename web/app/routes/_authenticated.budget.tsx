@@ -6,6 +6,7 @@ import { BudgetDetailView } from "./_authenticated.budget-manager/components/bud
 import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
 import { RequestRevisionDialog } from "./_authenticated.budget-manager/components/approve-dialog/RequestRevisionDialog";
 import { BudgetFilters } from "./_authenticated.budget-manager/components/BudgetFilters";
+import { ErrorPage } from "~/components/ErrorPage";
 import type { BudgetItemApproval } from "~/api";
 
 export default function ConcertsPage() {
@@ -29,11 +30,7 @@ export default function ConcertsPage() {
   const [approveModal, setApproveModal] = useState(false);
   const [revisionModal, setRevisionModal] = useState(false);
 
-  const filteredBudgets = useMemo(() => {
-    return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
-  }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
-
-  if (userLoading || budgetsLoading) {
+  if (userLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <p className="text-text-secondary">Loading...</p>
@@ -60,6 +57,30 @@ export default function ConcertsPage() {
     );
   }
 
+  if (!isBudgetManager) {
+    return (
+      <ErrorPage
+        statusCode={403}
+        title="Access Denied"
+        message="You don't have permission to access this page. Budget Manager role is required."
+        showHomeButton={true}
+        showBackButton={true}
+      />
+    );
+  }
+
+  const filteredBudgets = useMemo(() => {
+    return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
+  }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
+
+  if (budgetsLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-text-secondary">Loading...</p>
+      </div>
+    );
+  }
+
   if (budgetsError) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -67,14 +88,6 @@ export default function ConcertsPage() {
           <p className="text-text-secondary mb-2">Error loading budgets</p>
           <p className="text-sm text-text-secondary">Please try refreshing the page.</p>
         </div>
-      </div>
-    );
-  }
-
-  if (!isBudgetManager) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-text-secondary">Access denied. Budget Manager role required.</p>
       </div>
     );
   }

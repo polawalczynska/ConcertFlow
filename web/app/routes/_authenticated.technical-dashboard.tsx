@@ -6,14 +6,27 @@ import { TechnicalChartsSection } from "./_authenticated.technical-dashboard/com
 import { RecentActivity } from "./_authenticated.technical-dashboard/components/RecentActivity";
 import { TechnicalDashboardLoading } from "./_authenticated.technical-dashboard/components/TechnicalDashboardLoading";
 import { TechnicalDashboardError } from "./_authenticated.technical-dashboard/components/TechnicalDashboardError";
+import { ErrorPage } from "~/components/ErrorPage";
 import { mapTechnicalDashboardData } from "./_authenticated.technical-dashboard/utils/mapTechnicalDashboardData";
 
 export default function TechnicalManagerDashboard() {
   const { user, userLoading, isTechnicalManager } = useTechnicalManagerAccess();
   const { data: stats, isLoading: statsLoading } = useTechnicalManagerStats();
 
-  if (userLoading || !user || !isTechnicalManager) {
+  if (userLoading) {
     return null;
+  }
+
+  if (!user || !isTechnicalManager) {
+    return (
+      <ErrorPage
+        statusCode={403}
+        title="Access Denied"
+        message="You don't have permission to access this page. Technical Manager role is required."
+        showHomeButton={true}
+        showBackButton={true}
+      />
+    );
   }
 
   if (statsLoading) {
