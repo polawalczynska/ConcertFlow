@@ -42,7 +42,7 @@ public class BudgetApprovalService {
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
-        Page<Concert> concerts = concertRepository.findByBudgetManagerId(
+        Page<Concert> concerts = concertRepository.findByBudgetManagerIdWithSubmittedBudgets(
             budgetManagerId,
             pageable
         );
