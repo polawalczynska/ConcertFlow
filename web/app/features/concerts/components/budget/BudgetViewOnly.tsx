@@ -30,9 +30,6 @@ export function BudgetViewOnly({
       } catch (error) {
         const status = (error as { response?: { status?: number } })?.response?.status;
         if (status === 403 || status === 401) {
-          // Manager is not assigned, but we still want to show details if available
-          // Try to get details without assignment check - but this won't work with current API
-          // For now, return null and show a message
           return null;
         }
         throw error;

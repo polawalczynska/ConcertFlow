@@ -46,8 +46,6 @@ function parseRevisionNotes(notes: string | null | undefined): RevisionDetails |
 
 export function BudgetItemsTableRow({ item, onEdit, onDelete, canEdit, budgetStatus }: BudgetItemsTableRowProps) {
   const revisionDetails = parseRevisionNotes(item.notes);
-  // Only show revision info if budget is in REVISION_REQUESTED status
-  // Once approved, revision notes for specific items should not be displayed
   const hasRevision = budgetStatus !== "APPROVED" && revisionDetails !== null;
 
   return (

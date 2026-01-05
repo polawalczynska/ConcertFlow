@@ -19,7 +19,6 @@ export function filterAndSortApprovals(
   }
 
   if (statusFilter !== "all") {
-    // Filter by status (status is already mapped in mapToTechnicalApproval)
     filtered = filtered.filter((approval) => approval.status === statusFilter);
   }
 
