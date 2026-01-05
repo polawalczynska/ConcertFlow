@@ -1,5 +1,6 @@
 package com.concertflow.api.budget;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.budget.dto.BudgetItemResponse;
 import com.concertflow.api.budget.dto.CreateBudgetItemRequest;
 import com.concertflow.api.budget.dto.UpdateBudgetItemRequest;
@@ -13,7 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/concerts/{concertId}/budget-items")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/concerts/{concertId}/budget-items")
 @RequiredArgsConstructor
 public class BudgetItemController {
     private final BudgetItemService budgetItemService;

@@ -1,5 +1,6 @@
 package com.concertflow.api.budget;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.budget.dto.*;
 import com.concertflow.api.budget.service.BudgetApprovalService;
 import com.concertflow.api.security.annotation.RequireBudgetManager;
@@ -15,7 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/budget/approval")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/budget/approval")
 @RequiredArgsConstructor
 public class BudgetApprovalController {
     private final BudgetApprovalService budgetApprovalService;

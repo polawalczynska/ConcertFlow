@@ -1,5 +1,6 @@
 package com.concertflow.api.auth;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.auth.dto.AuthResponse;
 import com.concertflow.api.auth.dto.LoginRequest;
 import com.concertflow.api.auth.dto.RefreshTokenRequest;
@@ -14,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + ApiConstants.AUTH_ENDPOINT)
 @RequiredArgsConstructor
 public class AuthController {
     private final RegistrationService registrationService;

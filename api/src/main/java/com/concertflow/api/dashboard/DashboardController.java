@@ -1,5 +1,6 @@
 package com.concertflow.api.dashboard;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.dashboard.dto.BudgetManagerStatsResponse;
 import com.concertflow.api.dashboard.dto.CoordinatorStatsResponse;
 import com.concertflow.api.dashboard.dto.TechnicalManagerStatsResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/dashboard")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
     private final DashboardService dashboardService;

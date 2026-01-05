@@ -16,7 +16,7 @@ public class ApiConstants {
     public static final String REFRESH_ENDPOINT = "/refresh";
     
     public static final String[] PUBLIC_ENDPOINTS = {
-        API_BASE_PATH + AUTH_ENDPOINT + "/**",
+        API_V1_BASE_PATH + AUTH_ENDPOINT + "/**",
         API_BASE_PATH + "/api-docs/**",
         "/swagger-ui/**"
     };

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/concerts")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/concerts")
 @RequiredArgsConstructor
 public class ConcertController {
     private final ConcertService concertService;

@@ -1,5 +1,6 @@
 package com.concertflow.api.user;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.security.annotation.RequireAuthenticated;
 import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.user.dto.UpdateUserRequest;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

@@ -1,5 +1,6 @@
 package com.concertflow.api.team;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.security.annotation.RequireAuthenticated;
 import com.concertflow.api.security.annotation.RequireCoordinator;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/team")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/team")
 @RequiredArgsConstructor
 public class TeamController {
     private final TeamService teamService;

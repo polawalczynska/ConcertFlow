@@ -1,5 +1,6 @@
 package com.concertflow.api.technical;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.security.annotation.RequireTechnicalManager;
 import com.concertflow.api.technical.dto.*;
@@ -16,7 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/technical/approval")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/technical/approval")
 @RequiredArgsConstructor
 public class TechnicalApprovalController {
     private final TechnicalApprovalService technicalApprovalService;
