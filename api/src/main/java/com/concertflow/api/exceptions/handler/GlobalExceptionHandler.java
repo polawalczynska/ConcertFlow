@@ -6,6 +6,7 @@ import com.concertflow.api.exceptions.types.ArtistNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertValidationException;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
+import com.concertflow.api.exceptions.types.InvalidConcertStatusTransitionException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.InvalidInvitationStatusException;
 import com.concertflow.api.exceptions.types.PendingInvitationExistsException;
@@ -160,6 +161,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleAlreadyTeamMemberException(AlreadyTeamMemberException ex) {
         ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         pd.setTitle("ALREADY_TEAM_MEMBER");
+        return pd;
+    }
+
+    @ExceptionHandler(InvalidConcertStatusTransitionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleInvalidConcertStatusTransitionException(InvalidConcertStatusTransitionException ex) {
+        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        pd.setTitle("INVALID_CONCERT_STATUS_TRANSITION");
         return pd;
     }
 }
