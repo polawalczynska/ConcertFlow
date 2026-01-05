@@ -14,12 +14,10 @@ public abstract class AbstractApprovalHandler implements ApprovalHandler {
     @Override
     public boolean handle(ApprovalRequest request) {
         if (canHandle(request)) {
-            log.debug("Handler {} is processing request: {}", this.getClass().getSimpleName(), request.getAction());
             return process(request);
         }
         
         if (next != null) {
-            log.debug("Handler {} cannot handle request, passing to next handler", this.getClass().getSimpleName());
             return next.handle(request);
         }
         

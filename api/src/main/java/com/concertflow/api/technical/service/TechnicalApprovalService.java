@@ -42,7 +42,6 @@ public class TechnicalApprovalService {
         Long technicalManagerId,
         User authenticatedUser
     ) {
-        log.debug("Fetching technical approvals for technical manager ID: {}", technicalManagerId);
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
@@ -69,7 +68,6 @@ public class TechnicalApprovalService {
         Long technicalManagerId,
         User authenticatedUser
     ) {
-        log.debug("Fetching technical details for concert: {}, technical manager ID: {}", concertId, technicalManagerId);
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
@@ -85,7 +83,7 @@ public class TechnicalApprovalService {
 
     @RequireTechnicalManager
     public void approveTechnical(Long concertId, ApproveTechnicalRequest request, User approver) {
-        log.info("Approving technical requirements for concert: {}, approver: {}", concertId, approver.getEmail());
+        log.info("Approving technical requirements for concert: {}, approver ID: {}", concertId, approver.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateTechnicalManagerAccess(concert, approver);

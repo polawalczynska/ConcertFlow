@@ -49,7 +49,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget approved notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -68,7 +67,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget revision requested notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -87,7 +85,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget submitted notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -106,7 +103,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical approved notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -125,7 +121,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical revision requested notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -144,7 +139,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical submitted notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -166,7 +160,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Concert status changed notification sent for concert: {}", concert.getId());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -197,7 +190,6 @@ public class NotificationService {
                     null,
                     freshInvitation.getId()
                 );
-                log.info("Team invitation notification sent for invitation: {}", invitationId);
             } else {
                 log.warn("Team invitation notification failed - missing user data for invitation: {}", invitationId);
             }
@@ -235,7 +227,6 @@ public class NotificationService {
                     null,
                     freshInvitation.getId()
                 );
-                log.info("Team member joined notification sent to coordinator for invitation: {}", invitationId);
             } else {
                 log.warn("Team member joined notification failed - missing user data for invitation: {}", invitationId);
             }
@@ -258,7 +249,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Upcoming concert reminder sent for concert: {}", concert.getId());
     }
 
     private Notification createNotification(

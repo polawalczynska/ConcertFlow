@@ -39,7 +39,6 @@ public class BudgetApprovalService {
 
     @RequireBudgetManager
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
-        log.debug("Fetching budgets for budget manager ID: {}", budgetManagerId);
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
@@ -56,7 +55,6 @@ public class BudgetApprovalService {
 
     @RequireBudgetManager
     public BudgetDetailResponse getBudgetDetails(Long concertId, Long budgetManagerId, User authenticatedUser) {
-        log.debug("Fetching budget details for concert: {}, budget manager ID: {}", concertId, budgetManagerId);
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
@@ -71,7 +69,7 @@ public class BudgetApprovalService {
 
     @RequireBudgetManager
     public void approveBudget(Long concertId, ApproveBudgetRequest request, User approver) {
-        log.info("Approving budget for concert: {}, approver: {}", concertId, approver.getEmail());
+        log.info("Approving budget for concert: {}, approver ID: {}", concertId, approver.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetManagerAccess(concert, approver);
@@ -110,7 +108,7 @@ public class BudgetApprovalService {
 
     @RequireCoordinator
     public void submitBudgetForApproval(Long concertId, SubmitBudgetForApprovalRequest request, User submitter) {
-        log.info("Submitting budget for approval, concert: {}, submitter: {}", concertId, submitter.getEmail());
+        log.info("Submitting budget for approval, concert: {}, submitter ID: {}", concertId, submitter.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetForSubmission(concert);
@@ -129,7 +127,6 @@ public class BudgetApprovalService {
 
     @RequireCoordinator
     public BudgetDetailResponse getBudgetDetailsForCoordinator(Long concertId, User coordinator) {
-        log.debug("Fetching budget details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 
         Concert concert = findConcertById(concertId);
 

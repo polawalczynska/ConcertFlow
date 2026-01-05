@@ -36,12 +36,12 @@ public class ApprovalChainService {
     }
 
     public boolean process(ApprovalRequest request) {
-        log.debug("Processing approval request: {} for concert: {}", 
-            request.getAction(), request.getConcert().getId());
-        
         boolean result = chain.handle(request);
         
-        log.debug("Approval request processed. Result: {}", result);
+        if (!result) {
+            log.warn("Approval request failed: {} for concert: {}", 
+                request.getAction(), request.getConcert().getId());
+        }
         return result;
     }
 }

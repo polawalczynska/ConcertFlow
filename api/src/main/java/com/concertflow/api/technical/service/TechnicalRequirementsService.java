@@ -37,7 +37,7 @@ public class TechnicalRequirementsService {
 
     @RequireCoordinator
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
-        log.info("Saving technical requirements for concert: {}, coordinator: {}", concertId, coordinator.getEmail());
+        log.info("Saving technical requirements for concert: {}, coordinator ID: {}", concertId, coordinator.getId());
 
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, coordinator);
@@ -55,8 +55,8 @@ public class TechnicalRequirementsService {
         SubmitTechnicalRequirementsRequest request,
         User submitter
     ) {
-        log.info("Submitting technical requirements for approval, concert: {}, submitter: {}",
-            concertId, submitter.getEmail());
+        log.info("Submitting technical requirements for approval, concert: {}, submitter ID: {}",
+            concertId, submitter.getId());
 
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, submitter);
@@ -79,7 +79,6 @@ public class TechnicalRequirementsService {
 
     @RequireCoordinator
     public TechnicalDetailResponse getTechnicalDetailsForCoordinator(Long concertId, User coordinator) {
-        log.debug("Fetching technical details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, coordinator);
