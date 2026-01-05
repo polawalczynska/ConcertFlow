@@ -28,14 +28,12 @@ import java.util.List;
 
 import static com.concertflow.api.exceptions.ErrorMessage.*;
 
+import com.concertflow.api.config.ApiConstants;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final List<String> PERMIT_ALL_ENDPOINTS = List.of(
-        "/api/auth/**",
-        "/api/api-docs/**",
-        "/swagger-ui/**"
-    );
+    private static final List<String> PERMIT_ALL_ENDPOINTS = List.of(ApiConstants.PUBLIC_ENDPOINTS);
 
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
@@ -81,8 +79,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(ApiConstants.BEARER_PREFIX)) {
+            return bearerToken.substring(ApiConstants.BEARER_PREFIX_LENGTH);
         }
         return null;
     }

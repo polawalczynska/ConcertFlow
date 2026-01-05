@@ -1,5 +1,6 @@
 package com.concertflow.api.concert;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.concert.dto.CancelConcertRequest;
 import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
@@ -29,6 +30,9 @@ public class ConcertController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int pageSize
     ) {
+        if (pageSize > ApiConstants.MAX_PAGE_SIZE) {
+            pageSize = ApiConstants.MAX_PAGE_SIZE;
+        }
         return concertService.getAllConcerts(status, artistId, coordinatorId, search, page, pageSize);
     }
 
