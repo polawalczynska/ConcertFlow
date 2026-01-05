@@ -39,8 +39,7 @@ public class TechnicalRequirementsService {
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
         log.info("Saving technical requirements for concert: {}, coordinator ID: {}", concertId, coordinator.getId());
 
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, coordinator);
+        Concert concert = validateAndGetConcert(concertId, coordinator);
         TechnicalRequirements requirements = getOrCreateTechnicalRequirements(concert);
         accessValidator.validateTechnicalForEdit(concert);
         updateTechnicalRequirements(requirements, request);
@@ -58,8 +57,7 @@ public class TechnicalRequirementsService {
         log.info("Submitting technical requirements for approval, concert: {}, submitter ID: {}",
             concertId, submitter.getId());
 
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, submitter);
+        Concert concert = validateAndGetConcert(concertId, submitter);
         validateBudgetApproved(concert);
 
         TechnicalRequirements requirements = getOrCreateTechnicalRequirements(concert);
@@ -79,11 +77,14 @@ public class TechnicalRequirementsService {
 
     @RequireCoordinator
     public TechnicalDetailResponse getTechnicalDetailsForCoordinator(Long concertId, User coordinator) {
+        Concert concert = validateAndGetConcert(concertId, coordinator);
+        return technicalMapper.toDetailResponse(concert);
+    }
 
+    private Concert validateAndGetConcert(Long concertId, User coordinator) {
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, coordinator);
-
-        return technicalMapper.toDetailResponse(concert);
+        return concert;
     }
 
     private void validateCoordinatorAccess(Concert concert, User coordinator) {

@@ -12,6 +12,7 @@ import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
 import com.concertflow.api.concert.service.EntityFinderService;
 import com.concertflow.api.concert.service.UserFinderService;
+import com.concertflow.api.concert.state.ConcertStateManager;
 import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
@@ -44,6 +45,7 @@ public class ConcertService {
     private final EntityFinderService entityFinder;
     private final UserFinderService userFinder;
     private final TeamMemberService teamMemberService;
+    private final ConcertStateManager concertStateManager;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -104,6 +106,10 @@ public class ConcertService {
 
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
+        
+        if (!concertStateManager.canEdit(concert)) {
+            throw new IllegalStateException("Concert cannot be edited in its current state: " + concert.getStatus());
+        }
 
         Artist artist = entityFinder.findArtistById(request.artistId());
         User budgetManager = request.budgetManagerId() != null 
@@ -130,6 +136,10 @@ public class ConcertService {
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
+        if (!concertStateManager.canDelete(concert)) {
+            throw new IllegalStateException("Concert cannot be deleted in its current state: " + concert.getStatus());
+        }
+        
         concertRepository.delete(concert);
         concertRepository.flush();
     }
@@ -139,13 +149,7 @@ public class ConcertService {
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
-        if (concert.getStatus() == ConcertStatus.COMPLETED) {
-            throw new IllegalStateException("Cannot cancel a completed concert");
-        }
-        
-        concert.setStatus(ConcertStatus.CANCELLED);
-        concert.setCancellationReason(request.cancellationReason());
-        concertRepository.save(concert);
+        concertStateManager.cancel(concert, request.cancellationReason());
     }
 
     public ConcertResponse getConcertById(Long id) {

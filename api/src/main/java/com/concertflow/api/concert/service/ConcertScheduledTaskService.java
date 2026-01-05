@@ -3,6 +3,7 @@ package com.concertflow.api.concert.service;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.concert.state.ConcertStateManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +19,7 @@ import java.util.List;
 @Transactional
 public class ConcertScheduledTaskService {
     private final ConcertRepository concertRepository;
+    private final ConcertStateManager concertStateManager;
 
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void completePastConcerts() {
@@ -26,9 +28,12 @@ public class ConcertScheduledTaskService {
         
         if (!concertsToComplete.isEmpty()) {
             for (Concert concert : concertsToComplete) {
-                concert.setStatus(ConcertStatus.COMPLETED);
+                try {
+                    concertStateManager.complete(concert);
+                } catch (Exception e) {
+                    log.warn("Failed to complete concert {}: {}", concert.getId(), e.getMessage());
+                }
             }
-            concertRepository.saveAll(concertsToComplete);
             log.info("Completed {} past concerts", concertsToComplete.size());
         }
     }
@@ -39,11 +44,14 @@ public class ConcertScheduledTaskService {
         List<Concert> concertsToCancel = concertRepository.findUnapprovedPastConcerts(now);
         
         if (!concertsToCancel.isEmpty()) {
+            String cancellationReason = "Automatically cancelled - concert was not approved before the scheduled date";
             for (Concert concert : concertsToCancel) {
-                concert.setStatus(ConcertStatus.CANCELLED);
-                concert.setCancellationReason("Automatically cancelled - concert was not approved before the scheduled date");
+                try {
+                    concertStateManager.cancel(concert, cancellationReason);
+                } catch (Exception e) {
+                    log.warn("Failed to cancel concert {}: {}", concert.getId(), e.getMessage());
+                }
             }
-            concertRepository.saveAll(concertsToCancel);
             log.info("Cancelled {} unapproved past concerts", concertsToCancel.size());
         }
     }
