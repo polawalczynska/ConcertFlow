@@ -1,34 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { getAccessToken } from "~/shared/utils";
-
-const getApiBaseUrl = () => {
-  if (typeof window !== "undefined") {
-    return (window as { ENV?: { API_BASE_URL?: string } })?.ENV?.API_BASE_URL || "http://localhost:8080";
-  }
-  return "http://localhost:8080";
-};
+import { budgetApprovalApi } from "~/lib/api-client";
+import { useUser } from "~/shared/hooks/domain/useUser";
 
 export function useBudgetDetails(
   concertId: number | null,
   options?: { enabled?: boolean }
 ) {
+  const { data: currentUser } = useUser();
+  const budgetManagerId = currentUser?.id;
+
   return useQuery({
-    queryKey: ["budget-details", concertId],
+    queryKey: ["budget-details", concertId, budgetManagerId],
     queryFn: async () => {
-      if (!concertId) return null;
-      const token = getAccessToken();
-      const response = await axios.get(
-        `${getApiBaseUrl()}/api/budget/approval/concert/${concertId}/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (!concertId || !budgetManagerId) return null;
+      const response = await budgetApprovalApi.getBudgetDetails(concertId, budgetManagerId);
       return response.data;
     },
-    enabled: options?.enabled !== false && !!concertId,
+    enabled: options?.enabled !== false && !!concertId && !!budgetManagerId,
     staleTime: 30 * 1000,
   });
 }

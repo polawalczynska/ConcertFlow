@@ -1,17 +1,8 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "@remix-run/react";
 import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens, isTokenExpiringSoon, getTokenExpirationTime } from "~/shared/utils";
-import axios from "axios";
-
-interface WindowWithEnv extends Window {
-  ENV?: {
-    API_BASE_URL?: string;
-  };
-}
-
-const basePath = typeof window !== "undefined" 
-  ? (window as unknown as WindowWithEnv).ENV?.API_BASE_URL || "http://localhost:8080"
-  : "http://localhost:8080";
+import { authApi } from "~/lib/api-client";
+import type { RefreshTokenRequest } from "~/api";
 
 export function useTokenRefresh() {
   const navigate = useNavigate();
@@ -54,10 +45,8 @@ export function useTokenRefresh() {
 
     try {
       const tokenToUse = refreshTokenValue || rememberMeTokenValue;
-      const response = await axios.post(
-        `${basePath}/api/v1/auth/refresh`,
-        { refreshToken: tokenToUse }
-      );
+      const refreshTokenRequest: RefreshTokenRequest = { refreshToken: tokenToUse };
+      const response = await authApi.refreshToken(refreshTokenRequest);
 
       if (response.data.accessToken) {
         setAccessToken(response.data.accessToken);

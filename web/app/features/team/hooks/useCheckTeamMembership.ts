@@ -1,17 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "~/shared/hooks/domain/useUser";
-import axios from "axios";
-import { getAccessToken } from "~/shared/utils";
-
-interface WindowWithEnv extends Window {
-  ENV?: {
-    API_BASE_URL?: string;
-  };
-}
-
-const basePath = typeof window !== "undefined" 
-  ? (window as unknown as WindowWithEnv).ENV?.API_BASE_URL || "http://localhost:8080"
-  : "http://localhost:8080";
+import { teamApi } from "~/lib/api-client";
 
 export function useCheckTeamMembership() {
   const { data: currentUser } = useUser();
@@ -20,13 +9,7 @@ export function useCheckTeamMembership() {
     queryKey: ["team-membership", currentUser?.id],
     queryFn: async () => {
       if (!currentUser?.id) return false;
-      const token = getAccessToken();
-      const response = await axios.get<boolean>(
-        `${basePath}/api/team/check-membership`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        }
-      );
+      const response = await teamApi.checkTeamMembership();
       return response.data;
     },
     enabled: !!currentUser?.id && currentUser?.role !== "COORDINATOR",
