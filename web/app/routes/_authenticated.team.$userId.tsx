@@ -1,10 +1,10 @@
 import { useParams } from "@remix-run/react";
-import { DeleteTeamMemberDialog } from "~/routes/_authenticated.team/components/DeleteTeamMemberDialog";
-import { TeamMemberDetailHeader } from "./_authenticated.team.$userId/components/TeamMemberDetailHeader";
-import { TeamMemberDetailCard } from "./_authenticated.team.$userId/components/TeamMemberDetailCard";
-import { TeamMemberNotFound } from "./_authenticated.team.$userId/components/TeamMemberNotFound";
-import { AssignedConcertsTab } from "./_authenticated.team.$userId/components/tabs/AssignedConcertsTab";
-import { useTeamMemberDetail } from "./_authenticated.team.$userId/hooks/useTeamMemberDetail";
+import { DeleteTeamMemberDialog } from "~/features/team/components/DeleteTeamMemberDialog";
+import { TeamMemberDetailHeader } from "~/features/team/components/TeamMemberDetailHeader";
+import { TeamMemberDetailCard } from "~/features/team/components/TeamMemberDetailCard";
+import { TeamMemberNotFound } from "~/features/team/components/TeamMemberNotFound";
+import { AssignedConcertsTab } from "~/features/team/components/tabs/AssignedConcertsTab";
+import { useTeamMemberDetail } from "~/features/team/hooks/useTeamMemberDetail";
 import { useTeamMember, useRemoveTeamMember } from "~/features/team/hooks";
 
 export default function TeamMemberDetailPage() {

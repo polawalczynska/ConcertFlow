@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { Badge } from "~/components/ui/Badge";
-import { getStatusColor, formatStatus } from "~/routes/_authenticated.concerts/components/table/concertsTableUtils";
+import { getStatusColor, formatStatus } from "~/features/concerts/components/table/concertsTableUtils";
 import type { RecentConcert } from "~/api";
 
 interface RecentConcertsProps {

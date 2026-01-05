@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
-import { useBudgetManagerAccess } from "./_authenticated.budget-manager/hooks/useBudgetManagerAccess";
-import { useBudgetApprovals } from "./_authenticated.budget-manager/hooks/useBudgetApprovals";
-import { BudgetListPanel } from "./_authenticated.budget-manager/components/BudgetListPanel";
-import { BudgetDetailView } from "./_authenticated.budget-manager/components/budget-detail/BudgetDetailView";
-import { ApproveBudgetDialog } from "./_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
-import { RequestRevisionDialog } from "./_authenticated.budget-manager/components/approve-dialog/RequestRevisionDialog";
-import { BudgetFilters } from "./_authenticated.budget-manager/components/BudgetFilters";
+import { useBudgetManagerAccess } from "~/features/budget/hooks/useBudgetManagerAccess";
+import { useBudgetApprovals } from "~/features/budget/hooks/useBudgetApprovals";
+import { BudgetListPanel } from "~/features/budget/components/BudgetListPanel";
+import { BudgetDetailView } from "~/features/budget/components/budget-detail/BudgetDetailView";
+import { ApproveBudgetDialog } from "~/features/budget/components/approve-dialog/ApproveBudgetDialog";
+import { RequestRevisionDialog } from "~/features/budget/components/approve-dialog/RequestRevisionDialog";
+import { BudgetFilters } from "~/features/budget/components/BudgetFilters";
 import { ErrorPage } from "~/components/ErrorPage";
 import type { BudgetItemApproval } from "~/api";
 

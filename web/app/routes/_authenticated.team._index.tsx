@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { AuthGuard } from "~/features/auth/components";
-import { TeamHeader } from "~/routes/_authenticated.team/components/TeamHeader";
-import { TeamSearch } from "~/routes/_authenticated.team/components/TeamSearch";
-import { TeamList } from "~/routes/_authenticated.team/components/TeamList";
-import { InviteTeamMemberDialog } from "~/routes/_authenticated.team/components/InviteTeamMemberDialog";
-import { DeleteTeamMemberDialog } from "~/routes/_authenticated.team/components/DeleteTeamMemberDialog";
-import { TeamNotMemberMessage } from "~/routes/_authenticated.team/components/TeamNotMemberMessage";
+import { TeamHeader } from "~/features/team/components/TeamHeader";
+import { TeamSearch } from "~/features/team/components/TeamSearch";
+import { TeamList } from "~/features/team/components/TeamList";
+import { InviteTeamMemberDialog } from "~/features/team/components/InviteTeamMemberDialog";
+import { DeleteTeamMemberDialog } from "~/features/team/components/DeleteTeamMemberDialog";
+import { TeamNotMemberMessage } from "~/features/team/components/TeamNotMemberMessage";
 import { useTeamMembers, useTeamInvitations, useInviteTeamMember, useRemoveTeamMember, useCancelTeamInvitation, useCheckTeamMembership } from "~/features/team/hooks";
 import { useUser } from "~/shared/hooks/domain";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";

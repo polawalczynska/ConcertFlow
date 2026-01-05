@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useTechnicalManagerAccess } from "./_authenticated.technical-manager/hooks/useTechnicalManagerAccess";
-import { useTechnicalApprovals } from "./_authenticated.technical-manager/hooks/useTechnicalApprovals";
-import { TechnicalApprovalsList } from "./_authenticated.technical-manager/components/TechnicalApprovalsList";
-import { TechnicalDetailView } from "./_authenticated.technical-manager/components/TechnicalDetailView";
-import { TechnicalFilters } from "./_authenticated.technical-manager/components/TechnicalFilters";
-import { ApproveTechnicalDialog } from "./_authenticated.technical-manager/components/ApproveTechnicalDialog";
-import { RequestTechnicalRevisionDialog } from "./_authenticated.technical-manager/components/RequestTechnicalRevisionDialog";
+import { useTechnicalManagerAccess } from "~/features/technical/hooks/useTechnicalManagerAccess";
+import { useTechnicalApprovals } from "~/features/technical/hooks/useTechnicalApprovals";
+import { TechnicalApprovalsList } from "~/features/technical/components/TechnicalApprovalsList";
+import { TechnicalDetailView } from "~/features/technical/components/TechnicalDetailView";
+import { TechnicalFilters } from "~/features/technical/components/TechnicalFilters";
+import { ApproveTechnicalDialog } from "~/features/technical/components/ApproveTechnicalDialog";
+import { RequestTechnicalRevisionDialog } from "~/features/technical/components/RequestTechnicalRevisionDialog";
 import { ErrorPage } from "~/components/ErrorPage";
 
 export default function TechnicalPage() {

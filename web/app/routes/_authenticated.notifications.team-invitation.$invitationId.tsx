@@ -1,12 +1,12 @@
 import { useParams } from "@remix-run/react";
 import { Card, CardContent } from "~/components/ui/Card";
-import { TeamInvitationHeader } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationHeader";
-import { TeamInvitationCardHeader } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationCardHeader";
-import { TeamInvitationInfo } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationInfo";
-import { TeamInvitationActions } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationActions";
-import { TeamInvitationStatus } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationStatus";
-import { TeamInvitationNotFound } from "./_authenticated.notifications.team-invitation.$invitationId/components/TeamInvitationNotFound";
-import { useTeamInvitation } from "./_authenticated.notifications.team-invitation.$invitationId/hooks/useTeamInvitation";
+import { TeamInvitationHeader } from "~/features/notifications/components/TeamInvitationHeader";
+import { TeamInvitationCardHeader } from "~/features/notifications/components/TeamInvitationCardHeader";
+import { TeamInvitationInfo } from "~/features/notifications/components/TeamInvitationInfo";
+import { TeamInvitationActions } from "~/features/notifications/components/TeamInvitationActions";
+import { TeamInvitationStatus } from "~/features/notifications/components/TeamInvitationStatus";
+import { TeamInvitationNotFound } from "~/features/notifications/components/TeamInvitationNotFound";
+import { useTeamInvitation } from "~/features/notifications/hooks/useTeamInvitation";
 
 export default function TeamInvitationPage() {
   const params = useParams();

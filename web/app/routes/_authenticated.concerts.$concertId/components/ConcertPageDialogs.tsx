@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
-import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
-import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
-import { ApproveTechnicalDialog } from "~/routes/_authenticated.technical-manager/components/ApproveTechnicalDialog";
-import { RequestTechnicalRevisionDialog } from "~/routes/_authenticated.technical-manager/components/RequestTechnicalRevisionDialog";
-import { ApproveBudgetDialog } from "~/routes/_authenticated.budget-manager/components/approve-dialog/ApproveBudgetDialog";
-import { RequestRevisionDialog } from "~/routes/_authenticated.budget-manager/components/approve-dialog/RequestRevisionDialog";
+import { ConcertFormDialog } from "~/features/concerts/components/form/ConcertFormDialog";
+import { DeleteConcertDialog } from "~/features/concerts/components/dialogs/DeleteConcertDialog";
+import { CancelConcertDialog } from "~/features/concerts/components/dialogs/CancelConcertDialog";
+import { ApproveTechnicalDialog } from "~/features/technical/components/ApproveTechnicalDialog";
+import { RequestTechnicalRevisionDialog } from "~/features/technical/components/RequestTechnicalRevisionDialog";
+import { ApproveBudgetDialog } from "~/features/budget/components/approve-dialog/ApproveBudgetDialog";
+import { RequestRevisionDialog } from "~/features/budget/components/approve-dialog/RequestRevisionDialog";
 import { budgetApprovalApi } from "~/lib/api-client";
 import type { ConcertResponse, BudgetItemApproval, RevisionItem } from "~/api";
 

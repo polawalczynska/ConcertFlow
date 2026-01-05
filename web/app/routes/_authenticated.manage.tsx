@@ -4,17 +4,17 @@ import { useArtists } from "~/features/artists/hooks";
 import { useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
 import type { GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/features/auth/components";
-import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";
-import { ConcertsFilters } from "~/routes/_authenticated.concerts/components/ConcertsFilters";
-import { ConcertsTable } from "~/routes/_authenticated.concerts/components/ConcertsTable";
-import { ConcertsEmptyState } from "~/routes/_authenticated.concerts/components/ConcertsEmptyState";
-import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
-import { DeleteConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/DeleteConcertDialog";
-import { CancelConcertDialog } from "~/routes/_authenticated.concerts/components/dialogs/CancelConcertDialog";
-import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
-import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
-import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
-import { useCoordinatorAccess } from "~/routes/_authenticated.dashboard/hooks/useCoordinatorAccess";
+import { ConcertsHeader } from "~/features/concerts/components/ConcertsHeader";
+import { ConcertsFilters } from "~/features/concerts/components/ConcertsFilters";
+import { ConcertsTable } from "~/features/concerts/components/ConcertsTable";
+import { ConcertsEmptyState } from "~/features/concerts/components/ConcertsEmptyState";
+import { ConcertFormDialog } from "~/features/concerts/components/form/ConcertFormDialog";
+import { DeleteConcertDialog } from "~/features/concerts/components/dialogs/DeleteConcertDialog";
+import { CancelConcertDialog } from "~/features/concerts/components/dialogs/CancelConcertDialog";
+import { SubmitBudgetDialog } from "~/features/concerts/components/dialogs/SubmitBudgetDialog";
+import { useConcertForm } from "~/features/concerts/hooks/useConcertForm";
+import { useConcertActions } from "~/features/concerts/hooks/useConcertActions";
+import { useCoordinatorAccess } from "~/features/dashboard/hooks/useCoordinatorAccess";
 import { ErrorPage } from "~/components/ErrorPage";
 
 export default function ConcertsManagePage() {

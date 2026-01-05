@@ -1,92 +1,49 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { notificationApi } from "~/lib/api-client";
-import type { NotificationResponse } from "~/api";
+import { useMemo } from "react";
+import { useNotifications as useNotificationsQuery, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from "~/features/notifications/hooks";
+import { mapNotificationResponseToNotification } from "../utils/notificationMapper";
+import type { Notification } from "../types";
 
 export function useNotifications() {
-  return useQuery<NotificationResponse[]>({
-    queryKey: ["notifications"],
-    queryFn: async () => {
-      const response = await notificationApi.getNotifications();
-      return response.data;
-    },
-    staleTime: 30 * 1000,
-  });
-}
+  const { data: notificationsResponse = [], isLoading } = useNotificationsQuery();
+  const { data: unreadCount = 0 } = useUnreadNotificationCount();
+  const markAllAsReadMutation = useMarkAllNotificationsAsRead();
+  const markAsReadMutation = useMarkNotificationAsRead();
 
-export function useUnreadNotificationCount() {
-  return useQuery<number>({
-    queryKey: ["notifications", "unread-count"],
-    queryFn: async () => {
-      const response = await notificationApi.getUnreadCount();
-      return response.data;
-    },
-    staleTime: 10 * 1000,
-    refetchInterval: 30 * 1000,
-  });
-}
+  const notifications = useMemo(
+    () => notificationsResponse.map(mapNotificationResponseToNotification),
+    [notificationsResponse]
+  );
 
-export function useMarkNotificationAsRead() {
-  const queryClient = useQueryClient();
+  const handleMarkAllAsRead = () => {
+    markAllAsReadMutation.mutate();
+  };
 
-  return useMutation({
-    mutationFn: async (notificationId: number) => {
-      await notificationApi.markAsRead(notificationId);
-    },
-    onMutate: async (notificationId: number) => {
-      await queryClient.cancelQueries({ queryKey: ["notifications"] });
-      const previousNotifications = queryClient.getQueryData<NotificationResponse[]>(["notifications"]);
+  const handleMarkAsRead = (id: number) => {
+    markAsReadMutation.mutate(id);
+  };
 
-      if (previousNotifications) {
-        queryClient.setQueryData<NotificationResponse[]>(
-          ["notifications"],
-          previousNotifications.map((n) =>
-            n.id === notificationId ? { ...n, read: true } : n
-          )
+  const getFilteredNotifications = (activeTab: string): Notification[] => {
+    switch (activeTab) {
+      case "unread":
+        return notifications.filter((n) => !n.read);
+      case "concerts":
+        return notifications.filter(
+          (n) => n.type === "concert" || n.type === "budget" || n.type === "technical"
         );
-      }
+      case "team":
+        return notifications.filter((n) => n.type === "team");
+      default:
+        return notifications;
+    }
+  };
 
-      const previousUnreadCount = queryClient.getQueryData<number>([
-        "notifications",
-        "unread-count",
-      ]);
-      if (previousUnreadCount !== undefined) {
-        queryClient.setQueryData<number>(
-          ["notifications", "unread-count"],
-          Math.max(0, previousUnreadCount - 1)
-        );
-      }
-
-      return { previousNotifications, previousUnreadCount };
-    },
-    onError: (err, notificationId, context) => {
-      if (context?.previousNotifications) {
-        queryClient.setQueryData(["notifications"], context.previousNotifications);
-      }
-      if (context?.previousUnreadCount !== undefined) {
-        queryClient.setQueryData(
-          ["notifications", "unread-count"],
-          context.previousUnreadCount
-        );
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
-    },
-  });
-}
-
-export function useMarkAllNotificationsAsRead() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async () => {
-      await notificationApi.markAllAsRead();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
-    },
-  });
+  return {
+    notifications,
+    unreadCount,
+    isLoading,
+    handleMarkAllAsRead,
+    handleMarkAsRead,
+    getFilteredNotifications,
+  };
 }
 

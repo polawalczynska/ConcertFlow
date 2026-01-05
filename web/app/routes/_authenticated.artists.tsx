@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useArtists, useCreateArtist, useUpdateArtist, useDeleteArtist } from "~/features/artists/hooks";
 import type { ArtistResponse, ArtistRequest } from "~/api";
 import { AuthGuard } from "~/features/auth/components";
-import { ArtistsHeader } from "~/routes/_authenticated.artists/components/ArtistsHeader";
-import { ArtistsSearch } from "~/routes/_authenticated.artists/components/ArtistsSearch";
-import { ArtistsList } from "~/routes/_authenticated.artists/components/ArtistsList";
-import { ArtistFormDialog } from "~/routes/_authenticated.artists/components/form/ArtistFormDialog";
-import { DeleteArtistDialog } from "~/routes/_authenticated.artists/components/DeleteArtistDialog";
+import { ArtistsHeader } from "~/features/artists/components/ArtistsHeader";
+import { ArtistsSearch } from "~/features/artists/components/ArtistsSearch";
+import { ArtistsList } from "~/features/artists/components/ArtistsList";
+import { ArtistFormDialog } from "~/features/artists/components/form/ArtistFormDialog";
+import { DeleteArtistDialog } from "~/features/artists/components/DeleteArtistDialog";
 import { artistSchema, extractApiError } from "~/shared/utils";
 
 export default function ArtistsPage() {

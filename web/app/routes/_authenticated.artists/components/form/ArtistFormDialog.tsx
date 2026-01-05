@@ -3,10 +3,10 @@ import {
   DialogContent,
 } from "~/components/ui/Dialog";
 import type { ArtistResponse, ArtistRequest } from "~/api";
-import { ArtistFormDialogHeader } from "~/routes/_authenticated.artists/components/form/ArtistFormDialogHeader";
-import { ArtistFormError } from "~/routes/_authenticated.artists/components/form/ArtistFormError";
-import { ArtistFormFields } from "~/routes/_authenticated.artists/components/form/ArtistFormFields";
-import { ArtistFormDialogFooter } from "~/routes/_authenticated.artists/components/form/ArtistFormDialogFooter";
+import { ArtistFormDialogHeader } from "~/features/artists/components/form/ArtistFormDialogHeader";
+import { ArtistFormError } from "~/features/artists/components/form/ArtistFormError";
+import { ArtistFormFields } from "~/features/artists/components/form/ArtistFormFields";
+import { ArtistFormDialogFooter } from "~/features/artists/components/form/ArtistFormDialogFooter";
 
 interface ArtistFormDialogProps {
   isOpen: boolean;

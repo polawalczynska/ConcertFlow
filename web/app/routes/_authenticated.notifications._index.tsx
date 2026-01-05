@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AuthGuard } from "~/features/auth/components";
-import { NotificationsHeader } from "./_authenticated.notifications._index/components/NotificationsHeader";
-import { NotificationsTabs } from "./_authenticated.notifications._index/components/NotificationsTabs";
-import { useNotifications } from "./_authenticated.notifications._index/hooks/useNotifications";
+import { NotificationsHeader } from "~/features/notifications/components/NotificationsHeader";
+import { NotificationsTabs } from "~/features/notifications/components/NotificationsTabs";
+import { useNotifications } from "~/features/notifications/hooks/useNotifications";
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState("all");
