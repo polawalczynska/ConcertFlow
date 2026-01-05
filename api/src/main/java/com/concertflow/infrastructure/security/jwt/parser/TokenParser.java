@@ -1,7 +1,7 @@
-package com.concertflow.api.jwt.interfaces;
+package com.concertflow.infrastructure.security.jwt.parser;
 
-import com.concertflow.api.jwt.dto.TokenInfo;
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.dto.TokenInfo;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.Role;
 
 public interface TokenParser {

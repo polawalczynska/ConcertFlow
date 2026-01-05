@@ -1,4 +1,4 @@
-package com.concertflow.api.jwt.model;
+package com.concertflow.infrastructure.security.jwt.model;
 
 import com.concertflow.api.utils.TimeConstants;
 import com.concertflow.api.utils.TimeUtils;

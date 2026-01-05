@@ -1,6 +1,6 @@
 package com.concertflow.api.config;
 
-import com.concertflow.api.jwt.JwtAuthenticationFilter;
+import com.concertflow.infrastructure.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

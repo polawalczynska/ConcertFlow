@@ -1,4 +1,4 @@
-package com.concertflow.api.jwt.interfaces;
+package com.concertflow.infrastructure.security.jwt.generator;
 
 import com.concertflow.api.user.entity.User;
 

@@ -1,7 +1,7 @@
-package com.concertflow.api.jwt.builder;
+package com.concertflow.infrastructure.security.jwt.builder;
 
-import com.concertflow.api.jwt.config.JwtSigningKeyProvider;
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.config.JwtSigningKeyProvider;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;

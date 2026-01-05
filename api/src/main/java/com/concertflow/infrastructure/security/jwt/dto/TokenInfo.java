@@ -1,6 +1,6 @@
-package com.concertflow.api.jwt.dto;
+package com.concertflow.infrastructure.security.jwt.dto;
 
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.Role;
 
 import java.time.Instant;
@@ -15,3 +15,4 @@ public record TokenInfo(
     long remainingTimeMs
 ) {
 }
+

@@ -1,4 +1,4 @@
-package com.concertflow.api.jwt.interfaces;
+package com.concertflow.infrastructure.security.jwt.validator;
 
 public interface TokenValidator {
     boolean validateToken(String token);

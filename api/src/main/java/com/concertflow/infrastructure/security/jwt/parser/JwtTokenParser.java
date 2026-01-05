@@ -1,9 +1,8 @@
-package com.concertflow.api.jwt.parser;
+package com.concertflow.infrastructure.security.jwt.parser;
 
-import com.concertflow.api.jwt.config.JwtSigningKeyProvider;
-import com.concertflow.api.jwt.dto.TokenInfo;
-import com.concertflow.api.jwt.interfaces.TokenParser;
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.config.JwtSigningKeyProvider;
+import com.concertflow.infrastructure.security.jwt.dto.TokenInfo;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -28,10 +27,12 @@ public class JwtTokenParser implements TokenParser {
             .getBody();
     }
 
+    @Override
     public String getEmailFromToken(String token) {
         return parseClaims(token).getSubject();
     }
 
+    @Override
     public Role getRoleFromToken(String token) {
         String role = parseClaims(token).get("role", String.class);
         return Role.valueOf(role);
@@ -41,6 +42,7 @@ public class JwtTokenParser implements TokenParser {
         return parseClaims(token).get("userId", Long.class);
     }
 
+    @Override
     public TokenType getTokenTypeFromToken(String token) {
         try {
             String typeValue = parseClaims(token).get("type", String.class);
@@ -66,6 +68,7 @@ public class JwtTokenParser implements TokenParser {
         return Math.max(0, expiration.toEpochMilli() - System.currentTimeMillis());
     }
 
+    @Override
     public TokenInfo getTokenInfo(String token) {
         Claims claims = parseClaims(token);
         Date issuedAt = claims.getIssuedAt();

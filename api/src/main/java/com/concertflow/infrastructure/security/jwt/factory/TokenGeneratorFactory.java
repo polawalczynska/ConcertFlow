@@ -1,7 +1,7 @@
-package com.concertflow.api.jwt.factory;
+package com.concertflow.infrastructure.security.jwt.factory;
 
-import com.concertflow.api.jwt.interfaces.TokenGenerator;
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.generator.TokenGenerator;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.utils.StringUtils;
 import lombok.RequiredArgsConstructor;

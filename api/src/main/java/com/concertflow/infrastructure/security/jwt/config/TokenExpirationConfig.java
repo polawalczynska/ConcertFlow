@@ -1,7 +1,7 @@
-package com.concertflow.api.jwt.config;
+package com.concertflow.infrastructure.security.jwt.config;
 
 import com.concertflow.api.utils.TimeUtils;
-import com.concertflow.api.jwt.model.TokenType;
+import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,9 +1,10 @@
-package com.concertflow.api.jwt;
+package com.concertflow.infrastructure.security.jwt;
 
-import com.concertflow.api.jwt.interfaces.TokenParser;
-import com.concertflow.api.jwt.interfaces.TokenValidator;
+import com.concertflow.infrastructure.security.jwt.parser.TokenParser;
+import com.concertflow.infrastructure.security.jwt.validator.TokenValidator;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.config.ApiConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,8 +28,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.concertflow.api.exceptions.ErrorMessage.*;
-
-import com.concertflow.api.config.ApiConstants;
 
 @Component
 @RequiredArgsConstructor
@@ -89,3 +88,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 }
+
