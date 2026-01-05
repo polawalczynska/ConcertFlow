@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain/useUser";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 import type { TeamInvitationResponse } from "~/api";
 
 export function useTeamInvitations() {
@@ -14,7 +15,7 @@ export function useTeamInvitations() {
       return response.data;
     },
     enabled: isCoordinator === true,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

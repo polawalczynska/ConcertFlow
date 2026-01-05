@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain/useUser";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 
 export function useCheckUserOnAnotherTeam(userId: number | null | undefined) {
   const { data: currentUser } = useUser();
@@ -14,7 +15,7 @@ export function useCheckUserOnAnotherTeam(userId: number | null | undefined) {
       return response.data ?? false;
     },
     enabled: !!userId && !!currentUser?.id && isCoordinator === true,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

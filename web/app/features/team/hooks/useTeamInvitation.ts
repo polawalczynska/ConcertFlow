@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 import type { TeamInvitationResponse } from "~/api";
 
 export function useTeamInvitation(invitationId: number | null) {
@@ -11,7 +12,7 @@ export function useTeamInvitation(invitationId: number | null) {
       return response.data || null;
     },
     enabled: !!invitationId,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "~/shared/hooks/domain/useUser";
 import { teamApi } from "~/lib/api-client";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 
 export function useCheckTeamMembership() {
   const { data: currentUser } = useUser();
@@ -13,7 +14,7 @@ export function useCheckTeamMembership() {
       return response.data;
     },
     enabled: !!currentUser?.id && currentUser?.role !== "COORDINATOR",
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

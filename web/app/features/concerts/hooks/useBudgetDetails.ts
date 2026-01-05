@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { budgetApprovalApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain/useUser";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 
 export function useBudgetDetails(
   concertId: number | null,
@@ -17,7 +18,7 @@ export function useBudgetDetails(
       return response.data;
     },
     enabled: options?.enabled !== false && !!concertId && !!budgetManagerId,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "@remix-run/react";
 import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens, isTokenExpiringSoon, getTokenExpirationTime } from "~/shared/utils";
 import { authApi } from "~/lib/api-client";
+import { FIFTY_FIVE_MINUTES_MS, FIVE_MINUTES_MS, TIME_CONSTANTS } from "~/shared/constants";
 import type { RefreshTokenRequest } from "~/api";
 
 export function useTokenRefresh() {
@@ -18,13 +19,13 @@ export function useTokenRefresh() {
     if (!expirationTime) {
       refreshTimeoutRef.current = setTimeout(() => {
         refreshTokenRef.current?.();
-      }, 55 * 60 * 1000);
+      }, FIFTY_FIVE_MINUTES_MS);
       return;
     }
 
     const now = Date.now();
     const timeUntilExpiration = expirationTime - now;
-    const refreshTime = timeUntilExpiration - 5 * 60 * 1000;
+    const refreshTime = timeUntilExpiration - FIVE_MINUTES_MS;
 
     if (refreshTime > 0) {
       refreshTimeoutRef.current = setTimeout(() => {
@@ -71,7 +72,7 @@ export function useTokenRefresh() {
     refreshTokenRef.current = refreshToken;
 
     const accessToken = getAccessToken();
-    if (accessToken && isTokenExpiringSoon(accessToken, 5 * 60)) {
+    if (accessToken && isTokenExpiringSoon(accessToken, TIME_CONSTANTS.SECONDS_PER_MINUTE * 5)) {
       refreshToken();
     } else if (accessToken) {
       scheduleTokenRefresh(accessToken);

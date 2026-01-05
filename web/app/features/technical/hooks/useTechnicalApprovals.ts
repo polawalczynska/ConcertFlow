@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { technicalApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain";
+import { ONE_DAY_MS } from "~/shared/constants";
 import type { TechnicalApprovalDashboardResponse } from "~/api";
 import { filterAndSortApprovals } from "../utils/filterAndSortApprovals";
 import type { TechnicalApproval } from "../types/TechnicalApproval";
@@ -9,7 +10,7 @@ import type { TechnicalApproval } from "../types/TechnicalApproval";
 function mapToTechnicalApproval(response: TechnicalApprovalDashboardResponse): TechnicalApproval {
   const concertDate = response.concertDate ? new Date(response.concertDate) : new Date();
   const now = new Date();
-  const daysUntil = Math.max(0, Math.ceil((concertDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+  const daysUntil = Math.max(0, Math.ceil((concertDate.getTime() - now.getTime()) / ONE_DAY_MS));
   
   let urgency: "CRITICAL" | "HIGH" | "NORMAL" = "NORMAL";
   if (daysUntil <= 3) {

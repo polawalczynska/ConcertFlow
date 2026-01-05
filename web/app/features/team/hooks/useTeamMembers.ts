@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain/useUser";
 import { useCheckTeamMembership } from "./useCheckTeamMembership";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 import type { TeamMemberResponse } from "~/api";
 
 export function useTeamMembers() {
@@ -16,7 +17,7 @@ export function useTeamMembers() {
       return response.data;
     },
     enabled: isCoordinator === true || isTeamMember === true,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 

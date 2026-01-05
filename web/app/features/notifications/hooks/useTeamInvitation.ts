@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { useTeamInvitation as useTeamInvitationQuery, useAcceptTeamInvitation, useRejectTeamInvitation } from "~/features/team/hooks";
+import { ONE_SECOND_MS } from "~/shared/constants";
 
 export function useTeamInvitation(invitationId: number | null) {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export function useTeamInvitation(invitationId: number | null) {
         await acceptMutation.mutateAsync(invitationId);
         setTimeout(() => {
           navigate("/team/");
-        }, 1000);
+        }, ONE_SECOND_MS);
       } catch (error) {
         console.error("Failed to accept invitation:", error);
       }
@@ -26,7 +27,7 @@ export function useTeamInvitation(invitationId: number | null) {
         await rejectMutation.mutateAsync(invitationId);
         setTimeout(() => {
           navigate("/notifications/");
-        }, 1000);
+        }, ONE_SECOND_MS);
       } catch (error) {
         console.error("Failed to reject invitation:", error);
       }

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
+import { THIRTY_SECONDS_MS } from "~/shared/constants";
 import type { ConcertResponse } from "~/api";
 
 export function useAssignedConcerts(memberId: number | null) {
@@ -11,7 +12,7 @@ export function useAssignedConcerts(memberId: number | null) {
       return response.data;
     },
     enabled: !!memberId,
-    staleTime: 30 * 1000,
+    staleTime: THIRTY_SECONDS_MS,
   });
 }
 
