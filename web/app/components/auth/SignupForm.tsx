@@ -1,10 +1,5 @@
 import { useState, FormEvent } from "react";
-import NameInput from "~/routes/signup/components/NameInput";
-import EmailInput from "~/components/auth/EmailInput";
-import PhoneInput from "~/components/auth/PhoneInput";
-import RoleSelect from "~/routes/signup/components/RoleSelect";
-import PasswordInput from "~/components/auth/PasswordInput";
-import SubmitButton from "~/components/auth/SubmitButton";
+import { NameInput, EmailInput, PhoneInput, RoleSelect, PasswordInput, SubmitButton } from "~/features/auth/components";
 import { registerSchema, type RegisterFormData } from "~/shared/utils";
 
 interface SignupFormProps {
