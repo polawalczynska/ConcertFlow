@@ -7,17 +7,8 @@ import {
   setRefreshToken,
   setRememberMeToken,
   clearTokens,
-} from "~/lib/token-storage";
-
-function getRedirectPathForRole(role?: string): string {
-  if (role === "BUDGET_MANAGER") {
-    return "/budget-dashboard";
-  }
-  if (role === "TECHNICAL_MANAGER") {
-    return "/technical-dashboard";
-  }
-  return "/dashboard";
-}
+} from "~/shared/utils/helpers/token-storage";
+import { getRedirectPathForRole } from "~/shared/constants/routes";
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -53,13 +44,9 @@ export function useLogin() {
         
         const redirectPath = getRedirectPathForRole(userResponse?.role);
         navigate(redirectPath);
-      } catch (error) {
-        console.error("Failed to fetch user after login:", error);
+      } catch {
         navigate("/login");
       }
-    },
-    onError: (error: unknown) => {
-      console.error("Login error:", error);
     },
   });
 }
@@ -105,14 +92,10 @@ export function useRegister() {
         
         const redirectPath = getRedirectPathForRole(userResponse?.role);
         navigate(redirectPath);
-      } catch (error) {
-        console.error("Failed to fetch user after registration:", error);
+      } catch {
         const redirectPath = getRedirectPathForRole(data.role);
         navigate(redirectPath);
       }
-    },
-    onError: (error: unknown) => {
-      console.error("Registration error:", error);
     },
   });
 }
@@ -125,8 +108,7 @@ export function useLogout() {
     mutationFn: async (): Promise<void> => {
       try {
         await authApi.logout();
-      } catch (error) {
-        console.error("Logout endpoint error:", error);
+      } catch {
       }
     },
     onSuccess: () => {
@@ -134,11 +116,10 @@ export function useLogout() {
       queryClient.clear();
       navigate("/login");
     },
-    onError: (error: unknown) => {
+    onError: () => {
       clearTokens();
       queryClient.clear();
       navigate("/login");
-      console.error("Logout error:", error);
     },
   });
 }
@@ -162,8 +143,7 @@ export function useRefreshToken() {
 
       queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
-    onError: (error: unknown) => {
-      console.error("Token refresh error:", error);
+    onError: () => {
       clearTokens();
       queryClient.clear();
       if (typeof window !== "undefined") {

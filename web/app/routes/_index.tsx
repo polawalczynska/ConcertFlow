@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { isAuthenticated } from "~/lib/token-storage";
+import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import { useUser } from "~/hooks/useUser";
+import { getRedirectPathForRole } from "~/shared/constants/routes";
 import LandingPage from "./landing";
-
-function getRedirectPathForRole(role?: string): string {
-  if (role === "BUDGET_MANAGER") {
-    return "/budget-dashboard";
-  }
-  if (role === "TECHNICAL_MANAGER") {
-    return "/technical-dashboard";
-  }
-  return "/dashboard";
-}
 
 export default function Index() {
   const navigate = useNavigate();
