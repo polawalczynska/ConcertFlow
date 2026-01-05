@@ -1,19 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "@remix-run/react";
 import type { UserResponse } from "~/api";
-
-function getRedirectPathForRole(role?: string): string {
-  if (role === "BUDGET_MANAGER") {
-    return "/budget-dashboard";
-  }
-  if (role === "TECHNICAL_MANAGER") {
-    return "/technical-dashboard";
-  }
-  if (role === "COORDINATOR") {
-    return "/manage";
-  }
-  return "/dashboard";
-}
+import { getRedirectPathForRole } from "~/shared/constants/routes";
 
 export function useRoleBasedRedirect(
   user: UserResponse | undefined,
@@ -29,7 +17,7 @@ export function useRoleBasedRedirect(
         return;
       }
       if (user.role !== expectedRole) {
-        const redirectPath = getRedirectPathForRole(user.role);
+        const redirectPath = getRedirectPathForRole(user.role, true);
         navigate(redirectPath, { replace: true });
       }
     }

@@ -10,11 +10,11 @@ import { PasswordSection } from "./_authenticated.settings/components/PasswordSe
 import { RoleSection } from "./_authenticated.settings/components/RoleSection";
 import { DangerZoneSection } from "./_authenticated.settings/components/DangerZoneSection";
 import { DeleteAccountDialog } from "./_authenticated.settings/components/DeleteAccountDialog";
-import { settingsSchema, type SettingsFormData } from "~/lib/validations/auth";
+import { settingsSchema, type SettingsFormData } from "~/shared/utils/validations/auth";
 import { userApi } from "~/lib/api-client";
-import { extractApiError } from "~/lib/error-utils";
+import { extractApiError } from "~/shared/utils/helpers/error";
 import type { UpdateUserRequest, UserResponse, UserResponseRoleEnum } from "~/api";
-import { clearTokens } from "~/lib/token-storage";
+import { clearTokens } from "~/shared/utils/helpers/token-storage";
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useUser();
@@ -67,8 +67,6 @@ export default function SettingsPage() {
       setNewPassword("");
       setConfirmPassword("");
       setApiError(null);
-      
-      console.log("Settings updated successfully");
     },
     onError: (error) => {
       const apiError = extractApiError(error);
@@ -136,10 +134,8 @@ export default function SettingsPage() {
         window.location.href = "/login";
       }
     },
-    onError: (error) => {
-      console.error("Failed to delete account:", error);
+    onError: () => {
       setIsDeleting(false);
-      // You can add error handling here if needed
     },
   });
 
