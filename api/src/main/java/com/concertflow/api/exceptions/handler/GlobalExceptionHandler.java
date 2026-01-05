@@ -15,6 +15,7 @@ import com.concertflow.api.exceptions.types.UserNotFoundException;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
+import com.concertflow.api.exceptions.handler.ProblemDetailFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,73 +33,55 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("EMAIL_ALREADY_EXISTS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "EMAIL_ALREADY_EXISTS");
     }
 
     @ExceptionHandler({InvalidCredentialsException.class, BadCredentialsException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleInvalidCredentials(Exception ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        pd.setTitle("INVALID_CREDENTIALS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.UNAUTHORIZED, ex.getMessage(), "INVALID_CREDENTIALS");
     }
 
     @ExceptionHandler(TokenRefreshException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleTokenRefreshException(TokenRefreshException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        pd.setTitle("INVALID_REFRESH_TOKEN");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.UNAUTHORIZED, ex.getMessage(), "INVALID_REFRESH_TOKEN");
     }
 
     @ExceptionHandler({UserDisabledException.class, DisabledException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ProblemDetail handleUserDisabledException(Exception ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-        pd.setTitle("USER_DISABLED");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.FORBIDDEN, ex.getMessage(), "USER_DISABLED");
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ProblemDetail handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
-        pd.setTitle("UNAUTHORIZED_ACCESS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.FORBIDDEN, ex.getMessage(), "UNAUTHORIZED_ACCESS");
     }
 
     @ExceptionHandler(ArtistNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleArtistNotFoundException(ArtistNotFoundException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        pd.setTitle("ARTIST_NOT_FOUND");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.NOT_FOUND, ex.getMessage(), "ARTIST_NOT_FOUND");
     }
 
     @ExceptionHandler(ArtistAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleArtistAlreadyExistsException(ArtistAlreadyExistsException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("ARTIST_ALREADY_EXISTS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "ARTIST_ALREADY_EXISTS");
     }
 
     @ExceptionHandler(ConcertNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleConcertNotFoundException(ConcertNotFoundException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        pd.setTitle("CONCERT_NOT_FOUND");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.NOT_FOUND, ex.getMessage(), "CONCERT_NOT_FOUND");
     }
 
     @ExceptionHandler(ConcertValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleConcertValidationException(ConcertValidationException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("CONCERT_VALIDATION_ERROR");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "CONCERT_VALIDATION_ERROR");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -110,66 +93,55 @@ public class GlobalExceptionHandler {
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
             .collect(Collectors.toList());
 
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
-        pd.setTitle("VALIDATION_ERROR");
-        pd.setProperty("errors", errors);
-        return pd;
+        return ProblemDetailFactory.createWithProperty(
+            HttpStatus.BAD_REQUEST,
+            "Validation failed",
+            "VALIDATION_ERROR",
+            "errors",
+            errors
+        );
     }
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleIllegalStateException(IllegalStateException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("ILLEGAL_STATE");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "ILLEGAL_STATE");
     }
 
     @ExceptionHandler(TeamInvitationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleTeamInvitationNotFoundException(TeamInvitationNotFoundException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        pd.setTitle("TEAM_INVITATION_NOT_FOUND");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.NOT_FOUND, ex.getMessage(), "TEAM_INVITATION_NOT_FOUND");
     }
 
     @ExceptionHandler(PendingInvitationExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handlePendingInvitationExistsException(PendingInvitationExistsException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("PENDING_INVITATION_EXISTS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "PENDING_INVITATION_EXISTS");
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleUserNotFoundException(UserNotFoundException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        pd.setTitle("USER_NOT_FOUND");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.NOT_FOUND, ex.getMessage(), "USER_NOT_FOUND");
     }
 
     @ExceptionHandler(InvalidInvitationStatusException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleInvalidInvitationStatusException(InvalidInvitationStatusException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("INVALID_INVITATION_STATUS");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "INVALID_INVITATION_STATUS");
     }
 
     @ExceptionHandler(AlreadyTeamMemberException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleAlreadyTeamMemberException(AlreadyTeamMemberException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("ALREADY_TEAM_MEMBER");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "ALREADY_TEAM_MEMBER");
     }
 
     @ExceptionHandler(InvalidConcertStatusTransitionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleInvalidConcertStatusTransitionException(InvalidConcertStatusTransitionException ex) {
-        ProblemDetail pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        pd.setTitle("INVALID_CONCERT_STATUS_TRANSITION");
-        return pd;
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "INVALID_CONCERT_STATUS_TRANSITION");
     }
 }
 

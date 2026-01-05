@@ -8,7 +8,7 @@ import com.concertflow.api.exceptions.types.UserDisabledException;
 import com.concertflow.infrastructure.security.jwt.factory.TokenGeneratorFactory;
 import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.service.UserFinder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +26,7 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 @Transactional
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository userRepository;
+    private final UserFinder userFinder;
     private final AuthenticationManager authenticationManager;
     private final TokenGeneratorFactory tokenGeneratorFactory;
 
@@ -38,8 +38,7 @@ public class AuthenticationService {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User user = userRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.message()));
+            User user = userFinder.findByEmailOrThrowUsernameNotFound(loginRequest.email(), USER_NOT_FOUND.message());
 
             UserValidator.validateUserIsActive(user);
 

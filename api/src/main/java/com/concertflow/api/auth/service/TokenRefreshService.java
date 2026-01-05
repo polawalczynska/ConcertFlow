@@ -8,7 +8,7 @@ import com.concertflow.infrastructure.security.jwt.parser.TokenParser;
 import com.concertflow.infrastructure.security.jwt.validator.TokenValidator;
 import com.concertflow.infrastructure.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.service.UserFinder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +20,7 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 @Transactional
 @RequiredArgsConstructor
 public class TokenRefreshService {
-    private final UserRepository userRepository;
+    private final UserFinder userFinder;
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
     private final TokenGeneratorFactory tokenGeneratorFactory;
@@ -37,8 +37,7 @@ public class TokenRefreshService {
         }
 
         String email = tokenParser.getEmailFromToken(refreshToken);
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.message()));
+        User user = userFinder.findByEmailOrThrowUsernameNotFound(email, USER_NOT_FOUND.message());
 
         UserValidator.validateUserIsActive(user);
 

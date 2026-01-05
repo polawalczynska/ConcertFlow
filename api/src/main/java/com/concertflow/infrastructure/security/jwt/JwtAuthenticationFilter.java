@@ -3,7 +3,7 @@ package com.concertflow.infrastructure.security.jwt;
 import com.concertflow.infrastructure.security.jwt.parser.TokenParser;
 import com.concertflow.infrastructure.security.jwt.validator.TokenValidator;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.service.UserFinder;
 import com.concertflow.api.config.ApiConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
-    private final UserRepository userRepository;
+    private final UserFinder userFinder;
     private final List<PathPattern> permitAllPatterns = PERMIT_ALL_ENDPOINTS.stream()
         .map(PathPatternParser.defaultInstance::parse)
         .toList();
@@ -59,8 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && tokenValidator.validateToken(token)) {
                 String email = tokenParser.getEmailFromToken(token);
 
-                User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND.message()));
+                User user = userFinder.findByEmailOrThrowUsernameNotFound(email, USER_NOT_FOUND.message());
 
                 if (user.getActive()) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, getAuthorities(user));

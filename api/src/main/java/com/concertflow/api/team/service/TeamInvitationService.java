@@ -1,7 +1,6 @@
 package com.concertflow.api.team.service;
 
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
-import com.concertflow.api.exceptions.types.UserNotFoundException;
 import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.event.TeamInvitationAcceptedEvent;
 import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
@@ -13,7 +12,7 @@ import com.concertflow.api.team.entity.TeamInvitationRepository;
 import com.concertflow.api.team.mapper.TeamMapper;
 import com.concertflow.api.team.validator.TeamInvitationValidator;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.service.UserFinder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TeamInvitationService {
     private final TeamInvitationRepository teamInvitationRepository;
-    private final UserRepository userRepository;
+    private final UserFinder userFinder;
     private final TeamMapper teamMapper;
     private final TeamInvitationValidator validator;
     private final ApplicationEventPublisher eventPublisher;
@@ -110,8 +109,7 @@ public class TeamInvitationService {
     }
 
     private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        return userFinder.findByEmailOrThrow(email);
     }
 
     private TeamInvitation findInvitationByIdAndUser(Long invitationId, Long userId) {
