@@ -1,6 +1,6 @@
-package com.concertflow.infrastructure.security.jwt.validator;
+package com.concertflow.api.security.jwt.validator;
 
-import com.concertflow.infrastructure.security.jwt.config.JwtSigningKeyProvider;
+import com.concertflow.api.security.jwt.config.JwtSigningKeyProvider;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

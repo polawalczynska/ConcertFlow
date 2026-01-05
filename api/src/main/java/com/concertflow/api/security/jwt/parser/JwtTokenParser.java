@@ -1,8 +1,8 @@
-package com.concertflow.infrastructure.security.jwt.parser;
+package com.concertflow.api.security.jwt.parser;
 
-import com.concertflow.infrastructure.security.jwt.config.JwtSigningKeyProvider;
-import com.concertflow.infrastructure.security.jwt.dto.TokenInfo;
-import com.concertflow.infrastructure.security.jwt.model.TokenType;
+import com.concertflow.api.security.jwt.config.JwtSigningKeyProvider;
+import com.concertflow.api.security.jwt.dto.TokenInfo;
+import com.concertflow.api.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

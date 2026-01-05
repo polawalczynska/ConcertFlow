@@ -1,6 +1,6 @@
-package com.concertflow.infrastructure.security.jwt.dto;
+package com.concertflow.api.security.jwt.dto;
 
-import com.concertflow.infrastructure.security.jwt.model.TokenType;
+import com.concertflow.api.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.Role;
 
 import java.time.Instant;

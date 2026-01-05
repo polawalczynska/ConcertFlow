@@ -1,7 +1,7 @@
-package com.concertflow.infrastructure.security.jwt;
+package com.concertflow.api.security.jwt;
 
-import com.concertflow.infrastructure.security.jwt.parser.TokenParser;
-import com.concertflow.infrastructure.security.jwt.validator.TokenValidator;
+import com.concertflow.api.security.jwt.parser.TokenParser;
+import com.concertflow.api.security.jwt.validator.TokenValidator;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.service.UserFinder;
 import com.concertflow.api.config.ApiConstants;

@@ -1,9 +1,9 @@
-package com.concertflow.infrastructure.security.jwt.generator.impl;
+package com.concertflow.api.security.jwt.generator.impl;
 
-import com.concertflow.infrastructure.security.jwt.builder.JwtTokenBuilder;
-import com.concertflow.infrastructure.security.jwt.config.TokenExpirationConfig;
-import com.concertflow.infrastructure.security.jwt.generator.TokenGenerator;
-import com.concertflow.infrastructure.security.jwt.model.TokenType;
+import com.concertflow.api.security.jwt.builder.JwtTokenBuilder;
+import com.concertflow.api.security.jwt.config.TokenExpirationConfig;
+import com.concertflow.api.security.jwt.generator.TokenGenerator;
+import com.concertflow.api.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

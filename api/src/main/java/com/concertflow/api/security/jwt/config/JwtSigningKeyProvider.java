@@ -1,4 +1,4 @@
-package com.concertflow.infrastructure.security.jwt.config;
+package com.concertflow.api.security.jwt.config;
 
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;

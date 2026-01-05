@@ -1,10 +1,10 @@
-package com.concertflow.infrastructure.security.jwt;
+package com.concertflow.api.security.jwt;
 
-import com.concertflow.infrastructure.security.jwt.dto.TokenInfo;
-import com.concertflow.infrastructure.security.jwt.factory.TokenGeneratorFactory;
-import com.concertflow.infrastructure.security.jwt.model.TokenType;
-import com.concertflow.infrastructure.security.jwt.parser.TokenParser;
-import com.concertflow.infrastructure.security.jwt.validator.TokenValidator;
+import com.concertflow.api.security.jwt.dto.TokenInfo;
+import com.concertflow.api.security.jwt.factory.TokenGeneratorFactory;
+import com.concertflow.api.security.jwt.model.TokenType;
+import com.concertflow.api.security.jwt.parser.TokenParser;
+import com.concertflow.api.security.jwt.validator.TokenValidator;
 import com.concertflow.api.user.entity.Role;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
