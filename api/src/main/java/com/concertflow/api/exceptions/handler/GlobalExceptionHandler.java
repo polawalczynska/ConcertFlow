@@ -143,6 +143,12 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleInvalidConcertStatusTransitionException(InvalidConcertStatusTransitionException ex) {
         return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "INVALID_CONCERT_STATUS_TRANSITION");
     }
+
+    @ExceptionHandler(InvalidConcertStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleInvalidConcertStatusException(InvalidConcertStatusException ex) {
+        return ProblemDetailFactory.create(HttpStatus.BAD_REQUEST, ex.getMessage(), "INVALID_CONCERT_STATUS");
+    }
 }
 
 

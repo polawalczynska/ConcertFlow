@@ -11,13 +11,13 @@ import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.service.BudgetManagerChangeHandler;
 import com.concertflow.api.concert.service.EntityFinderService;
+import com.concertflow.api.concert.service.TeamMemberValidator;
 import com.concertflow.api.concert.service.UserFinderService;
 import com.concertflow.api.concert.state.ConcertStateManager;
 import com.concertflow.api.concert.validator.ConcertValidator;
+import com.concertflow.api.exceptions.types.InvalidConcertStatusException;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
-import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.ConcertMapper;
-import com.concertflow.api.team.service.TeamMemberService;
 import com.concertflow.api.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class ConcertService {
     private final BudgetManagerChangeHandler budgetManagerChangeHandler;
     private final EntityFinderService entityFinder;
     private final UserFinderService userFinder;
-    private final TeamMemberService teamMemberService;
+    private final TeamMemberValidator teamMemberValidator;
     private final ConcertStateManager concertStateManager;
 
     public List<ConcertResponse> getAllConcerts(
@@ -86,12 +86,7 @@ public class ConcertService {
             ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
         
-        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
-            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
-        }
-        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
-            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
-        }
+        teamMemberValidator.validateManagersAreTeamMembers(budgetManager, technicalManager, coordinator);
         
         Concert concert = concertBuilder.build(request, artist, coordinator, budgetManager, technicalManager);
 
@@ -108,7 +103,8 @@ public class ConcertService {
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
         if (!concertStateManager.canEdit(concert)) {
-            throw new IllegalStateException("Concert cannot be edited in its current state: " + concert.getStatus());
+            throw new InvalidConcertStatusException(
+                "Concert cannot be edited in its current state: " + concert.getStatus());
         }
 
         Artist artist = entityFinder.findArtistById(request.artistId());
@@ -118,12 +114,8 @@ public class ConcertService {
         User technicalManager = request.technicalManagerId() != null
             ? userFinder.findTechnicalManagerById(request.technicalManagerId())
             : null;
-        if (budgetManager != null && !teamMemberService.isTeamMember(budgetManager.getId(), coordinator.getId())) {
-            throw new UnauthorizedAccessException("Budget manager must be a member of your team");
-        }
-        if (technicalManager != null && !teamMemberService.isTeamMember(technicalManager.getId(), coordinator.getId())) {
-            throw new UnauthorizedAccessException("Technical manager must be a member of your team");
-        }
+        
+        teamMemberValidator.validateManagersAreTeamMembers(budgetManager, technicalManager, coordinator);
         
         budgetManagerChangeHandler.handleBudgetManagerChange(concert, budgetManager);
         
@@ -137,7 +129,8 @@ public class ConcertService {
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
         if (!concertStateManager.canDelete(concert)) {
-            throw new IllegalStateException("Concert cannot be deleted in its current state: " + concert.getStatus());
+            throw new InvalidConcertStatusException(
+                "Concert cannot be deleted in its current state: " + concert.getStatus());
         }
         
         concertRepository.delete(concert);

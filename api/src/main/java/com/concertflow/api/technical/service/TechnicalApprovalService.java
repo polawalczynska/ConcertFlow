@@ -2,10 +2,7 @@ package com.concertflow.api.technical.service;
 
 import com.concertflow.api.approval.chain.ApprovalChainService;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.concert.entity.Concert;
-import com.concertflow.api.concert.entity.ConcertRepository;
-import com.concertflow.api.concert.entity.TechnicalRequirements;
-import com.concertflow.api.concert.entity.TechnicalStatus;
+import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
 import com.concertflow.api.security.annotation.RequireTechnicalManager;
@@ -72,7 +69,7 @@ public class TechnicalApprovalService {
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
         Concert concert = findConcertById(concertId);
-        
+
         TechnicalStatus status = concert.getTechnicalStatus();
         if (status == TechnicalStatus.PENDING) {
             throw new IllegalStateException("Technical requirements have not been submitted yet. They are only visible after submission.");
