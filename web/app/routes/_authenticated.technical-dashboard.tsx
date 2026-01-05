@@ -1,5 +1,5 @@
 import { useTechnicalManagerAccess } from "./_authenticated.technical-manager/hooks/useTechnicalManagerAccess";
-import { useTechnicalManagerStats } from "~/hooks/useTechnicalManagerStats";
+import { useTechnicalManagerStats } from "~/features/technical/hooks";
 import { TechnicalDashboardHeader } from "./_authenticated.technical-dashboard/components/TechnicalDashboardHeader";
 import { TechnicalStatisticsGrid } from "./_authenticated.technical-dashboard/components/statistics/TechnicalStatisticsGrid";
 import { TechnicalChartsSection } from "./_authenticated.technical-dashboard/components/charts/TechnicalChartsSection";

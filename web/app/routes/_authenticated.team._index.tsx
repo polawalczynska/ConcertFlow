@@ -6,13 +6,8 @@ import { TeamList } from "~/routes/_authenticated.team/components/TeamList";
 import { InviteTeamMemberDialog } from "~/routes/_authenticated.team/components/InviteTeamMemberDialog";
 import { DeleteTeamMemberDialog } from "~/routes/_authenticated.team/components/DeleteTeamMemberDialog";
 import { TeamNotMemberMessage } from "~/routes/_authenticated.team/components/TeamNotMemberMessage";
-import { useTeamMembers } from "~/hooks/useTeamMembers";
-import { useTeamInvitations } from "~/hooks/useTeamInvitations";
-import { useInviteTeamMember } from "~/hooks/useInviteTeamMember";
-import { useRemoveTeamMember } from "~/hooks/useRemoveTeamMember";
-import { useCancelTeamInvitation } from "~/hooks/useCancelTeamInvitation";
-import { useCheckTeamMembership } from "~/hooks/useCheckTeamMembership";
-import { useUser } from "~/hooks/useUser";
+import { useTeamMembers, useTeamInvitations, useInviteTeamMember, useRemoveTeamMember, useCancelTeamInvitation, useCheckTeamMembership } from "~/features/team/hooks";
+import { useUser } from "~/shared/hooks/domain";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
 
 export default function TeamPage() {

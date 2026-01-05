@@ -1,4 +1,4 @@
-import { useBudgetDetails } from "~/hooks/useBudgetDetails";
+import { useBudgetDetails } from "~/features/concerts/hooks";
 import { BudgetItemsTable } from "./BudgetItemsTable";
 import { BudgetStatusSection } from "./BudgetStatusSection";
 import { BudgetQuickActions } from "./BudgetQuickActions";

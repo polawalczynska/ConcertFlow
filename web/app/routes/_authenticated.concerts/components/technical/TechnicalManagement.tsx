@@ -4,7 +4,7 @@ import { TechnicalRequirementsView } from "./TechnicalRequirementsView";
 import { TechnicalStatusSection } from "./TechnicalStatusSection";
 import { TechnicalQuickActions } from "./TechnicalQuickActions";
 import { TechnicalRequirementsProvider } from "./context/TechnicalRequirementsContext";
-import { useBudgetDetails } from "~/hooks/useBudgetDetails";
+import { useBudgetDetails } from "~/features/concerts/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { technicalApi } from "~/lib/api-client";
 

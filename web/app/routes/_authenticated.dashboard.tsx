@@ -1,7 +1,6 @@
-import { useArtists } from "~/hooks/useArtists";
-import { useBudgetManagers } from "~/hooks/useBudgetManagers";
-import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
-import { useDashboardStats } from "~/hooks/useDashboardStats";
+import { useArtists } from "~/features/artists/hooks";
+import { useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
+import { useDashboardStats } from "~/features/dashboard/hooks";
 import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
 import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
 import { StatisticsGrid } from "./_authenticated.dashboard/components/statistics/StatisticsGrid";

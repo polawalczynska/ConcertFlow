@@ -1,4 +1,4 @@
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 
 export function useTechnicalManagerAccess() {
   const { data: user, isLoading: userLoading, error: userError } = useUser();

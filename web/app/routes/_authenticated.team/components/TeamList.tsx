@@ -1,6 +1,6 @@
 import { TeamMemberCard } from "./card/TeamMemberCard";
 import { PendingInvitations } from "./PendingInvitations";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
 
 interface TeamListProps {

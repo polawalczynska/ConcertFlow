@@ -8,7 +8,7 @@ import { TechnicalAreaSelector } from "./revision/TechnicalAreaSelector";
 import { useRequestTechnicalRevisionForm } from "./revision/useRequestTechnicalRevisionForm";
 import { technicalAreas } from "../data/technicalAreas";
 import { technicalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 
 interface RequestTechnicalRevisionDialogProps {
   isOpen: boolean;

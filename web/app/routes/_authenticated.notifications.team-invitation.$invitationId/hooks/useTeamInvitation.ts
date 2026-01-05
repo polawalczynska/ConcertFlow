@@ -1,7 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { useTeamInvitation as useTeamInvitationQuery } from "~/hooks/useTeamInvitation";
-import { useAcceptTeamInvitation } from "~/hooks/useAcceptTeamInvitation";
-import { useRejectTeamInvitation } from "~/hooks/useRejectTeamInvitation";
+import { useTeamInvitation as useTeamInvitationQuery, useAcceptTeamInvitation, useRejectTeamInvitation } from "~/features/team/hooks";
 
 export function useTeamInvitation(invitationId: number | null) {
   const navigate = useNavigate();

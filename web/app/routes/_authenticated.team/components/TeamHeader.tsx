@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/Button";
 import { Plus } from "lucide-react";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 
 interface TeamHeaderProps {
   onInviteMember: () => void;

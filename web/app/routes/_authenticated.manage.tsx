@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useConcerts } from "~/hooks/useConcerts";
-import { useArtists } from "~/hooks/useArtists";
-import { useBudgetManagers } from "~/hooks/useBudgetManagers";
-import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
+import { useConcerts } from "~/features/concerts/hooks";
+import { useArtists } from "~/features/artists/hooks";
+import { useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
 import type { GetAllConcertsStatusEnum } from "~/api";
 import { AuthGuard } from "~/features/auth/components";
 import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";

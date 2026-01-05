@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "@remix-run/react";
 import type { ConcertResponse } from "~/api";
-import { useDeleteConcert, useCancelConcert } from "~/hooks/useConcerts";
-import { useSubmitBudget } from "~/hooks/useSubmitBudget";
+import { useDeleteConcert, useCancelConcert, useSubmitBudget } from "~/features/concerts/hooks";
 
 export function useConcertActions() {
   const navigate = useNavigate();

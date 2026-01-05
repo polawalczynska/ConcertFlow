@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "~/components/ui/Button";
 import { Checkbox } from "~/components/ui/Checkbox";
 import { technicalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 
 interface ApproveTechnicalDialogProps {
   isOpen: boolean;

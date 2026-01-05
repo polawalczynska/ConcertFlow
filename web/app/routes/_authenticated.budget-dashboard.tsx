@@ -1,5 +1,5 @@
 import { useBudgetManagerAccess } from "./_authenticated.budget-manager/hooks/useBudgetManagerAccess";
-import { useBudgetManagerStats } from "~/hooks/useBudgetManagerStats";
+import { useBudgetManagerStats } from "~/features/budget/hooks";
 import { BudgetDashboardHeader } from "./_authenticated.budget-dashboard/components/BudgetDashboardHeader";
 import { BudgetStatisticsGrid } from "./_authenticated.budget-dashboard/components/statistics/BudgetStatisticsGrid";
 import { BudgetChartsSection } from "./_authenticated.budget-dashboard/components/charts/BudgetChartsSection";

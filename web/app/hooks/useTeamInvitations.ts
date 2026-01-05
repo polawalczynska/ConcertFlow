@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { TeamInvitationResponse } from "~/api";
 
 export function useTeamInvitations() {

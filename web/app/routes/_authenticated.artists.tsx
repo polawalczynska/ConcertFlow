@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useArtists, useCreateArtist, useUpdateArtist, useDeleteArtist } from "~/hooks/useArtists";
+import { useArtists, useCreateArtist, useUpdateArtist, useDeleteArtist } from "~/features/artists/hooks";
 import type { ArtistResponse, ArtistRequest } from "~/api";
 import { AuthGuard } from "~/features/auth/components";
 import { ArtistsHeader } from "~/routes/_authenticated.artists/components/ArtistsHeader";

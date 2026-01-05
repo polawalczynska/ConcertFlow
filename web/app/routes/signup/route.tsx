@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrandHeader, AuthCard, AuthFormHeader, AuthLink, SignupForm } from "~/features/auth/components";
-import { useRegister } from "~/hooks/useAuth";
+import { useRegister } from "~/features/auth/hooks";
 import { registerFormDataToRequest, type RegisterFormData, extractApiError } from "~/shared/utils";
 
 export default function SignUpPage() {

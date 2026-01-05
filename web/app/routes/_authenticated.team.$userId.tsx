@@ -5,8 +5,7 @@ import { TeamMemberDetailCard } from "./_authenticated.team.$userId/components/T
 import { TeamMemberNotFound } from "./_authenticated.team.$userId/components/TeamMemberNotFound";
 import { AssignedConcertsTab } from "./_authenticated.team.$userId/components/tabs/AssignedConcertsTab";
 import { useTeamMemberDetail } from "./_authenticated.team.$userId/hooks/useTeamMemberDetail";
-import { useTeamMember } from "~/hooks/useTeamMember";
-import { useRemoveTeamMember } from "~/hooks/useRemoveTeamMember";
+import { useTeamMember, useRemoveTeamMember } from "~/features/team/hooks";
 
 export default function TeamMemberDetailPage() {
   const params = useParams();

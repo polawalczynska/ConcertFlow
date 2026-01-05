@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { BrandHeader, AuthCard, AuthFormHeader, AuthLink, LoginForm } from "~/features/auth/components";
-import { useLogin } from "~/hooks/useAuth";
+import { useLogin } from "~/features/auth/hooks";
 import { type LoginFormData, extractApiError } from "~/shared/utils";
 
 export default function LoginPage() {

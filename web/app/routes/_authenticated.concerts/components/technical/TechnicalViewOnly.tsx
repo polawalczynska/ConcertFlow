@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { technicalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { TechnicalStatusHeader } from "./status/TechnicalStatusHeader";
 import { TechnicalLatestResponse } from "./status/TechnicalLatestResponse";
 import { TechnicalRequirementsView } from "./TechnicalRequirementsView";

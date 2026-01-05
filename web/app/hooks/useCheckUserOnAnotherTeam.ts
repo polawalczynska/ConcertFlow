@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { teamApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 
 export function useCheckUserOnAnotherTeam(userId: number | null | undefined) {
   const { data: currentUser } = useUser();

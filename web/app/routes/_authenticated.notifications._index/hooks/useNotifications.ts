@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useNotifications as useNotificationsQuery, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from "~/hooks/useNotifications";
+import { useNotifications as useNotificationsQuery, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from "~/features/notifications/hooks";
 import { mapNotificationResponseToNotification } from "../utils/notificationMapper";
 import type { Notification } from "../types";
 

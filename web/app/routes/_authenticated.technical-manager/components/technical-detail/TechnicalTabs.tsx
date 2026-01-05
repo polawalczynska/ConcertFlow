@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/Tabs";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { technicalApi } from "~/lib/api-client";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { OverviewTab } from "./tabs/OverviewTab";

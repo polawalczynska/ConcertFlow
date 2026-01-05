@@ -1,6 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "~/components/ui/Button";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { TeamMemberResponse } from "~/api";
 
 interface TeamMemberCardDeleteButtonProps {

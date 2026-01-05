@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { technicalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { TechnicalApprovalDashboardResponse } from "~/api";
 import { filterAndSortApprovals } from "../utils/filterAndSortApprovals";
 import type { TechnicalApproval } from "../types/TechnicalApproval";

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { ConcertRequest, ConcertResponse } from "~/api";
-import { useCreateConcert, useUpdateConcert } from "~/hooks/useConcerts";
+import { useCreateConcert, useUpdateConcert } from "~/features/concerts/hooks";
 import { concertSchema, extractApiError } from "~/shared/utils";
 import { formatDateForInput } from "../utils/dateUtils";
 

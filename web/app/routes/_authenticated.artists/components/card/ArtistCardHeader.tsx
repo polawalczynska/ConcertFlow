@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/Button";
 import { Music, Edit, Trash2 } from "lucide-react";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { ArtistResponse } from "~/api";
 
 interface ArtistCardHeaderProps {

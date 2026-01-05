@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { technicalApi } from "~/lib/api-client";
 import type { TechnicalApproval } from "../types/TechnicalApproval";
 import { TechnicalHeader } from "./technical-detail/TechnicalHeader";

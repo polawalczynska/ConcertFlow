@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "~/components/ui/Card";
 import { budgetApprovalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { BudgetStatusSection } from "./BudgetStatusSection";
 import { BudgetItemsTable } from "./BudgetItemsTable";
 import { BudgetActionButtons } from "./BudgetActionButtons";

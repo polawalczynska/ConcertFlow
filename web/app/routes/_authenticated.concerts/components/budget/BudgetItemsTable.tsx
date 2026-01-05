@@ -6,7 +6,7 @@ import { BudgetItemsTableHeader } from "./table/BudgetItemsTableHeader";
 import { BudgetItemsTableBody } from "./table/BudgetItemsTableBody";
 import { BudgetItemsTableFooter } from "./table/BudgetItemsTableFooter";
 import { BudgetItemsEmptyState } from "./table/BudgetItemsEmptyState";
-import { useDeleteBudgetItem } from "~/hooks/useBudgetItems";
+import { useDeleteBudgetItem } from "~/features/concerts/hooks";
 import type { BudgetItemResponse, BudgetDetailResponseBudgetStatusEnum } from "~/api";
 
 interface BudgetItemsTableProps {

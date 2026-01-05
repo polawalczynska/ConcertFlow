@@ -2,7 +2,7 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { AssignedConcertsTabHeader } from "./assigned-concerts/AssignedConcertsTabHeader";
 import { AssignedConcertsEmptyState } from "./assigned-concerts/AssignedConcertsEmptyState";
 import { AssignedConcertItem } from "./assigned-concerts/AssignedConcertItem";
-import { useAssignedConcerts } from "~/hooks/useAssignedConcerts";
+import { useAssignedConcerts } from "~/features/concerts/hooks";
 import type { ConcertResponse } from "~/api";
 
 interface AssignedConcertsTabProps {

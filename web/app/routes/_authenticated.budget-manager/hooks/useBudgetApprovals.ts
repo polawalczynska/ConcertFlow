@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { budgetApprovalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { BudgetApprovalDashboardResponse, ApproveBudgetRequest, RequestBudgetRevisionRequest } from "~/api";
 
 export function useBudgetApprovals() {

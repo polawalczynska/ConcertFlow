@@ -11,7 +11,7 @@ import { ConcertDescription } from "./view/ConcertDescription";
 import { CancellationReason } from "./view/CancellationReason";
 import { BudgetManagement } from "../budget/BudgetManagement";
 import { TechnicalManagement } from "../technical/TechnicalManagement";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { UserResponseRoleEnum } from "~/api";
 
 interface ViewConcertDialogProps {

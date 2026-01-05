@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
-import { useSubmitBudget } from "~/hooks/useSubmitBudget";
+import { useSubmitBudget } from "~/features/concerts/hooks";
 import { SubmitBudgetDialog } from "~/routes/_authenticated.concerts/components/dialogs/SubmitBudgetDialog";
 import type { BudgetDetailResponse } from "~/api";
 import { Send } from "lucide-react";

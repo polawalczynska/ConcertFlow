@@ -10,7 +10,7 @@ import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
 import { Textarea } from "~/components/ui/Textarea";
 import { Checkbox } from "~/components/ui/Checkbox";
-import { useCreateBudgetItem, useUpdateBudgetItem } from "~/hooks/useBudgetItems";
+import { useCreateBudgetItem, useUpdateBudgetItem } from "~/features/concerts/hooks";
 import { useBudgetItemForm } from "./form/useBudgetItemForm";
 import { BudgetItemCategoryField } from "./form/BudgetItemCategoryField";
 import { BudgetItemAmountField } from "./form/BudgetItemAmountField";

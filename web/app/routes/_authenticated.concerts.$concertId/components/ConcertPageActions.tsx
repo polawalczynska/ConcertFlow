@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { technicalApi, budgetApprovalApi } from "~/lib/api-client";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { UserResponseRoleEnum } from "~/api";
 import { TechnicalActionButtons } from "~/routes/_authenticated.concerts/components/technical/TechnicalActionButtons";
 import { BudgetActionButtons } from "~/routes/_authenticated.concerts/components/budget/BudgetActionButtons";

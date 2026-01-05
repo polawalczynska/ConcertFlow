@@ -6,7 +6,7 @@ import { Send } from "lucide-react";
 import { SubmitTechnicalDialog } from "../dialogs/SubmitTechnicalDialog";
 import { useTechnicalRequirementsContext } from "./context/TechnicalRequirementsContext";
 import { technicalApi } from "~/lib/api-client";
-import { useBudgetDetails } from "~/hooks/useBudgetDetails";
+import { useBudgetDetails } from "~/features/concerts/hooks";
 
 interface TechnicalQuickActionsProps {
   concertId: number;
@@ -31,7 +31,6 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
       setIsDialogOpen(false);
     } catch (error) {
-      console.error("Error submitting technical requirements:", error);
       throw error;
     } finally {
       setIsSubmitting(false);

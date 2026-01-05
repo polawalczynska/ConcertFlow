@@ -1,6 +1,6 @@
 import { Card, CardContent } from "~/components/ui/Card";
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { technicalApi } from "~/lib/api-client";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
 

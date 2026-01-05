@@ -8,7 +8,7 @@ import { UserAlreadyOnTeam } from "./invite-dialog/UserAlreadyOnTeam";
 import { UserOnAnotherTeam } from "./invite-dialog/UserOnAnotherTeam";
 import { InviteDialogFooter } from "./invite-dialog/InviteDialogFooter";
 import { useUserSearch } from "./invite-dialog/hooks/useUserSearch";
-import { useCheckUserOnAnotherTeam } from "~/hooks/useCheckUserOnAnotherTeam";
+import { useCheckUserOnAnotherTeam } from "~/features/team/hooks";
 import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
 
 interface InviteTeamMemberDialogProps {

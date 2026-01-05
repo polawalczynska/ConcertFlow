@@ -1,7 +1,7 @@
 import { Button } from "~/components/ui/Button";
 import { Card, CardContent } from "~/components/ui/Card";
 import { Trash2 } from "lucide-react";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import type { TeamMemberResponse } from "~/api";
 import { formatRole } from "~/shared/utils";
 import { TeamMemberContactInfo } from "./TeamMemberContactInfo";

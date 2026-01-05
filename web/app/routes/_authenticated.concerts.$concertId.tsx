@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "@remix-run/react";
-import { useConcert } from "~/hooks/useConcerts";
-import { useUser } from "~/hooks/useUser";
-import { useArtists } from "~/hooks/useArtists";
-import { useBudgetManagers } from "~/hooks/useBudgetManagers";
-import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
+import { useConcert } from "~/features/concerts/hooks";
+import { useUser, useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
+import { useArtists } from "~/features/artists/hooks";
 import { UserResponseRoleEnum } from "~/api";
 import { AuthGuard } from "~/components/AuthGuard";
 import { ConcertPageHeader } from "./_authenticated.concerts.$concertId/components/ConcertPageHeader";
