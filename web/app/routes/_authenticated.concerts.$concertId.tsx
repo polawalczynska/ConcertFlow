@@ -4,7 +4,7 @@ import { useConcert } from "~/features/concerts/hooks";
 import { useUser, useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
 import { useArtists } from "~/features/artists/hooks";
 import { UserResponseRoleEnum } from "~/api";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { ConcertPageHeader } from "~/features/concerts/components/ConcertPageHeader";
 import { ConcertPageContent } from "~/features/concerts/components/ConcertPageContent";
 import { ConcertPageManagement } from "~/features/concerts/components/ConcertPageManagement";
