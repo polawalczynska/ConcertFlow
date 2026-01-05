@@ -9,7 +9,7 @@ import type {
   SafetyRequirementsDto,
   LightingFixtureDto
 } from "~/api";
-import type { LightingFixture } from "../forms/LightingRequirementsForm";
+import type { LightingFixture } from "~/features/concerts/components/technical/forms/LightingRequirementsForm";
 
 export interface TechnicalRequirementsData {
   powerRequirements: number | null;

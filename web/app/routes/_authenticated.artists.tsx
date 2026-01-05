@@ -148,8 +148,8 @@ export default function ArtistsPage() {
       if (!url) return undefined;
       const trimmed = url.trim();
       if (!trimmed) return undefined;
-      if (!trimmed.match(/^https?:\/\
-        return `https:
+      if (!trimmed.match(/^https?:\/\//)) {
+        return `https://${trimmed}`;
       }
       return trimmed;
     };

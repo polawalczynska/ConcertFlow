@@ -1,6 +1,6 @@
 import { AuthControllerApi, ArtistControllerApi, UserControllerApi, ConcertControllerApi, DashboardControllerApi, BudgetApprovalControllerApi, BudgetItemControllerApi, TechnicalApprovalControllerApi, TeamControllerApi, NotificationControllerApi, Configuration } from "~/api";
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "./token-storage";
+import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "~/shared/utils/helpers/token-storage";
 
 interface WindowWithEnv extends Window {
   ENV?: {

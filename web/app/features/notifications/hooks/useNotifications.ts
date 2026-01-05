@@ -1,7 +1,52 @@
 import { useMemo } from "react";
-import { useNotifications as useNotificationsQuery, useUnreadNotificationCount, useMarkAllNotificationsAsRead, useMarkNotificationAsRead } from "~/features/notifications/hooks";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { notificationApi } from "~/lib/api-client";
 import { mapNotificationResponseToNotification } from "../utils/notificationMapper";
 import type { Notification } from "../types";
+
+export function useNotificationsQuery() {
+  return useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const response = await notificationApi.getNotifications();
+      return response.data;
+    },
+  });
+}
+
+export function useUnreadNotificationCount() {
+  return useQuery({
+    queryKey: ["notifications", "unread-count"],
+    queryFn: async () => {
+      const response = await notificationApi.getUnreadCount();
+      return response.data;
+    },
+  });
+}
+
+export function useMarkAllNotificationsAsRead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      await notificationApi.markAllAsRead();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
+
+export function useMarkNotificationAsRead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: number) => {
+      await notificationApi.markAsRead(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+}
 
 export function useNotifications() {
   const { data: notificationsResponse = [], isLoading } = useNotificationsQuery();
@@ -46,4 +91,3 @@ export function useNotifications() {
     getFilteredNotifications,
   };
 }
-

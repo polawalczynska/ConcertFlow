@@ -6,7 +6,7 @@ import { RevisionReasonField } from "./revision/RevisionReasonField";
 import { RevisionDeadlineField } from "./revision/RevisionDeadlineField";
 import { TechnicalAreaSelector } from "./revision/TechnicalAreaSelector";
 import { useRequestTechnicalRevisionForm } from "./revision/useRequestTechnicalRevisionForm";
-import { technicalAreas } from "../data/technicalAreas";
+import { technicalAreas } from "~/features/technical/data/technicalAreas";
 import { technicalApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain";
 

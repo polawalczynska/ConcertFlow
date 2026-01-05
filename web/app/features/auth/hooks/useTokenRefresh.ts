@@ -45,7 +45,8 @@ export function useTokenRefresh() {
     }
 
     try {
-      const tokenToUse = refreshTokenValue || rememberMeTokenValue;
+      const tokenToUse = refreshTokenValue || rememberMeTokenValue || null;
+      if (!tokenToUse) return;
       const refreshTokenRequest: RefreshTokenRequest = { refreshToken: tokenToUse };
       const response = await authApi.refreshToken(refreshTokenRequest);
 

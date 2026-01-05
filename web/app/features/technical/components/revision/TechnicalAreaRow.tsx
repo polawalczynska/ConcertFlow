@@ -1,7 +1,7 @@
 import { Checkbox } from "~/components/ui/Checkbox";
 import { Label } from "~/components/ui/Label";
 import { Textarea } from "~/components/ui/Textarea";
-import type { TechnicalArea } from "../../data/technicalAreas";
+import type { TechnicalArea } from "~/features/technical/data/technicalAreas";
 
 interface TechnicalAreaRowProps {
   area: TechnicalArea;

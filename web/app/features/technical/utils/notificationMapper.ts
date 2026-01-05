@@ -1,7 +1,7 @@
 import { Users, DollarSign, Wrench, Calendar, CheckCircle2, AlertCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { NotificationResponse } from "~/api";
-import type { Notification } from "../types";
+import type { Notification } from "~/features/notifications/types";
 
 
 function getIconComponent(iconName?: string): LucideIcon {

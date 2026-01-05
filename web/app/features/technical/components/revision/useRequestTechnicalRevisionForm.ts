@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { TechnicalArea } from "../../data/technicalAreas";
+import type { TechnicalArea } from "~/features/technical/data/technicalAreas";
 
 interface UseRequestTechnicalRevisionFormProps {
   isOpen: boolean;

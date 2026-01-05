@@ -1,5 +1,5 @@
 import { FileText, Clock, CheckCircle2, AlertCircle, CalendarIcon } from "lucide-react";
-import { StatisticsCard } from "../../../_authenticated.dashboard/components/statistics/StatisticsCard";
+import { StatisticsCard } from "~/features/dashboard/components/statistics/StatisticsCard";
 import type { TechnicalManagerStatsResponse } from "~/api";
 
 interface TechnicalStatisticsGridProps {

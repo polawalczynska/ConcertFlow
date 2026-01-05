@@ -1,6 +1,6 @@
 import { Label } from "~/components/ui/Label";
 import { TechnicalAreaRow } from "./TechnicalAreaRow";
-import type { TechnicalArea } from "../../data/technicalAreas";
+import type { TechnicalArea } from "~/features/technical/data/technicalAreas";
 
 interface TechnicalAreaSelectorProps {
   areas: TechnicalArea[];

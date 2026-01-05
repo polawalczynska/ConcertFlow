@@ -10,4 +10,6 @@ export { default as SubmitButton } from "./SubmitButton";
 export { default as LoginForm } from "./LoginForm";
 export { default as SignupForm } from "./SignupForm";
 export { AuthGuard } from "./AuthGuard";
+export { default as NameInput } from "./NameInput";
+export { default as RoleSelect } from "./RoleSelect";
 
