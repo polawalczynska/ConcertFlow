@@ -2,9 +2,16 @@ package com.concertflow.api.budget.service;
 
 import com.concertflow.api.approval.chain.ApprovalChainService;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.budget.dto.*;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.budget.dto.ApproveBudgetRequest;
+import com.concertflow.api.budget.dto.BudgetApprovalDashboardResponse;
+import com.concertflow.api.budget.dto.BudgetDetailResponse;
+import com.concertflow.api.budget.dto.BudgetValidation;
+import com.concertflow.api.budget.dto.RequestBudgetRevisionRequest;
+import com.concertflow.api.budget.dto.SubmitBudgetForApprovalRequest;
+import com.concertflow.api.concert.entity.Concert;
+import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.BudgetMapper;
 import com.concertflow.api.security.annotation.RequireBudgetManager;
 import com.concertflow.api.security.annotation.RequireCoordinator;
@@ -127,7 +134,7 @@ public class BudgetApprovalService {
         Concert concert = findConcertById(concertId);
 
         if (!concert.getCoordinator().getId().equals(coordinator.getId())) {
-            throw new com.concertflow.api.exceptions.types.UnauthorizedAccessException(
+            throw new UnauthorizedAccessException(
                 "You can only view budget details for your own concerts");
         }
 
