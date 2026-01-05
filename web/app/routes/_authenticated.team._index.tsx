@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { TeamHeader } from "~/routes/_authenticated.team/components/TeamHeader";
 import { TeamSearch } from "~/routes/_authenticated.team/components/TeamSearch";
 import { TeamList } from "~/routes/_authenticated.team/components/TeamList";

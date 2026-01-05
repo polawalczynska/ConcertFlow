@@ -4,7 +4,7 @@ import { useArtists } from "~/hooks/useArtists";
 import { useBudgetManagers } from "~/hooks/useBudgetManagers";
 import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
 import type { GetAllConcertsStatusEnum } from "~/api";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { ConcertsHeader } from "~/routes/_authenticated.concerts/components/ConcertsHeader";
 import { ConcertsFilters } from "~/routes/_authenticated.concerts/components/ConcertsFilters";
 import { ConcertsTable } from "~/routes/_authenticated.concerts/components/ConcertsTable";

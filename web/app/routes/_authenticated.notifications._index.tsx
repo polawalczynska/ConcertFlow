@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { NotificationsHeader } from "./_authenticated.notifications._index/components/NotificationsHeader";
 import { NotificationsTabs } from "./_authenticated.notifications._index/components/NotificationsTabs";
 import { useNotifications } from "./_authenticated.notifications._index/hooks/useNotifications";

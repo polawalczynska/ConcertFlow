@@ -1,4 +1,4 @@
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 
 export function ConcertPageLoading() {
   return (

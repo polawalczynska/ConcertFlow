@@ -1,5 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { Button } from "~/components/ui/Button";
 import { ArrowLeft } from "lucide-react";
 
