@@ -128,11 +128,6 @@ public class ConcertService {
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
         
-        if (!concertStateManager.canDelete(concert)) {
-            throw new InvalidConcertStatusException(
-                "Concert cannot be deleted in its current state: " + concert.getStatus());
-        }
-        
         concertRepository.delete(concert);
         concertRepository.flush();
     }
