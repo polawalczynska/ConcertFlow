@@ -10,6 +10,8 @@ import com.concertflow.api.budget.dto.CategoryBreakdown;
 import com.concertflow.api.concert.entity.BudgetApproval;
 import com.concertflow.api.concert.entity.BudgetItem;
 import com.concertflow.api.concert.entity.BudgetItemStatus;
+import com.concertflow.api.budget.config.BudgetApprovalConfig;
+import com.concertflow.api.budget.config.BudgetConstants;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import org.springframework.stereotype.Component;
@@ -237,12 +239,12 @@ public class BudgetMapper {
     }
 
     private String determinePriority(Concert concert, int daysUntil) {
-        if (daysUntil < 7) {
-            return "HIGH";
-        } else if (daysUntil < 30) {
-            return "MEDIUM";
+        if (daysUntil < BudgetApprovalConfig.HIGH_PRIORITY_DAYS) {
+            return BudgetConstants.PRIORITY_HIGH;
+        } else if (daysUntil < BudgetApprovalConfig.MEDIUM_PRIORITY_DAYS) {
+            return BudgetConstants.PRIORITY_MEDIUM;
         }
-        return "LOW";
+        return BudgetConstants.PRIORITY_LOW;
     }
 
     private LocalDateTime findLatestSubmissionDate(Concert concert) {
@@ -265,9 +267,9 @@ public class BudgetMapper {
         if (budgetAmount == null) {
             return 1;
         }
-        if (budgetAmount.compareTo(new BigDecimal("50000")) > 0) {
+        if (budgetAmount.compareTo(BudgetApprovalConfig.HIGH_APPROVAL_LEVEL_THRESHOLD) > 0) {
             return 3;
-        } else if (budgetAmount.compareTo(new BigDecimal("20000")) > 0) {
+        } else if (budgetAmount.compareTo(BudgetApprovalConfig.MEDIUM_APPROVAL_LEVEL_THRESHOLD) > 0) {
             return 2;
         }
         return 1;
