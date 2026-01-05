@@ -2,6 +2,7 @@ package com.concertflow.api.team;
 
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.security.annotation.RequireAuthenticated;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.team.dto.InviteTeamMemberRequest;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
 import com.concertflow.api.team.dto.TeamMemberResponse;
@@ -11,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +26,10 @@ public class TeamController {
     @GetMapping("/members")
     @RequireAuthenticated
     public List<TeamMemberResponse> getTeamMembers(@AuthenticationPrincipal User user) {
-        // If user is a coordinator, return their team members
+        
         if (user.getRole().name().equals("COORDINATOR")) {
             return teamService.getTeamMembers(user.getId());
         }
-        // If user is a manager who is a team member, return their team members
         return teamService.getTeamMembersForManager(user);
     }
 
@@ -41,15 +40,13 @@ public class TeamController {
     }
 
     @GetMapping("/invitations")
-    @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public List<TeamInvitationResponse> getPendingInvitations(@AuthenticationPrincipal User coordinator) {
         return teamService.getPendingInvitations(coordinator.getId());
     }
 
     @PostMapping("/invite")
-    @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public ResponseEntity<TeamInvitationResponse> inviteTeamMember(
             @Valid @RequestBody InviteTeamMemberRequest request,
             @AuthenticationPrincipal User coordinator) {
@@ -58,8 +55,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/members/{id}")
-    @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public ResponseEntity<Void> removeTeamMember(
             @PathVariable Long id,
             @AuthenticationPrincipal User coordinator) {
@@ -94,8 +90,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/invitations/{id}")
-    @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public ResponseEntity<Void> cancelInvitation(
             @PathVariable Long id,
             @AuthenticationPrincipal User coordinator) {
@@ -117,8 +112,7 @@ public class TeamController {
     }
 
     @GetMapping("/check-other-team/{userId}")
-    @RequireAuthenticated
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public ResponseEntity<Boolean> checkIfUserOnAnotherTeam(
             @PathVariable Long userId,
             @AuthenticationPrincipal User coordinator) {

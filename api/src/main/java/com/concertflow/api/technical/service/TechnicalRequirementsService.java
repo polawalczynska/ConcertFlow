@@ -6,6 +6,7 @@ import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.technical.dto.SaveTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.SubmitTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.TechnicalDetailResponse;
@@ -13,7 +14,6 @@ import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ public class TechnicalRequirementsService {
     @Lazy
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
         log.info("Saving technical requirements for concert: {}, coordinator: {}", concertId, coordinator.getEmail());
 
@@ -44,7 +44,7 @@ public class TechnicalRequirementsService {
         log.info("Technical requirements saved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public void submitTechnicalRequirements(
         Long concertId,
         SubmitTechnicalRequirementsRequest request,
@@ -72,7 +72,7 @@ public class TechnicalRequirementsService {
         log.info("Technical requirements submitted for approval, concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public TechnicalDetailResponse getTechnicalDetailsForCoordinator(Long concertId, User coordinator) {
         log.debug("Fetching technical details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 

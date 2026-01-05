@@ -5,13 +5,13 @@ import com.concertflow.api.approval.chain.ApprovalRequest;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.security.annotation.RequireTechnicalManager;
 import com.concertflow.api.technical.dto.*;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,7 @@ public class TechnicalApprovalService {
     private final TechnicalRequirementsService technicalRequirementsService;
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public Page<TechnicalApprovalDashboardResponse> getPendingTechnicalApprovals(
         Pageable pageable,
         Long technicalManagerId,
@@ -57,7 +57,7 @@ public class TechnicalApprovalService {
         });
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public TechnicalDetailResponse getTechnicalDetails(
         Long concertId,
         Long technicalManagerId,
@@ -77,7 +77,7 @@ public class TechnicalApprovalService {
         return technicalMapper.toDetailResponse(concert);
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public void approveTechnical(Long concertId, ApproveTechnicalRequest request, User approver) {
         log.info("Approving technical requirements for concert: {}, approver: {}", concertId, approver.getEmail());
 
@@ -97,7 +97,7 @@ public class TechnicalApprovalService {
         log.info("Technical requirements approved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public void requestRevision(Long concertId, RequestTechnicalRevisionRequest request, User requester) {
         log.info("Requesting technical revision for concert: {}", concertId);
 

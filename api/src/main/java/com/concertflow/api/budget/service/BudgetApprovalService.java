@@ -6,12 +6,13 @@ import com.concertflow.api.budget.dto.*;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.BudgetMapper;
+import com.concertflow.api.security.annotation.RequireBudgetManager;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class BudgetApprovalService {
     private final BudgetAccessValidator accessValidator;
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
         log.debug("Fetching budgets for budget manager ID: {}", budgetManagerId);
 
@@ -46,7 +47,7 @@ public class BudgetApprovalService {
         });
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public BudgetDetailResponse getBudgetDetails(Long concertId, Long budgetManagerId, User authenticatedUser) {
         log.debug("Fetching budget details for concert: {}, budget manager ID: {}", concertId, budgetManagerId);
 
@@ -61,7 +62,7 @@ public class BudgetApprovalService {
         return budgetMapper.toDetailResponse(concert, validations, isEligible);
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void approveBudget(Long concertId, ApproveBudgetRequest request, User approver) {
         log.info("Approving budget for concert: {}, approver: {}", concertId, approver.getEmail());
 
@@ -81,7 +82,7 @@ public class BudgetApprovalService {
         log.info("Budget approved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void requestRevision(Long concertId, RequestBudgetRevisionRequest request, User requester) {
         log.info("Requesting budget revision for concert: {}", concertId);
 
@@ -100,7 +101,7 @@ public class BudgetApprovalService {
         log.info("Budget revision requested for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN') or hasRole('ORGANIZER')")
+    @RequireCoordinator
     public void submitBudgetForApproval(Long concertId, SubmitBudgetForApprovalRequest request, User submitter) {
         log.info("Submitting budget for approval, concert: {}, submitter: {}", concertId, submitter.getEmail());
 
@@ -119,7 +120,7 @@ public class BudgetApprovalService {
         log.info("Budget submitted for approval, concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN')")
+    @RequireCoordinator
     public BudgetDetailResponse getBudgetDetailsForCoordinator(Long concertId, User coordinator) {
         log.debug("Fetching budget details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 
