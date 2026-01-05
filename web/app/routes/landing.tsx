@@ -1,9 +1,9 @@
-import { LandingNavigation } from "./landing/components/LandingNavigation";
-import { HeroSection } from "./landing/components/HeroSection";
-import { ValuePropositionSection } from "./landing/components/ValuePropositionSection";
-import { FeaturesSection } from "./landing/components/FeaturesSection";
-import { CTASection } from "./landing/components/CTASection";
-import { Footer } from "./landing/components/Footer";
+import { LandingNavigation } from "~/features/landing/components/LandingNavigation";
+import { HeroSection } from "~/features/landing/components/HeroSection";
+import { ValuePropositionSection } from "~/features/landing/components/ValuePropositionSection";
+import { FeaturesSection } from "~/features/landing/components/FeaturesSection";
+import { CTASection } from "~/features/landing/components/CTASection";
+import { Footer } from "~/features/landing/components/Footer";
 
 export default function LandingPage() {
   return (

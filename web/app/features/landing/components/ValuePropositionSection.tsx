@@ -1,5 +1,5 @@
 import { Calendar, Wrench, DollarSign } from "lucide-react";
-import { RoleCard } from "./RoleCard";
+import { RoleCard } from "~/features/landing/components/RoleCard";
 
 export function ValuePropositionSection() {
   const coordinatorFeatures = [

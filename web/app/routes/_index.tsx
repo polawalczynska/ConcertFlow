@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import { useUser } from "~/shared/hooks/domain";
 import { getRedirectPathForRole } from "~/shared/constants/routes";
-import LandingPage from "./landing";
+import LandingPage from "~/routes/landing";
 
 export default function Index() {
   const navigate = useNavigate();
