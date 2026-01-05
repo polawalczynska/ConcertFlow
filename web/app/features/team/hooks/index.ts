@@ -9,4 +9,5 @@ export * from "./useRejectTeamInvitation";
 export * from "./useCancelTeamInvitation";
 export * from "./useCheckTeamMembership";
 export * from "./useCheckUserOnAnotherTeam";
+export * from "./useTeamMemberDetail";
 

@@ -1,7 +1,7 @@
 import { TeamMemberCard } from "./card/TeamMemberCard";
-import { PendingInvitations } from "./PendingInvitations";
+import { PendingInvitations } from "./pending-invitations/PendingInvitations";
 import { useUser } from "~/shared/hooks/domain";
-import type { TeamMemberResponse, TeamInvitationResponse } from "~/api";
+import type { TeamInvitationResponse, TeamMemberResponse } from "~/api";
 
 interface TeamListProps {
   members: TeamMemberResponse[];
@@ -13,15 +13,15 @@ interface TeamListProps {
   isLoading?: boolean;
 }
 
-export function TeamList({ 
-  members, 
-  pendingInvitations, 
-  onDeleteMember, 
-  onCancelInvitation,
-  isCancellingInvitation = false,
-  isLoading 
-}: TeamListProps) {
-  const { data: user } = useUser();
+export function TeamList({
+                           members,
+                           pendingInvitations,
+                           onDeleteMember,
+                           onCancelInvitation,
+                           isCancellingInvitation = false,
+                           isLoading
+                         }: TeamListProps) {
+  const {data: user} = useUser();
   const isCoordinator = user?.role === "COORDINATOR";
   const pendingInvites = pendingInvitations.filter((inv) => inv.status === "PENDING");
 
@@ -29,7 +29,7 @@ export function TeamList({
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-48 animate-pulse rounded-xl bg-bg-card border border-border-light" />
+          <div key={i} className="h-48 animate-pulse rounded-xl bg-bg-card border border-border-light"/>
         ))}
       </div>
     );
@@ -38,13 +38,13 @@ export function TeamList({
   return (
     <div className="space-y-6">
       {isCoordinator && pendingInvites.length > 0 && (
-        <PendingInvitations 
+        <PendingInvitations
           invitations={pendingInvites}
           onCancelInvitation={onCancelInvitation}
           isCancelling={isCancellingInvitation}
         />
       )}
-      
+
       {members.length === 0 ? (
         <div className="rounded-xl border border-border-light bg-bg-card p-12 text-center">
           <p className="text-text-secondary">No team members found.</p>
@@ -52,7 +52,7 @@ export function TeamList({
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
-            <TeamMemberCard key={member.id} member={member} onDelete={onDeleteMember} />
+            <TeamMemberCard key={member.id} member={member} onDelete={onDeleteMember}/>
           ))}
         </div>
       )}
