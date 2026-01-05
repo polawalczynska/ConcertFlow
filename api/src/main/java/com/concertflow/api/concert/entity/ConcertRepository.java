@@ -112,4 +112,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     @Query("SELECT DISTINCT c FROM Concert c LEFT JOIN FETCH c.technicalRequirements WHERE c.technicalManager.id = :technicalManagerId")
     List<Concert> findByTechnicalManagerId(@Param("technicalManagerId") Long technicalManagerId);
+
+    @Query("SELECT COUNT(c) FROM Concert c WHERE c.artist.id = :artistId AND c.date > :currentDate")
+    long countByArtistIdAndDateAfter(@Param("artistId") Long artistId, @Param("currentDate") LocalDateTime currentDate);
 }

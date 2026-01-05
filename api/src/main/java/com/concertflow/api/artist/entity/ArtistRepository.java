@@ -11,7 +11,4 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
     List<Artist> findByNameContainingIgnoreCase(String trim);
 
     boolean existsByName(String name);
-    
-    @Query("SELECT COUNT(c) FROM com.concertflow.api.concert.entity.Concert c WHERE c.artist.id = :artistId AND c.date > :currentDate")
-    long countByArtistIdAndDateAfter(@Param("artistId") Long artistId, @Param("currentDate") LocalDateTime currentDate);
 }
