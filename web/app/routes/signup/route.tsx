@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import BrandHeader from "~/components/auth/BrandHeader";
-import AuthCard from "~/components/auth/AuthCard";
-import AuthFormHeader from "~/components/auth/AuthFormHeader";
-import AuthLink from "~/components/auth/AuthLink";
-import SignupForm from "~/components/auth/SignupForm";
+import { BrandHeader, AuthCard, AuthFormHeader, AuthLink, SignupForm } from "~/features/auth/components";
 import { useRegister } from "~/hooks/useAuth";
 import { registerFormDataToRequest, type RegisterFormData, extractApiError } from "~/shared/utils";
 

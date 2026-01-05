@@ -1,6 +1,6 @@
 import { Outlet, useRouteError, isRouteErrorResponse } from "@remix-run/react";
 import { Navbar } from "~/components/navbar";
-import { AuthGuard } from "~/components/AuthGuard";
+import { AuthGuard } from "~/features/auth/components";
 import { ErrorPage } from "~/components/ErrorPage";
 
 export default function AuthenticatedLayout() {

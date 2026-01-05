@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import BrandHeader from "~/components/auth/BrandHeader";
-import AuthCard from "~/components/auth/AuthCard";
-import AuthFormHeader from "~/components/auth/AuthFormHeader";
-import AuthLink from "~/components/auth/AuthLink";
-import LoginForm from "~/components/auth/LoginForm";
+import { BrandHeader, AuthCard, AuthFormHeader, AuthLink, LoginForm } from "~/features/auth/components";
 import { useLogin } from "~/hooks/useAuth";
 import { type LoginFormData, extractApiError } from "~/shared/utils";
 
