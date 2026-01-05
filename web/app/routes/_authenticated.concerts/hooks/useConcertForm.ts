@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { ConcertRequest, ConcertResponse } from "~/api";
 import { useCreateConcert, useUpdateConcert } from "~/hooks/useConcerts";
-import { concertSchema } from "~/lib/validations/concert";
-import { extractApiError } from "~/lib/error-utils";
+import { concertSchema, extractApiError } from "~/shared/utils";
 import { formatDateForInput } from "../utils/dateUtils";
 
 const initialFormData: ConcertRequest = {

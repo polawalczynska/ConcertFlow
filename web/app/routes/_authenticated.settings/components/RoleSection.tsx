@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Label } from "~/components/ui/Label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "~/components/ui/Select";
-import { formatRole } from "~/lib/role-utils";
+import { formatRole } from "~/shared/utils";
 
 interface RoleSectionProps {
   role: "" | "COORDINATOR" | "BUDGET_MANAGER" | "TECHNICAL_MANAGER";

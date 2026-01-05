@@ -1,5 +1,5 @@
 import type { BudgetApprovalDashboardResponse } from "~/api";
-import { formatDateOnly } from "~/lib/date-utils";
+import { formatDateOnly } from "~/shared/utils";
 
 interface BudgetCardInfoProps {
   budget: BudgetApprovalDashboardResponse;

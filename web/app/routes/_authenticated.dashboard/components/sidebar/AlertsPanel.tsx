@@ -3,7 +3,7 @@ import { AlertCircle, AlertTriangle, CheckCircle2, Info, XCircle } from "lucide-
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { Badge } from "~/components/ui/Badge";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import type { CoordinatorAlert } from "~/api";
 
 interface AlertsPanelProps {

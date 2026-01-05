@@ -2,8 +2,7 @@ import { Badge } from "~/components/ui/Badge";
 import { Button } from "~/components/ui/Button";
 import { X } from "lucide-react";
 import type { TeamInvitationResponse } from "~/api";
-import { formatRole } from "~/lib/role-utils";
-import { formatDateOnly } from "~/lib/date-utils";
+import { formatRole, formatDateOnly } from "~/shared/utils";
 
 interface PendingInvitationItemProps {
   invitation: TeamInvitationResponse;

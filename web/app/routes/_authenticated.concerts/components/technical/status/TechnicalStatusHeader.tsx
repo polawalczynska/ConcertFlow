@@ -1,6 +1,5 @@
 import { Badge } from "~/components/ui/Badge";
-import { parseLocalDateTime } from "~/lib/date-utils";
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { parseLocalDateTime, getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 import type { TechnicalDetailResponse } from "~/api";
 
 interface TechnicalStatusHeaderProps {

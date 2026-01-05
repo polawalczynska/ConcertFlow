@@ -1,5 +1,5 @@
 import { Card, CardContent } from "~/components/ui/Card";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
 import { TechnicalApprovalCardHeader } from "./TechnicalApprovalCardHeader";
 import { TechnicalApprovalCardInfo } from "./TechnicalApprovalCardInfo";

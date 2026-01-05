@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "~/hooks/useUser";
 import axios from "axios";
-import { getAccessToken } from "~/lib/token-storage";
+import { getAccessToken } from "~/shared/utils";
 
 interface WindowWithEnv extends Window {
   ENV?: {

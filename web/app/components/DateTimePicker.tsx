@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CalendarGrid } from "../routes/_authenticated.concerts/components/form/CalendarGrid";
 import { TimeSlotList } from "../routes/_authenticated.concerts/components/form/time/TimeSlotList";
 import { Label } from "~/components/ui/Label";
-import { formatToISOString, parseISOString } from "~/lib/date-utils";
+import { formatToISOString, parseISOString } from "~/shared/utils";
 
 interface DateTimePickerProps {
   value: string;

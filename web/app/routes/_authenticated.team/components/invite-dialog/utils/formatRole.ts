@@ -1,3 +1,3 @@
 
-export { formatRole } from "~/lib/role-utils";
+export { formatRole } from "~/shared/utils";
 

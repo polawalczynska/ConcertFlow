@@ -1,4 +1,4 @@
-import { parseLocalDateTime } from "~/lib/date-utils";
+import { parseLocalDateTime } from "~/shared/utils";
 
 interface RevisionReasonProps {
   reason?: string | null;

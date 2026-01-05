@@ -1,5 +1,5 @@
 import type { TeamMemberResponse } from "~/api";
-import { formatRole } from "~/lib/role-utils";
+import { formatRole } from "~/shared/utils";
 
 interface TeamMemberCardHeaderProps {
   member: TeamMemberResponse;

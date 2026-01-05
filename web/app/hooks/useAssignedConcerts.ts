@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import type { ConcertResponse } from "~/api";
-import { getAccessToken } from "~/lib/token-storage";
+import { getAccessToken } from "~/shared/utils";
 
 interface WindowWithEnv extends Window {
   ENV?: {

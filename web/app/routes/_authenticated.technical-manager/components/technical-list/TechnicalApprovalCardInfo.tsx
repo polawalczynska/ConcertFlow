@@ -1,6 +1,6 @@
 import { Calendar, MapPin } from "lucide-react";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
-import { formatDateOnly } from "~/lib/date-utils";
+import { formatDateOnly } from "~/shared/utils";
 
 interface TechnicalApprovalCardInfoProps {
   approval: TechnicalApproval;

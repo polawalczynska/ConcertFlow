@@ -1,7 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "@remix-run/react";
-import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens } from "~/lib/token-storage";
-import { isTokenExpiringSoon, getTokenExpirationTime } from "~/lib/token-utils";
+import { getAccessToken, getRefreshToken, getRememberMeToken, setAccessToken, setRefreshToken, setRememberMeToken, clearTokens, isTokenExpiringSoon, getTokenExpirationTime } from "~/shared/utils";
 import axios from "axios";
 
 interface WindowWithEnv extends Window {

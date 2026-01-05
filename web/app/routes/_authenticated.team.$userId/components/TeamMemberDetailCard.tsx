@@ -3,7 +3,7 @@ import { Card, CardContent } from "~/components/ui/Card";
 import { Trash2 } from "lucide-react";
 import { useUser } from "~/hooks/useUser";
 import type { TeamMemberResponse } from "~/api";
-import { formatRole } from "~/lib/role-utils";
+import { formatRole } from "~/shared/utils";
 import { TeamMemberContactInfo } from "./TeamMemberContactInfo";
 
 interface TeamMemberDetailCardProps {

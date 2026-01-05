@@ -1,7 +1,6 @@
 import { Badge } from "~/components/ui/Badge";
 import type { TechnicalApproval } from "../../types/TechnicalApproval";
-import { formatDateOnly } from "~/lib/date-utils";
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { formatDateOnly, getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 
 interface TechnicalHeaderProps {
   approval: TechnicalApproval;

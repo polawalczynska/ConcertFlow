@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { getAccessToken } from "~/lib/token-storage";
+import { getAccessToken } from "~/shared/utils";
 
 const getApiBaseUrl = () => {
   if (typeof window !== "undefined") {

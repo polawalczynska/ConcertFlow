@@ -1,4 +1,4 @@
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 
 export function getStatusColor(status?: string): string {
   return getStatusBadgeClasses(status);

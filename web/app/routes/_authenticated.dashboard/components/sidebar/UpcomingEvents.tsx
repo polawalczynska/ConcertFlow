@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import type { UpcomingEvent } from "~/api";
 
 interface UpcomingEventsProps {

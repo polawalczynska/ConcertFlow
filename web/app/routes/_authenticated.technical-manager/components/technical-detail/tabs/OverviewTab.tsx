@@ -1,7 +1,7 @@
 import { Check, Clock, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import type { TechnicalApproval } from "../../../types/TechnicalApproval";
-import { parseLocalDateTime } from "~/lib/date-utils";
+import { parseLocalDateTime } from "~/shared/utils";
 
 interface OverviewTabProps {
   approval: TechnicalApproval;

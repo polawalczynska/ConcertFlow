@@ -7,8 +7,7 @@ import { ArtistsSearch } from "~/routes/_authenticated.artists/components/Artist
 import { ArtistsList } from "~/routes/_authenticated.artists/components/ArtistsList";
 import { ArtistFormDialog } from "~/routes/_authenticated.artists/components/form/ArtistFormDialog";
 import { DeleteArtistDialog } from "~/routes/_authenticated.artists/components/DeleteArtistDialog";
-import { artistSchema } from "~/lib/validations/artist";
-import { extractApiError } from "~/lib/error-utils";
+import { artistSchema, extractApiError } from "~/shared/utils";
 
 export default function ArtistsPage() {
   const [searchQuery, setSearchQuery] = useState("");

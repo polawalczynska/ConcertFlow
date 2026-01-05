@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Badge } from "~/components/ui/Badge";
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 
 interface RecentBudgetActivity {
   concertName: string;

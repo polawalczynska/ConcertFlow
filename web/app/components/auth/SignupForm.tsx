@@ -5,7 +5,7 @@ import PhoneInput from "~/components/auth/PhoneInput";
 import RoleSelect from "~/routes/signup/components/RoleSelect";
 import PasswordInput from "~/components/auth/PasswordInput";
 import SubmitButton from "~/components/auth/SubmitButton";
-import { registerSchema, type RegisterFormData } from "~/lib/validations/auth";
+import { registerSchema, type RegisterFormData } from "~/shared/utils";
 
 interface SignupFormProps {
   onSubmit: (data: RegisterFormData) => void;

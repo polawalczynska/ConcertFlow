@@ -2,7 +2,7 @@ import type { BudgetApprovalDashboardResponse } from "~/api";
 import { Badge } from "~/components/ui/Badge";
 import { Button } from "~/components/ui/Button";
 import { Eye } from "lucide-react";
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 
 interface BudgetCardFooterProps {
   budget: BudgetApprovalDashboardResponse;

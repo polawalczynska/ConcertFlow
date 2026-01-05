@@ -5,8 +5,7 @@ import AuthFormHeader from "~/components/auth/AuthFormHeader";
 import AuthLink from "~/components/auth/AuthLink";
 import LoginForm from "~/components/auth/LoginForm";
 import { useLogin } from "~/hooks/useAuth";
-import { type LoginFormData } from "~/lib/validations/auth";
-import { extractApiError } from "~/lib/error-utils";
+import { type LoginFormData, extractApiError } from "~/shared/utils";
 
 export default function LoginPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});

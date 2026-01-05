@@ -3,7 +3,7 @@ import EmailInput from "~/components/auth/EmailInput";
 import PasswordInput from "~/components/auth/PasswordInput";
 import CheckboxInput from "~/components/auth/CheckboxInput";
 import SubmitButton from "~/components/auth/SubmitButton";
-import { loginSchema, type LoginFormData } from "~/lib/validations/auth";
+import { loginSchema, type LoginFormData } from "~/shared/utils";
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void;

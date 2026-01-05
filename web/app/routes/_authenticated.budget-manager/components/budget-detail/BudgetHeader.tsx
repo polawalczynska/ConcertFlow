@@ -1,7 +1,6 @@
 import type { BudgetDetailResponse } from "~/api";
 import { Badge } from "~/components/ui/Badge";
-import { formatDateOnly } from "~/lib/date-utils";
-import { getStatusBadgeClasses, formatStatusLabel } from "~/lib/status-utils";
+import { formatDateOnly, getStatusBadgeClasses, formatStatusLabel } from "~/shared/utils";
 
 interface BudgetHeaderProps {
   budget: BudgetDetailResponse;

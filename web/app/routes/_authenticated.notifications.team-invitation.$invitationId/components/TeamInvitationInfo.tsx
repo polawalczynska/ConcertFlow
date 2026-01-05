@@ -1,5 +1,5 @@
 import type { TeamInvitationResponse } from "~/api";
-import { formatDateOnly } from "~/lib/date-utils";
+import { formatDateOnly } from "~/shared/utils";
 
 interface TeamInvitationInfoProps {
   invitation: TeamInvitationResponse;

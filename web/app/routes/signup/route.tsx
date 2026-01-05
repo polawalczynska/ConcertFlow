@@ -5,8 +5,7 @@ import AuthFormHeader from "~/components/auth/AuthFormHeader";
 import AuthLink from "~/components/auth/AuthLink";
 import SignupForm from "~/components/auth/SignupForm";
 import { useRegister } from "~/hooks/useAuth";
-import { registerFormDataToRequest, type RegisterFormData } from "~/lib/validations/auth";
-import { extractApiError } from "~/lib/error-utils";
+import { registerFormDataToRequest, type RegisterFormData, extractApiError } from "~/shared/utils";
 
 export default function SignUpPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});

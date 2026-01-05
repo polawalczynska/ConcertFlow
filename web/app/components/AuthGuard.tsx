@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@remix-run/react";
-import { getAccessToken, getRefreshToken, getRememberMeToken } from "~/lib/token-storage";
-import { isTokenExpired } from "~/lib/token-utils";
+import { getAccessToken, getRefreshToken, getRememberMeToken, isTokenExpired } from "~/shared/utils";
 import { useTokenRefresh } from "~/hooks/useTokenRefresh";
 
 interface AuthGuardProps {
