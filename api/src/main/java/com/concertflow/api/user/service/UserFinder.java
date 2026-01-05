@@ -25,14 +25,6 @@ public class UserFinder {
             .orElseThrow(() -> new UserNotFoundException(errorMessage.get()));
     }
 
-    /**
-     * Finds a user by email or throws UsernameNotFoundException (for Spring Security compatibility).
-     *
-     * @param email User email
-     * @param errorMessage Custom error message
-     * @return User entity
-     * @throws UsernameNotFoundException if user not found
-     */
     public User findByEmailOrThrowUsernameNotFound(String email, String errorMessage) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException(errorMessage));
