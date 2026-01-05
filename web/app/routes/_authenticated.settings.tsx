@@ -126,10 +126,10 @@ export default function SettingsPage() {
       await userApi.deleteAccount();
     },
     onSuccess: () => {
-      // Clear tokens and redirect to login with full page reload
+      
       clearTokens();
       queryClient.clear();
-      // Use window.location for a complete sign-out and page reload
+      
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }

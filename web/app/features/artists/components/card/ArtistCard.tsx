@@ -1,7 +1,7 @@
 import type { ArtistResponse } from "~/api";
-import { ArtistCardHeader } from "~/routes/_authenticated.artists/components/card/ArtistCardHeader";
-import { ArtistCardContactInfo } from "~/routes/_authenticated.artists/components/card/ArtistCardContactInfo";
-import { ArtistCardFooter } from "~/routes/_authenticated.artists/components/card/ArtistCardFooter";
+import { ArtistCardHeader } from "~/features/artists/components/card/ArtistCardHeader";
+import { ArtistCardContactInfo } from "~/features/artists/components/card/ArtistCardContactInfo";
+import { ArtistCardFooter } from "~/features/artists/components/card/ArtistCardFooter";
 
 interface ArtistCardProps {
   artist: ArtistResponse;

@@ -1,6 +1,6 @@
 import type { ArtistResponse } from "~/api";
-import { ArtistCard } from "~/routes/_authenticated.artists/components/card/ArtistCard";
-import { ArtistsEmptyState } from "~/routes/_authenticated.artists/components/ArtistsEmptyState";
+import { ArtistCard } from "~/features/artists/components/card/ArtistCard";
+import { ArtistsEmptyState } from "~/features/artists/components/ArtistsEmptyState";
 
 interface ArtistsListProps {
   artists: ArtistResponse[];

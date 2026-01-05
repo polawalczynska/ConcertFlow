@@ -1,5 +1,5 @@
 import type { ArtistRequest } from "~/api";
-import { ArtistFormField } from "~/routes/_authenticated.artists/components/form/ArtistFormField";
+import { ArtistFormField } from "~/features/artists/components/form/ArtistFormField";
 
 interface ArtistFormFieldsProps {
   formData: ArtistRequest;

@@ -53,7 +53,7 @@ export default function TeamPage() {
       await inviteMutation.mutateAsync({ email });
       setIsInviteDialogOpen(false);
     } catch (error) {
-      // Error will be handled by displaying appropriate info in the dialog
+      
       console.error("Failed to invite team member:", error);
     }
   };

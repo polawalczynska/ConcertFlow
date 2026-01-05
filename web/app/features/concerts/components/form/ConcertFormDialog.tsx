@@ -7,7 +7,7 @@ import {
   DialogFooter,
 } from "~/components/ui/Dialog";
 import type { ConcertResponse, ConcertRequest } from "~/api";
-import { ConcertFormFields } from "~/routes/_authenticated.concerts/components/form/ConcertFormFields";
+import { ConcertFormFields } from "~/features/concerts/components/form/ConcertFormFields";
 import { Button } from "~/components/ui/Button";
 
 interface ConcertFormDialogProps {

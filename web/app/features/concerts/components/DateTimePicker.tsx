@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { CalendarGrid } from "~/routes/_authenticated.concerts/components/form/CalendarGrid";
-import { TimeSlotList } from "~/routes/_authenticated.concerts/components/form/time/TimeSlotList";
+import { CalendarGrid } from "~/features/concerts/components/form/CalendarGrid";
+import { TimeSlotList } from "~/features/concerts/components/form/time/TimeSlotList";
 import { Label } from "~/components/ui/Label";
 import { formatToISOString, parseISOString } from "~/shared/utils";
 

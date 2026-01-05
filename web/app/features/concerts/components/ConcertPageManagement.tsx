@@ -1,7 +1,7 @@
-import { BudgetManagement } from "~/routes/_authenticated.concerts/components/budget/BudgetManagement";
-import { TechnicalManagement } from "~/routes/_authenticated.concerts/components/technical/TechnicalManagement";
-import { BudgetViewOnly } from "~/routes/_authenticated.concerts/components/budget/BudgetViewOnly";
-import { TechnicalViewOnly } from "~/routes/_authenticated.concerts/components/technical/TechnicalViewOnly";
+import { BudgetManagement } from "~/features/concerts/components/budget/BudgetManagement";
+import { TechnicalManagement } from "~/features/concerts/components/technical/TechnicalManagement";
+import { BudgetViewOnly } from "~/features/concerts/components/budget/BudgetViewOnly";
+import { TechnicalViewOnly } from "~/features/concerts/components/technical/TechnicalViewOnly";
 import { UserResponseRoleEnum } from "~/api";
 import type { ConcertResponse } from "~/api";
 

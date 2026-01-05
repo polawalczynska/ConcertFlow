@@ -1,8 +1,8 @@
 import type { ConcertResponse } from "~/api";
-import { ConcertHeader } from "~/routes/_authenticated.concerts/components/dialogs/view/ConcertHeader";
-import { ConcertDetails } from "~/routes/_authenticated.concerts/components/dialogs/view/ConcertDetails";
-import { ConcertDescription } from "~/routes/_authenticated.concerts/components/dialogs/view/ConcertDescription";
-import { CancellationReason } from "~/routes/_authenticated.concerts/components/dialogs/view/CancellationReason";
+import { ConcertHeader } from "~/features/concerts/components/dialogs/view/ConcertHeader";
+import { ConcertDetails } from "~/features/concerts/components/dialogs/view/ConcertDetails";
+import { ConcertDescription } from "~/features/concerts/components/dialogs/view/ConcertDescription";
+import { CancellationReason } from "~/features/concerts/components/dialogs/view/CancellationReason";
 
 interface ConcertPageContentProps {
   concert: ConcertResponse;
