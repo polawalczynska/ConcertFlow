@@ -123,9 +123,7 @@ public class ArtistService {
     }
 
     private long countUpcomingConcerts(Long artistId) {
-        return concertRepository.findByArtistId(artistId).stream()
-            .filter(concert -> concert.getDate().isAfter(LocalDateTime.now()))
-            .count();
+        return concertRepository.countByArtistIdAndDateAfter(artistId, LocalDateTime.now());
     }
 }
 

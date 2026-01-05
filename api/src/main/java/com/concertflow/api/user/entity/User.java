@@ -14,7 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+    @Index(name = "idx_user_email", columnList = "email"),
+    @Index(name = "idx_user_role_active", columnList = "role,active")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

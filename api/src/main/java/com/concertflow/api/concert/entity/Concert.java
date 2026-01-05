@@ -17,7 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "concerts")
+@Table(name = "concerts", indexes = {
+    @Index(name = "idx_concert_artist_id", columnList = "artist_id"),
+    @Index(name = "idx_concert_coordinator_id", columnList = "coordinator_id"),
+    @Index(name = "idx_concert_budget_manager_id", columnList = "budget_manager_id"),
+    @Index(name = "idx_concert_technical_manager_id", columnList = "technical_manager_id"),
+    @Index(name = "idx_concert_date", columnList = "date"),
+    @Index(name = "idx_concert_status", columnList = "status"),
+    @Index(name = "idx_concert_budget_status_status", columnList = "budget_status,status"),
+    @Index(name = "idx_concert_technical_status_status", columnList = "technical_status,status"),
+    @Index(name = "idx_concert_status_date", columnList = "status,date"),
+    @Index(name = "idx_concert_name", columnList = "name")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

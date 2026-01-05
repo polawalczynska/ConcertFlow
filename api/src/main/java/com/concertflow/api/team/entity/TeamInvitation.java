@@ -10,7 +10,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "team_invitations")
+@Table(name = "team_invitations", indexes = {
+    @Index(name = "idx_team_invitation_invited_user_id", columnList = "invited_user_id"),
+    @Index(name = "idx_team_invitation_invited_by_id", columnList = "invited_by_id"),
+    @Index(name = "idx_team_invitation_invited_user_status", columnList = "invited_user_id,status"),
+    @Index(name = "idx_team_invitation_invited_by_status", columnList = "invited_by_id,status"),
+    @Index(name = "idx_team_invitation_status", columnList = "status")
+})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
