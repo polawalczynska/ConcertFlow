@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { technicalApi } from "~/lib/api-client";
@@ -12,15 +11,21 @@ interface TechnicalViewOnlyProps {
   concertId: number;
   concertName: string;
   technicalStatus?: string;
+  technicalManagerId?: number;
 }
 
 export function TechnicalViewOnly({ 
   concertId, 
   concertName,
   technicalStatus,
+  technicalManagerId: assignedTechnicalManagerId,
 }: TechnicalViewOnlyProps) {
   const { data: currentUser } = useUser();
   const technicalManagerId = currentUser?.id;
+  const isAssigned = assignedTechnicalManagerId === technicalManagerId;
+  
+  const isPending = technicalStatus === "PENDING" || technicalStatus === undefined;
+  const shouldFetch = !!technicalManagerId && !!concertId && !isPending;
 
   const { data: technicalDetails, isLoading, error } = useQuery({
     queryKey: ["technical-details-manager", concertId, technicalManagerId],
@@ -33,10 +38,13 @@ export function TechnicalViewOnly({
         const status = (error as { response?: { status?: number } })?.response?.status;
         const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
         
-        if (errorMessage.includes("not been submitted") || 
-            errorMessage.includes("PENDING") ||
-            errorMessage.includes("have not been submitted") ||
-            errorMessage.includes("only visible after submission")) {
+        if (status === 400) {
+          if (errorMessage.includes("not been submitted") || 
+              errorMessage.includes("PENDING") ||
+              errorMessage.includes("have not been submitted") ||
+              errorMessage.includes("only visible after submission")) {
+            return null;
+          }
           return null;
         }
         
@@ -49,7 +57,8 @@ export function TechnicalViewOnly({
         throw error;
       }
     },
-    enabled: !!technicalManagerId && !!concertId,
+    enabled: shouldFetch,
+    retry: false,
   });
 
   const detailsTechnicalStatus = technicalDetails?.technicalStatus || "PENDING";
@@ -70,17 +79,28 @@ export function TechnicalViewOnly({
     );
   }
 
-  const isPending = technicalStatus === "PENDING" || technicalStatus === undefined;
+  if (isPending) {
+    return (
+      <Card className="mt-6">
+        <CardContent className="p-6">
+          <p className="text-text-secondary">
+            No technical information provided yet. The coordinator needs to create and submit the technical requirements first.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const errorMessage = error 
     ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || ""
     : "";
-  const isNotSubmitted = isPending || 
-                        errorMessage.includes("not been submitted") || 
+  const isNotSubmitted = errorMessage.includes("not been submitted") || 
                         errorMessage.includes("PENDING") ||
                         errorMessage.includes("have not been submitted") ||
-                        errorMessage.includes("only visible after submission");
+                        errorMessage.includes("only visible after submission") ||
+                        (error && (error as { response?: { status?: number } })?.response?.status === 400);
 
-  if (error && !isNotSubmitted) {
+  if (error && !isNotSubmitted && (error as { response?: { status?: number } })?.response?.status !== 400) {
     return (
       <Card className="mt-6">
         <CardContent className="p-6">

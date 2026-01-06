@@ -7,7 +7,7 @@ import { BudgetActionButtons } from "~/features/concerts/components/budget/Budge
 
 interface ConcertPageActionsProps {
   concertId: number;
-  concert?: { budgetManagerId?: number; technicalManagerId?: number };
+  concert?: { budgetManagerId?: number; technicalManagerId?: number; technicalStatus?: string };
   userRole?: UserResponseRoleEnum;
   onApproveTechnical: () => void;
   onRequestTechnicalRevision: () => void;
@@ -33,6 +33,10 @@ export function ConcertPageActions({
 
   const isBudgetManagerAssigned = isBudgetManager && currentUser?.id && concert?.budgetManagerId === currentUser.id;
   const isTechnicalManagerAssigned = isTechnicalManager && currentUser?.id && concert?.technicalManagerId === currentUser.id;
+  
+  const technicalStatus = concert?.technicalStatus;
+  const isTechnicalPending = technicalStatus === "PENDING" || technicalStatus === undefined;
+  const shouldFetchTechnical = !!technicalManagerId && !!concertId && isTechnicalManager && !isTechnicalPending;
 
   const { data: budgetDetails } = useQuery({
     queryKey: ["budget-details-manager", concertId, budgetManagerId],
@@ -53,23 +57,35 @@ export function ConcertPageActions({
         return response.data;
       } catch (error) {
         const status = (error as { response?: { status?: number } })?.response?.status;
+        const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
+        
+        if (status === 400) {
+          if (errorMessage.includes("not been submitted") || 
+              errorMessage.includes("PENDING") ||
+              errorMessage.includes("have not been submitted") ||
+              errorMessage.includes("only visible after submission")) {
+            return null;
+          }
+          return null;
+        }
+        
         if (status === 404) {
           return null;
         }
-        const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "";
-        if (errorMessage.includes("not been submitted") || errorMessage.includes("PENDING")) {
+        if (status === 403 || status === 401) {
           return null;
         }
         throw error;
       }
     },
-    enabled: !!technicalManagerId && !!concertId && isTechnicalManager,
+    enabled: shouldFetchTechnical,
+    retry: false,
   });
 
-  const technicalStatus = technicalDetails?.technicalStatus || "PENDING";
-  const isTechnicalApproved = technicalStatus === "APPROVED";
-  const isTechnicalRevisionRequested = technicalStatus === "REVISION_REQUESTED";
-  const isTechnicalSubmitted = technicalStatus === "SUBMITTED";
+  const detailsTechnicalStatus = technicalDetails?.technicalStatus || technicalStatus || "PENDING";
+  const isTechnicalApproved = detailsTechnicalStatus === "APPROVED";
+  const isTechnicalRevisionRequested = detailsTechnicalStatus === "REVISION_REQUESTED";
+  const isTechnicalSubmitted = detailsTechnicalStatus === "SUBMITTED";
   const canApproveOrRequestTechnicalRevision = (isTechnicalSubmitted || isTechnicalRevisionRequested) && !isTechnicalApproved;
 
   const budgetStatus = budgetDetails?.budgetStatus;
