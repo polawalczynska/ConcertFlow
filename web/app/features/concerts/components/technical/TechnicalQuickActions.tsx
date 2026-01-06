@@ -30,8 +30,6 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
       await technicalApi.submitTechnicalRequirements(concertId, request);
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
       setIsDialogOpen(false);
-    } catch (error) {
-      throw error;
     } finally {
       setIsSubmitting(false);
     }

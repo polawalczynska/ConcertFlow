@@ -5,8 +5,6 @@ import { useUser } from "~/shared/hooks/domain";
 import { TechnicalStatusHeader } from "./status/TechnicalStatusHeader";
 import { TechnicalLatestResponse } from "./status/TechnicalLatestResponse";
 import { TechnicalRequirementsView } from "./TechnicalRequirementsView";
-import { TechnicalActionButtons } from "./TechnicalActionButtons";
-
 interface TechnicalViewOnlyProps {
   concertId: number;
   concertName: string;
@@ -16,13 +14,12 @@ interface TechnicalViewOnlyProps {
 
 export function TechnicalViewOnly({ 
   concertId, 
-  concertName,
+  concertName: _concertName,
   technicalStatus,
-  technicalManagerId: assignedTechnicalManagerId,
+  technicalManagerId: _assignedTechnicalManagerId,
 }: TechnicalViewOnlyProps) {
   const { data: currentUser } = useUser();
   const technicalManagerId = currentUser?.id;
-  const isAssigned = assignedTechnicalManagerId === technicalManagerId;
   
   const isPending = technicalStatus === "PENDING" || technicalStatus === undefined;
   const shouldFetch = !!technicalManagerId && !!concertId && !isPending;
@@ -64,10 +61,6 @@ export function TechnicalViewOnly({
   const detailsTechnicalStatus = technicalDetails?.technicalStatus || "PENDING";
   const approvalHistory = technicalDetails?.approvalHistory;
   const latestApproval = approvalHistory?.[(approvalHistory?.length ?? 1) - 1];
-  const isApproved = detailsTechnicalStatus === "APPROVED";
-  const isRevisionRequested = detailsTechnicalStatus === "REVISION_REQUESTED";
-  const isSubmitted = detailsTechnicalStatus === "SUBMITTED";
-  const canApproveOrRequestRevision = isSubmitted || isRevisionRequested;
 
   if (isLoading) {
     return (

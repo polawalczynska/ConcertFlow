@@ -30,6 +30,10 @@ export default function ConcertsPage() {
   const [approveModal, setApproveModal] = useState(false);
   const [revisionModal, setRevisionModal] = useState(false);
 
+  const filteredBudgets = useMemo(() => {
+    return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
+  }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
+
   if (userLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -68,10 +72,6 @@ export default function ConcertsPage() {
       />
     );
   }
-
-  const filteredBudgets = useMemo(() => {
-    return filterAndSortBudgets(budgets, searchQuery, statusFilter, sortBy);
-  }, [budgets, searchQuery, statusFilter, sortBy, filterAndSortBudgets]);
 
   if (budgetsLoading) {
     return (

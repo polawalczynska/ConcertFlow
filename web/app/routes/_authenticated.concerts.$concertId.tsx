@@ -118,7 +118,15 @@ export default function ConcertPage() {
             concertForm={{
               isFormOpen: false,
               selectedConcert: null,
-              formData: {} as any,
+              formData: {
+                name: "",
+                date: "",
+                venue: "",
+                city: "",
+                budget: 0,
+                description: "",
+                artistId: 0,
+              },
               fieldErrors: {},
               generalError: null,
               isSubmitting: false,
@@ -156,7 +164,15 @@ export default function ConcertPage() {
             concertForm={{
               isFormOpen: false,
               selectedConcert: null,
-              formData: {} as any,
+              formData: {
+                name: "",
+                date: "",
+                venue: "",
+                city: "",
+                budget: 0,
+                description: "",
+                artistId: 0,
+              },
               fieldErrors: {},
               generalError: null,
               isSubmitting: false,
