@@ -30,9 +30,7 @@ public class UpcomingEventsCalculator implements StatCalculator<List<UpcomingEve
                     && concert.getDate().isAfter(now)
                     && concert.getDate().isBefore(oneMonthFromNow);
                 
-                boolean isUpcoming = daysUntil <= DashboardConstants.UPCOMING_DAYS.getValue();
-                
-                String status = (needsAttention || isUpcoming) 
+                String status = needsAttention 
                     ? "Needs Attention" 
                     : "On Track";
                 return UpcomingEvent.builder()
