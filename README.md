@@ -296,3 +296,28 @@ repositories) and allows for easy switching of data access implementations.
 - Simplifies testing with mock repositories
 - Centralizes data access queries
 - Makes code more maintainable and readable
+
+### 7. Adapter
+
+**Classes**:
+
+- `NotificationAdapter`
+- `NotificationCategoryAdapter`, `NotificationIconAdapter`, `NotificationColorAdapter`
+- `RoleAdapter` (implements `RoleAdapterInterface`)
+- `StatusAdapter` (implements `StatusAdapterInterface`)
+- Mapper classes: `ConcertMapper`, `ArtistMapper`, `BudgetMapper`, `TechnicalMapper`, `TeamMapper`, `NotificationMapper`
+
+**Justification**: The application needs to transform data between different representations - from domain entities (JPA
+entities) to DTOs (Data Transfer Objects) for API responses, and between different formats (e.g., Role enum to human-readable
+strings). Mappers and Adapters adapt one interface (Entity) to another interface (DTO), making incompatible interfaces work
+together. This separation ensures that internal domain models remain independent from external API contracts, allowing
+changes to either without affecting the other.
+
+**Benefits**:
+
+- Decouples domain entities from API contracts
+- Allows independent evolution of entities and DTOs
+- Provides a single point of transformation logic
+- Makes it easy to change data representation without affecting business logic
+- Simplifies testing by allowing mock adapters/mappers
+- Enables reuse of transformation logic across different contexts
