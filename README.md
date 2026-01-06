@@ -303,14 +303,13 @@ repositories) and allows for easy switching of data access implementations.
 
 - `NotificationAdapter`
 - `NotificationCategoryAdapter`, `NotificationIconAdapter`, `NotificationColorAdapter`
-- `RoleAdapter` (implements `RoleAdapterInterface`)
-- `StatusAdapter` (implements `StatusAdapterInterface`)
+- `RoleAdapter`
+- `StatusAdapter`
 - Mapper classes: `ConcertMapper`, `ArtistMapper`, `BudgetMapper`, `TechnicalMapper`, `TeamMapper`, `NotificationMapper`
 
-**Justification**: The application needs to transform data between different representations - from domain entities (JPA
-entities) to DTOs (Data Transfer Objects) for API responses, and between different formats (e.g., Role enum to human-readable
-strings). Mappers and Adapters adapt one interface (Entity) to another interface (DTO), making incompatible interfaces work
-together. This separation ensures that internal domain models remain independent from external API contracts, allowing
+**Justification**: The application needs to transform data between different representations - from domain entities to
+DTOs. Mappers and Adapters adapt one interface to another, making incompatible interfaces work
+together. This separation ensures that internal domain models remain independent of external API contracts, allowing
 changes to either without affecting the other.
 
 **Benefits**:
