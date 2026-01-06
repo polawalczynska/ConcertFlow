@@ -4,6 +4,7 @@ import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
+import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.team.entity.TeamInvitation;
 import com.concertflow.api.team.entity.TeamInvitationRepository;
 import com.concertflow.api.user.dto.UpdateUserRequest;
@@ -32,6 +33,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ConcertRepository concertRepository;
     private final TeamInvitationRepository teamInvitationRepository;
+    private final NotificationRepository notificationRepository;
 
     public UserResponse getUserResponse(User user) {
         return mapperService.toUserResponse(user);
@@ -94,6 +96,12 @@ public class UserService {
     public void deleteAccount(User user) {
         if (user.getRole() == Role.COORDINATOR) {
             List<Concert> concerts = concertRepository.findByCoordinatorId(user.getId());
+            
+            // Delete all notifications related to these concerts
+            for (Concert concert : concerts) {
+                notificationRepository.deleteByConcertId(concert.getId());
+            }
+            
             concertRepository.deleteAll(concerts);
             concertRepository.flush();
 
