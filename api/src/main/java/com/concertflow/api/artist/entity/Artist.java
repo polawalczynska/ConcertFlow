@@ -1,6 +1,7 @@
 package com.concertflow.api.artist.entity;
 
 import com.concertflow.api.concert.entity.Concert;
+import com.concertflow.api.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "artists", indexes = {
     @Index(name = "idx_artist_email", columnList = "email"),
-    @Index(name = "idx_artist_name", columnList = "name")
+    @Index(name = "idx_artist_name", columnList = "name"),
+    @Index(name = "idx_artist_coordinator_id", columnList = "coordinator_id")
 })
 @Data
 @NoArgsConstructor
@@ -35,6 +37,10 @@ public class Artist {
     private String genre;
     private String website;
     private String contactPerson;
+
+    @ManyToOne
+    @JoinColumn(name = "coordinator_id", nullable = false)
+    private User coordinator;
 
     @OneToMany(mappedBy = "artist")
     @Builder.Default

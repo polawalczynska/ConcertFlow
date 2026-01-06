@@ -13,14 +13,14 @@ import static com.concertflow.api.exceptions.ErrorMessage.ARTIST_ALREADY_EXISTS;
 public class ArtistValidator {
     private final ArtistRepository artistRepository;
 
-    public void validateNameUnique(String name) {
-        if (artistRepository.existsByName(name)) {
+    public void validateNameUniqueForCoordinator(String name, Long coordinatorId) {
+        if (artistRepository.existsByCoordinatorIdAndName(coordinatorId, name)) {
             throw new ArtistAlreadyExistsException(ARTIST_ALREADY_EXISTS.message());
         }
     }
 
-    public void validateNameUniqueForUpdate(Artist existingArtist, String newName) {
-        if (!existingArtist.getName().equals(newName) && artistRepository.existsByName(newName)) {
+    public void validateNameUniqueForUpdateForCoordinator(Artist existingArtist, String newName, Long coordinatorId) {
+        if (!existingArtist.getName().equals(newName) && artistRepository.existsByCoordinatorIdAndName(coordinatorId, newName)) {
             throw new ArtistAlreadyExistsException(ARTIST_ALREADY_EXISTS.message());
         }
     }
