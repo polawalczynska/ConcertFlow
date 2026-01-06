@@ -8,16 +8,24 @@ export function useBudgetDetails(
   options?: { enabled?: boolean }
 ) {
   const { data: currentUser } = useUser();
+  const isCoordinator = currentUser?.role === "COORDINATOR";
   const budgetManagerId = currentUser?.id;
 
   return useQuery({
-    queryKey: ["budget-details", concertId, budgetManagerId],
+    queryKey: ["budget-details", concertId, currentUser?.role, budgetManagerId],
     queryFn: async () => {
-      if (!concertId || !budgetManagerId) return null;
-      const response = await budgetApprovalApi.getBudgetDetails(concertId, budgetManagerId);
-      return response.data;
+      if (!concertId || !currentUser?.id) return null;
+      
+      if (isCoordinator) {
+        const response = await budgetApprovalApi.getBudgetDetailsForCoordinator(concertId);
+        return response.data;
+      } else if (budgetManagerId) {
+        const response = await budgetApprovalApi.getBudgetDetails(concertId, budgetManagerId);
+        return response.data;
+      }
+      return null;
     },
-    enabled: options?.enabled !== false && !!concertId && !!budgetManagerId,
+    enabled: options?.enabled !== false && !!concertId && !!currentUser?.id,
     staleTime: THIRTY_SECONDS_MS,
   });
 }

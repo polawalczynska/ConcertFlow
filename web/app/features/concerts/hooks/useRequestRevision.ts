@@ -11,8 +11,13 @@ export function useRequestRevision() {
     },
     onSuccess: (_, variables) => {
       const { concertId } = variables;
+      queryClient.invalidateQueries({ 
+        predicate: (query) => {
+          return (query.queryKey[0] === "budget-details" || query.queryKey[0] === "budget-details-manager") && 
+                 query.queryKey[1] === concertId;
+        }
+      });
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
-      queryClient.invalidateQueries({ queryKey: ["budget-details", concertId] });
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
     },
   });

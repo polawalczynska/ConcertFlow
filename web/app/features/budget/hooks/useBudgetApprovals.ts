@@ -52,7 +52,12 @@ export function useBudgetApprovals() {
     },
     onSuccess: () => {
       if (selectedBudgetId) {
-        queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
+        queryClient.invalidateQueries({ 
+          predicate: (query) => {
+            return query.queryKey[0] === "budget-details" && 
+                   query.queryKey[1] === selectedBudgetId;
+          }
+        });
       }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["concerts"] });
@@ -66,7 +71,12 @@ export function useBudgetApprovals() {
     },
     onSuccess: () => {
       if (selectedBudgetId) {
-        queryClient.invalidateQueries({ queryKey: ["budget-details", selectedBudgetId] });
+        queryClient.invalidateQueries({ 
+          predicate: (query) => {
+            return query.queryKey[0] === "budget-details" && 
+                   query.queryKey[1] === selectedBudgetId;
+          }
+        });
       }
       queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
       queryClient.invalidateQueries({ queryKey: ["concerts"] });

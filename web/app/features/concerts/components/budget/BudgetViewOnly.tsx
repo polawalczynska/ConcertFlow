@@ -18,15 +18,22 @@ export function BudgetViewOnly({
   budgetStatus,
 }: BudgetViewOnlyProps) {
   const { data: currentUser } = useUser();
+  const isCoordinator = currentUser?.role === "COORDINATOR";
   const budgetManagerId = currentUser?.id;
 
   const { data: budgetDetails, isLoading, error } = useQuery({
-    queryKey: ["budget-details-manager", concertId, budgetManagerId],
+    queryKey: ["budget-details", concertId, currentUser?.role, budgetManagerId],
     queryFn: async () => {
-      if (!budgetManagerId) return null;
+      if (!currentUser?.id) return null;
       try {
-        const response = await budgetApprovalApi.getBudgetDetails(concertId, budgetManagerId);
-        return response.data;
+        if (isCoordinator) {
+          const response = await budgetApprovalApi.getBudgetDetailsForCoordinator(concertId);
+          return response.data;
+        } else if (budgetManagerId) {
+          const response = await budgetApprovalApi.getBudgetDetails(concertId, budgetManagerId);
+          return response.data;
+        }
+        return null;
       } catch (error) {
         const status = (error as { response?: { status?: number } })?.response?.status;
         if (status === 403 || status === 401) {
@@ -35,7 +42,7 @@ export function BudgetViewOnly({
         throw error;
       }
     },
-    enabled: !!budgetManagerId && !!concertId,
+    enabled: !!currentUser?.id && !!concertId,
   });
 
   if (isLoading) {

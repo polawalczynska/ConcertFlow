@@ -94,7 +94,12 @@ export function ConcertPageDialogs({
     },
     onSuccess: () => {
       if (budgetDialogs?.concertId) {
-        queryClient.invalidateQueries({ queryKey: ["budget-details-manager", budgetDialogs.concertId] });
+        queryClient.invalidateQueries({ 
+          predicate: (query) => {
+            return (query.queryKey[0] === "budget-details" || query.queryKey[0] === "budget-details-manager") && 
+                   query.queryKey[1] === budgetDialogs.concertId;
+          }
+        });
         queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
         queryClient.invalidateQueries({ queryKey: ["concerts"] });
       }
@@ -114,7 +119,12 @@ export function ConcertPageDialogs({
     },
     onSuccess: () => {
       if (budgetDialogs?.concertId) {
-        queryClient.invalidateQueries({ queryKey: ["budget-details-manager", budgetDialogs.concertId] });
+        queryClient.invalidateQueries({ 
+          predicate: (query) => {
+            return (query.queryKey[0] === "budget-details" || query.queryKey[0] === "budget-details-manager") && 
+                   query.queryKey[1] === budgetDialogs.concertId;
+          }
+        });
         queryClient.invalidateQueries({ queryKey: ["budget-approvals"] });
         queryClient.invalidateQueries({ queryKey: ["concerts"] });
       }
