@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@remix-run/react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import type { MenuItem } from "./navbarData";
 
 interface DesktopMenuProps {

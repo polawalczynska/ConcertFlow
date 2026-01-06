@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode } from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import { Button } from "./Button";
 
 interface AlertDialogContextValue {

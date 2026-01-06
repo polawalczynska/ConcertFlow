@@ -1,13 +1,13 @@
-import { useTechnicalManagerAccess } from "./_authenticated.technical-manager/hooks/useTechnicalManagerAccess";
-import { useTechnicalManagerStats } from "~/hooks/useTechnicalManagerStats";
-import { TechnicalDashboardHeader } from "./_authenticated.technical-dashboard/components/TechnicalDashboardHeader";
-import { TechnicalStatisticsGrid } from "./_authenticated.technical-dashboard/components/statistics/TechnicalStatisticsGrid";
-import { TechnicalChartsSection } from "./_authenticated.technical-dashboard/components/charts/TechnicalChartsSection";
-import { RecentActivity } from "./_authenticated.technical-dashboard/components/RecentActivity";
-import { TechnicalDashboardLoading } from "./_authenticated.technical-dashboard/components/TechnicalDashboardLoading";
-import { TechnicalDashboardError } from "./_authenticated.technical-dashboard/components/TechnicalDashboardError";
+import { useTechnicalManagerAccess } from "~/features/technical/hooks/useTechnicalManagerAccess";
+import { useTechnicalManagerStats } from "~/features/technical/hooks";
+import { TechnicalDashboardHeader } from "~/features/technical/components/TechnicalDashboardHeader";
+import { TechnicalStatisticsGrid } from "~/features/technical/components/statistics/TechnicalStatisticsGrid";
+import { TechnicalChartsSection } from "~/features/technical/components/charts/TechnicalChartsSection";
+import { RecentActivity } from "~/features/technical/components/RecentActivity";
+import { TechnicalDashboardLoading } from "~/features/technical/components/TechnicalDashboardLoading";
+import { TechnicalDashboardError } from "~/features/technical/components/TechnicalDashboardError";
 import { ErrorPage } from "~/components/ErrorPage";
-import { mapTechnicalDashboardData } from "./_authenticated.technical-dashboard/utils/mapTechnicalDashboardData";
+import { mapTechnicalDashboardData } from "~/features/technical/utils/mapTechnicalDashboardData";
 
 export default function TechnicalManagerDashboard() {
   const { user, userLoading, isTechnicalManager } = useTechnicalManagerAccess();

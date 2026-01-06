@@ -1,4 +1,4 @@
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import { MobileMenuHeader } from "./MobileMenuHeader";
 import { MobileMenuItems } from "./MobileMenuItems";
 import { LogOut } from "lucide-react";

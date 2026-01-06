@@ -1,5 +1,6 @@
 package com.concertflow.api.notification;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.notification.dto.NotificationResponse;
 import com.concertflow.api.notification.entity.Notification;
 import com.concertflow.api.notification.entity.NotificationRepository;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
     private final NotificationRepository notificationRepository;

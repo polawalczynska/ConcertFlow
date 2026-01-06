@@ -1,6 +1,7 @@
 package com.concertflow.api.budget.service;
 
 import com.concertflow.api.budget.config.BudgetApprovalConfig;
+import com.concertflow.api.budget.config.BudgetConstants;
 import com.concertflow.api.budget.dto.BudgetValidation;
 import com.concertflow.api.concert.entity.BudgetItem;
 import com.concertflow.api.concert.entity.BudgetStatus;
@@ -35,9 +36,9 @@ public class BudgetValidationService {
 
         if (requestedBudget == null || requestedBudget.compareTo(BigDecimal.ZERO) <= 0) {
             validations.add(BudgetValidation.builder()
-                .code("BUDGET_ZERO_OR_NEGATIVE")
+                .code(BudgetConstants.VALIDATION_CODE_BUDGET_ZERO_OR_NEGATIVE)
                 .message("Budget must be greater than zero")
-                .severity("ERROR")
+                .severity(BudgetConstants.SEVERITY_ERROR)
                 .passed(false)
                 .details("Requested budget is zero or negative")
                 .build());
@@ -48,9 +49,9 @@ public class BudgetValidationService {
 
         if (estimatedBudget.compareTo(BudgetApprovalConfig.MAX_BUDGET) > 0) {
             validations.add(BudgetValidation.builder()
-                .code("BUDGET_EXCEEDS_MAXIMUM")
+                .code(BudgetConstants.VALIDATION_CODE_BUDGET_EXCEEDS_MAXIMUM)
                 .message("Budget exceeds maximum threshold of " + BudgetApprovalConfig.MAX_BUDGET)
-                .severity("WARNING")
+                .severity(BudgetConstants.SEVERITY_WARNING)
                 .passed(false)
                 .details("Budget exceeds maximum allowed amount")
                 .build());
@@ -58,9 +59,9 @@ public class BudgetValidationService {
 
         if (estimatedBudget.compareTo(BudgetApprovalConfig.BUDGET_THRESHOLD) > 0) {
             validations.add(BudgetValidation.builder()
-                .code("BUDGET_EXCEEDS_THRESHOLD")
+                .code(BudgetConstants.VALIDATION_CODE_BUDGET_EXCEEDS_THRESHOLD)
                 .message("Budget exceeds standard threshold and requires higher approval level")
-                .severity("INFO")
+                .severity(BudgetConstants.SEVERITY_INFO)
                 .passed(true)
                 .details("Budget exceeds " + BudgetApprovalConfig.BUDGET_THRESHOLD + " threshold")
                 .build());
@@ -72,9 +73,9 @@ public class BudgetValidationService {
 
         if (items == null || items.isEmpty()) {
             validations.add(BudgetValidation.builder()
-                .code("NO_BUDGET_ITEMS")
+                .code(BudgetConstants.VALIDATION_CODE_NO_BUDGET_ITEMS)
                 .message("Budget must contain at least one item")
-                .severity("ERROR")
+                .severity(BudgetConstants.SEVERITY_ERROR)
                 .passed(false)
                 .details("No budget items found")
                 .build());
@@ -89,9 +90,9 @@ public class BudgetValidationService {
 
         if (mandatoryItemsWithoutAmount > 0) {
             validations.add(BudgetValidation.builder()
-                .code("MANDATORY_ITEMS_MISSING_AMOUNTS")
+                .code(BudgetConstants.VALIDATION_CODE_MANDATORY_ITEMS_MISSING_AMOUNTS)
                 .message(mandatoryItemsWithoutAmount + " mandatory items are missing estimated amounts")
-                .severity("ERROR")
+                .severity(BudgetConstants.SEVERITY_ERROR)
                 .passed(false)
                 .details("All mandatory items must have estimated amounts")
                 .build());
@@ -106,9 +107,9 @@ public class BudgetValidationService {
         BigDecimal budget = concert.getBudget();
         if (budget != null && totalItemsAmount.compareTo(budget) > 0) {
             validations.add(BudgetValidation.builder()
-                .code("ITEMS_EXCEED_BUDGET")
+                .code(BudgetConstants.VALIDATION_CODE_ITEMS_EXCEED_BUDGET)
                 .message("Sum of budget items exceeds total concert budget")
-                .severity("WARNING")
+                .severity(BudgetConstants.SEVERITY_WARNING)
                 .passed(false)
                 .details("Items total: " + totalItemsAmount + ", Budget: " + budget)
                 .build());
@@ -128,17 +129,17 @@ public class BudgetValidationService {
     private void validateBudgetStatus(Concert concert, List<BudgetValidation> validations) {
         if (concert.getBudgetStatus() == null) {
             validations.add(BudgetValidation.builder()
-                .code("BUDGET_STATUS_MISSING")
+                .code(BudgetConstants.VALIDATION_CODE_BUDGET_STATUS_MISSING)
                 .message("Budget status is not set")
-                .severity("ERROR")
+                .severity(BudgetConstants.SEVERITY_ERROR)
                 .passed(false)
                 .details("Budget status must be set")
                 .build());
         } else if (concert.getBudgetStatus() == BudgetStatus.REJECTED) {
             validations.add(BudgetValidation.builder()
-                .code("BUDGET_PREVIOUSLY_REJECTED")
+                .code(BudgetConstants.VALIDATION_CODE_BUDGET_PREVIOUSLY_REJECTED)
                 .message("Budget was previously rejected")
-                .severity("WARNING")
+                .severity(BudgetConstants.SEVERITY_WARNING)
                 .passed(true)
                 .details("Budget has been rejected and may need revision")
                 .build());
@@ -156,9 +157,9 @@ public class BudgetValidationService {
 
         if (itemsWithoutCategory > 0) {
             validations.add(BudgetValidation.builder()
-                .code("ITEMS_MISSING_CATEGORY")
+                .code(BudgetConstants.VALIDATION_CODE_ITEMS_MISSING_CATEGORY)
                 .message(itemsWithoutCategory + " items are missing category")
-                .severity("WARNING")
+                .severity(BudgetConstants.SEVERITY_WARNING)
                 .passed(false)
                 .details("All items should have a category assigned")
                 .build());

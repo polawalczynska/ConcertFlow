@@ -1,16 +1,15 @@
-import { useArtists } from "~/hooks/useArtists";
-import { useBudgetManagers } from "~/hooks/useBudgetManagers";
-import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
-import { useDashboardStats } from "~/hooks/useDashboardStats";
-import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
-import { ConcertFormDialog } from "~/routes/_authenticated.concerts/components/form/ConcertFormDialog";
-import { StatisticsGrid } from "./_authenticated.dashboard/components/statistics/StatisticsGrid";
-import { ChartsSection } from "./_authenticated.dashboard/components/charts/ChartsSection";
-import { RecentConcerts } from "./_authenticated.dashboard/components/RecentConcerts";
-import { QuickActions } from "./_authenticated.dashboard/components/sidebar/QuickActions";
-import { AlertsPanel } from "./_authenticated.dashboard/components/sidebar/AlertsPanel";
-import { UpcomingEvents } from "./_authenticated.dashboard/components/sidebar/UpcomingEvents";
-import { useCoordinatorAccess } from "./_authenticated.dashboard/hooks/useCoordinatorAccess";
+import { useArtists } from "~/features/artists/hooks";
+import { useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
+import { useDashboardStats } from "~/features/dashboard/hooks";
+import { useConcertForm } from "~/features/concerts/hooks/useConcertForm";
+import { ConcertFormDialog } from "~/features/concerts/components/form/ConcertFormDialog";
+import { StatisticsGrid } from "~/features/dashboard/components/statistics/StatisticsGrid";
+import { ChartsSection } from "~/features/dashboard/components/charts/ChartsSection";
+import { RecentConcerts } from "~/features/dashboard/components/RecentConcerts";
+import { QuickActions } from "~/features/dashboard/components/sidebar/QuickActions";
+import { AlertsPanel } from "~/features/dashboard/components/sidebar/AlertsPanel";
+import { UpcomingEvents } from "~/features/dashboard/components/sidebar/UpcomingEvents";
+import { useCoordinatorAccess } from "~/features/dashboard/hooks/useCoordinatorAccess";
 
 export default function CoordinatorDashboard() {
   const {user, userLoading, isCoordinator} = useCoordinatorAccess();

@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@remix-run/react";
 import { Bell } from "lucide-react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 
 interface NotificationButtonProps {
   unreadCount: number;

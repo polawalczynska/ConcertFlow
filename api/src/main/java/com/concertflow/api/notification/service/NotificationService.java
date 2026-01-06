@@ -5,7 +5,15 @@ import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.notification.entity.Notification;
 import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.entity.NotificationType;
-import com.concertflow.api.notification.event.*;
+import com.concertflow.api.notification.event.BudgetApprovedEvent;
+import com.concertflow.api.notification.event.BudgetRevisionRequestedEvent;
+import com.concertflow.api.notification.event.BudgetSubmittedEvent;
+import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
+import com.concertflow.api.notification.event.TeamInvitationAcceptedEvent;
+import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
+import com.concertflow.api.notification.event.TechnicalApprovedEvent;
+import com.concertflow.api.notification.event.TechnicalRevisionRequestedEvent;
+import com.concertflow.api.notification.event.TechnicalSubmittedEvent;
 import com.concertflow.api.team.entity.TeamInvitation;
 import com.concertflow.api.team.entity.TeamInvitationRepository;
 import com.concertflow.api.user.entity.User;
@@ -41,7 +49,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget approved notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -60,7 +67,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget revision requested notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -79,7 +85,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Budget submitted notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -98,7 +103,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical approved notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -117,7 +121,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical revision requested notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -136,7 +139,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Technical submitted notification sent for concert: {}", concert.getId());
     }
 
     @EventListener
@@ -158,7 +160,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Concert status changed notification sent for concert: {}", concert.getId());
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
@@ -189,7 +190,6 @@ public class NotificationService {
                     null,
                     freshInvitation.getId()
                 );
-                log.info("Team invitation notification sent for invitation: {}", invitationId);
             } else {
                 log.warn("Team invitation notification failed - missing user data for invitation: {}", invitationId);
             }
@@ -227,7 +227,6 @@ public class NotificationService {
                     null,
                     freshInvitation.getId()
                 );
-                log.info("Team member joined notification sent to coordinator for invitation: {}", invitationId);
             } else {
                 log.warn("Team member joined notification failed - missing user data for invitation: {}", invitationId);
             }
@@ -250,7 +249,6 @@ public class NotificationService {
                 null
             );
         }
-        log.info("Upcoming concert reminder sent for concert: {}", concert.getId());
     }
 
     private Notification createNotification(

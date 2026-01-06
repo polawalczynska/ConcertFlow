@@ -1,5 +1,6 @@
 package com.concertflow.api.artist;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.artist.dto.ArtistRequest;
 import com.concertflow.api.artist.dto.ArtistResponse;
 import com.concertflow.api.artist.service.ArtistService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/artists")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/artists")
 @RequiredArgsConstructor
 public class ArtistController {
     private final ArtistService artistService;

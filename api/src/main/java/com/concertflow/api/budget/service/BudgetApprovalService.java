@@ -2,16 +2,24 @@ package com.concertflow.api.budget.service;
 
 import com.concertflow.api.approval.chain.ApprovalChainService;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.budget.dto.*;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.budget.dto.ApproveBudgetRequest;
+import com.concertflow.api.budget.dto.BudgetApprovalDashboardResponse;
+import com.concertflow.api.budget.dto.BudgetDetailResponse;
+import com.concertflow.api.budget.dto.BudgetValidation;
+import com.concertflow.api.budget.dto.RequestBudgetRevisionRequest;
+import com.concertflow.api.budget.dto.SubmitBudgetForApprovalRequest;
+import com.concertflow.api.concert.entity.Concert;
+import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
+import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.BudgetMapper;
+import com.concertflow.api.security.annotation.RequireBudgetManager;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +37,12 @@ public class BudgetApprovalService {
     private final BudgetAccessValidator accessValidator;
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public Page<BudgetApprovalDashboardResponse> getPendingBudgets(Pageable pageable, Long budgetManagerId, User authenticatedUser) {
-        log.debug("Fetching budgets for budget manager ID: {}", budgetManagerId);
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
-        Page<Concert> concerts = concertRepository.findByBudgetManagerId(
+        Page<Concert> concerts = concertRepository.findByBudgetManagerIdWithSubmittedBudgets(
             budgetManagerId,
             pageable
         );
@@ -46,9 +53,8 @@ public class BudgetApprovalService {
         });
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public BudgetDetailResponse getBudgetDetails(Long concertId, Long budgetManagerId, User authenticatedUser) {
-        log.debug("Fetching budget details for concert: {}, budget manager ID: {}", concertId, budgetManagerId);
 
         accessValidator.validateBudgetManagerIdMatchesUser(budgetManagerId, authenticatedUser);
 
@@ -61,9 +67,9 @@ public class BudgetApprovalService {
         return budgetMapper.toDetailResponse(concert, validations, isEligible);
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void approveBudget(Long concertId, ApproveBudgetRequest request, User approver) {
-        log.info("Approving budget for concert: {}, approver: {}", concertId, approver.getEmail());
+        log.info("Approving budget for concert: {}, approver ID: {}", concertId, approver.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetManagerAccess(concert, approver);
@@ -81,7 +87,7 @@ public class BudgetApprovalService {
         log.info("Budget approved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('BUDGET_MANAGER') or hasRole('ADMIN')")
+    @RequireBudgetManager
     public void requestRevision(Long concertId, RequestBudgetRevisionRequest request, User requester) {
         log.info("Requesting budget revision for concert: {}", concertId);
 
@@ -100,9 +106,9 @@ public class BudgetApprovalService {
         log.info("Budget revision requested for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN') or hasRole('ORGANIZER')")
+    @RequireCoordinator
     public void submitBudgetForApproval(Long concertId, SubmitBudgetForApprovalRequest request, User submitter) {
-        log.info("Submitting budget for approval, concert: {}, submitter: {}", concertId, submitter.getEmail());
+        log.info("Submitting budget for approval, concert: {}, submitter ID: {}", concertId, submitter.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateBudgetForSubmission(concert);
@@ -119,14 +125,13 @@ public class BudgetApprovalService {
         log.info("Budget submitted for approval, concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR') or hasRole('ADMIN')")
+    @RequireCoordinator
     public BudgetDetailResponse getBudgetDetailsForCoordinator(Long concertId, User coordinator) {
-        log.debug("Fetching budget details for concert: {}, coordinator: {}", concertId, coordinator.getId());
 
         Concert concert = findConcertById(concertId);
 
         if (!concert.getCoordinator().getId().equals(coordinator.getId())) {
-            throw new com.concertflow.api.exceptions.types.UnauthorizedAccessException(
+            throw new UnauthorizedAccessException(
                 "You can only view budget details for your own concerts");
         }
 

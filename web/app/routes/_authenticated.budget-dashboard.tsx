@@ -1,13 +1,13 @@
-import { useBudgetManagerAccess } from "./_authenticated.budget-manager/hooks/useBudgetManagerAccess";
-import { useBudgetManagerStats } from "~/hooks/useBudgetManagerStats";
-import { BudgetDashboardHeader } from "./_authenticated.budget-dashboard/components/BudgetDashboardHeader";
-import { BudgetStatisticsGrid } from "./_authenticated.budget-dashboard/components/statistics/BudgetStatisticsGrid";
-import { BudgetChartsSection } from "./_authenticated.budget-dashboard/components/charts/BudgetChartsSection";
-import { RecentActivity } from "./_authenticated.budget-dashboard/components/RecentActivity";
-import { BudgetDashboardLoading } from "./_authenticated.budget-dashboard/components/BudgetDashboardLoading";
-import { BudgetDashboardError } from "./_authenticated.budget-dashboard/components/BudgetDashboardError";
+import { useBudgetManagerAccess } from "~/features/budget/hooks/useBudgetManagerAccess";
+import { useBudgetManagerStats } from "~/features/budget/hooks";
+import { BudgetDashboardHeader } from "~/features/budget/components/BudgetDashboardHeader";
+import { BudgetStatisticsGrid } from "~/features/budget/components/statistics/BudgetStatisticsGrid";
+import { BudgetChartsSection } from "~/features/budget/components/charts/BudgetChartsSection";
+import { RecentActivity } from "~/features/budget/components/RecentActivity";
+import { BudgetDashboardLoading } from "~/features/budget/components/BudgetDashboardLoading";
+import { BudgetDashboardError } from "~/features/budget/components/BudgetDashboardError";
 import { ErrorPage } from "~/components/ErrorPage";
-import { mapBudgetDashboardData } from "./_authenticated.budget-dashboard/utils/mapBudgetDashboardData";
+import { mapBudgetDashboardData } from "~/features/budget/utils/mapBudgetDashboardData";
 
 export default function BudgetManagerDashboard() {
   const { user, userLoading, isBudgetManager } = useBudgetManagerAccess();

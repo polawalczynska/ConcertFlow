@@ -7,13 +7,16 @@ import com.concertflow.api.budget.dto.RequestBudgetRevisionRequest;
 import com.concertflow.api.budget.service.BudgetApprovalRecordService;
 import com.concertflow.api.budget.service.BudgetItemService;
 import com.concertflow.api.budget.service.BudgetRevisionNoteBuilder;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.concert.entity.BudgetApproval;
+import com.concertflow.api.concert.entity.BudgetItem;
+import com.concertflow.api.concert.entity.BudgetStatus;
+import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
-import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.concert.entity.ApprovalDecision;
+import com.concertflow.api.approval.chain.service.FinalApprovalService;
 import com.concertflow.api.exceptions.types.BudgetVersionConflictException;
 import com.concertflow.api.notification.event.BudgetApprovedEvent;
 import com.concertflow.api.notification.event.BudgetRevisionRequestedEvent;
-import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,6 +33,7 @@ public class BudgetApprovalHandler extends AbstractApprovalHandler {
     private final BudgetItemService budgetItemService;
     private final BudgetRevisionNoteBuilder revisionNoteBuilder;
     private final ApplicationEventPublisher eventPublisher;
+    private final FinalApprovalService finalApprovalService;
 
     @Override
     protected boolean canHandle(ApprovalRequest request) {
@@ -76,7 +80,7 @@ public class BudgetApprovalHandler extends AbstractApprovalHandler {
         concertRepository.save(concert);
         eventPublisher.publishEvent(new BudgetApprovedEvent(concert, request.getUser()));
         
-        checkAndSetFinalApproval(concert);
+        finalApprovalService.checkAndSetFinalApproval(concert);
         
         log.info("Budget approved for concert: {}", concert.getId());
         return true;
@@ -120,28 +124,6 @@ public class BudgetApprovalHandler extends AbstractApprovalHandler {
         
         log.info("Budget revision requested for concert: {}", concert.getId());
         return true;
-    }
-
-    private void checkAndSetFinalApproval(Concert concert) {
-        Concert refreshedConcert = concertRepository.findById(concert.getId())
-            .orElse(concert);
-        
-        if (refreshedConcert.getBudgetStatus() == BudgetStatus.APPROVED && 
-            refreshedConcert.getTechnicalStatus() == TechnicalStatus.APPROVED) {
-            
-            if (refreshedConcert.getStatus() != ConcertStatus.APPROVED) {
-                ConcertStatus oldStatus = refreshedConcert.getStatus();
-                refreshedConcert.setStatus(ConcertStatus.APPROVED);
-                concertRepository.save(refreshedConcert);
-                
-                eventPublisher.publishEvent(
-                    new ConcertStatusChangedEvent(refreshedConcert, oldStatus, ConcertStatus.APPROVED)
-                );
-                
-                log.info("Concert status set to APPROVED (both budget and technical requirements approved), concert: {}", 
-                    refreshedConcert.getId());
-            }
-        }
     }
 }
 

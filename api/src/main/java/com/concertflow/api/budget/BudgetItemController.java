@@ -1,5 +1,6 @@
 package com.concertflow.api.budget;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.budget.dto.BudgetItemResponse;
 import com.concertflow.api.budget.dto.CreateBudgetItemRequest;
 import com.concertflow.api.budget.dto.UpdateBudgetItemRequest;
@@ -10,10 +11,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/concerts/{concertId}/budget-items")
+@RequestMapping(ApiConstants.API_V1_BASE_PATH + "/concerts/{concertId}/budget-items")
 @RequiredArgsConstructor
 public class BudgetItemController {
     private final BudgetItemService budgetItemService;

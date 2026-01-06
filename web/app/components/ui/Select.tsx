@@ -1,5 +1,5 @@
 import { createContext, forwardRef, ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import { ChevronDown } from "lucide-react";
 
 interface SelectContextValue {

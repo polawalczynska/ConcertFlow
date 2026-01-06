@@ -1,6 +1,6 @@
 import { forwardRef, useRef } from "react";
 import { ChevronDown } from "lucide-react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import { useSearchableSelectContext } from "./SearchableSelectContext";
 
 export const SearchableSelectTrigger = forwardRef<

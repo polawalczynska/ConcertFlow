@@ -8,6 +8,7 @@ import com.concertflow.api.concert.entity.BudgetItem;
 import com.concertflow.api.concert.entity.BudgetItemStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
+import com.concertflow.api.concert.state.ConcertStateManager;
 import com.concertflow.api.exceptions.types.BudgetItemNotFoundException;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
@@ -26,11 +27,10 @@ import java.util.List;
 public class BudgetItemService {
     private final ConcertRepository concertRepository;
     private final BudgetMapper budgetMapper;
+    private final ConcertStateManager concertStateManager;
 
     public BudgetItemResponse createBudgetItem(Long concertId, CreateBudgetItemRequest request, User coordinator) {
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, coordinator);
-        validateBudgetStatusForEditing(concert);
+        Concert concert = validateAndGetEditableConcert(concertId, coordinator);
 
         BudgetItem item = BudgetItem.builder()
             .concert(concert)
@@ -52,9 +52,7 @@ public class BudgetItemService {
     }
 
     public BudgetItemResponse updateBudgetItem(Long concertId, Long itemId, UpdateBudgetItemRequest request, User coordinator) {
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, coordinator);
-        validateBudgetStatusForEditing(concert);
+        Concert concert = validateAndGetEditableConcert(concertId, coordinator);
 
         BudgetItem item = findBudgetItem(concert, itemId);
         
@@ -76,9 +74,7 @@ public class BudgetItemService {
     }
 
     public void deleteBudgetItem(Long concertId, Long itemId, User coordinator) {
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, coordinator);
-        validateBudgetStatusForEditing(concert);
+        Concert concert = validateAndGetEditableConcert(concertId, coordinator);
 
         BudgetItem item = findBudgetItem(concert, itemId);
         concert.getBudgetItems().remove(item);
@@ -136,6 +132,21 @@ public class BudgetItemService {
     private void validateCoordinatorAccess(Concert concert, User coordinator) {
         if (!concert.getCoordinator().getId().equals(coordinator.getId())) {
             throw new UnauthorizedAccessException("You can only manage budget items for your own concerts");
+        }
+    }
+
+    private Concert validateAndGetEditableConcert(Long concertId, User coordinator) {
+        Concert concert = findConcertById(concertId);
+        validateCoordinatorAccess(concert, coordinator);
+        validateConcertCanBeEdited(concert);
+        validateBudgetStatusForEditing(concert);
+        return concert;
+    }
+
+    private void validateConcertCanBeEdited(Concert concert) {
+        if (!concertStateManager.canEdit(concert)) {
+            throw new com.concertflow.api.exceptions.types.InvalidConcertStatusException(
+                "Cannot modify budget items for a concert in state: " + concert.getStatus());
         }
     }
 

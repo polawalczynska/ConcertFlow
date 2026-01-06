@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import { useLogout } from "~/hooks/useAuth";
+import { useLogout } from "~/features/auth/hooks";
 
 interface LogoutButtonProps {
   variant?: "desktop" | "mobile";

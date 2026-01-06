@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "@remix-run/react";
-import { useUser } from "~/hooks/useUser";
-import { useUnreadNotificationCount } from "~/hooks/useNotifications";
-import { useLogout } from "~/hooks/useAuth";
+import { useUser } from "~/shared/hooks/domain";
+import { useUnreadNotificationCount } from "~/features/notifications/hooks";
+import { useLogout } from "~/features/auth/hooks";
 import { NavbarLogo } from "./NavbarLogo";
 import { DesktopMenu } from "./DesktopMenu";
 import { DesktopUserInfo } from "./DesktopUserInfo";

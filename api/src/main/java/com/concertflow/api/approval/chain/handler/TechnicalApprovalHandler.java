@@ -2,9 +2,16 @@ package com.concertflow.api.approval.chain.handler;
 
 import com.concertflow.api.approval.chain.AbstractApprovalHandler;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.concert.entity.ApprovalDecision;
+import com.concertflow.api.concert.entity.BudgetStatus;
+import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.concert.entity.TechnicalApproval;
+import com.concertflow.api.approval.chain.service.FinalApprovalService;
+import com.concertflow.api.concert.entity.TechnicalRequirements;
+import com.concertflow.api.concert.entity.TechnicalRequirementsRepository;
+import com.concertflow.api.concert.entity.TechnicalStatus;
 import com.concertflow.api.exceptions.types.TechnicalVersionConflictException;
 import com.concertflow.api.notification.event.ConcertStatusChangedEvent;
 import com.concertflow.api.notification.event.TechnicalApprovedEvent;
@@ -27,6 +34,7 @@ public class TechnicalApprovalHandler extends AbstractApprovalHandler {
     private final TechnicalApprovalRecordService approvalRecordService;
     private final TechnicalRevisionCommentBuilder revisionCommentBuilder;
     private final ApplicationEventPublisher eventPublisher;
+    private final FinalApprovalService finalApprovalService;
 
     @Override
     protected boolean canHandle(ApprovalRequest request) {
@@ -74,7 +82,7 @@ public class TechnicalApprovalHandler extends AbstractApprovalHandler {
         concertRepository.save(concert);
         eventPublisher.publishEvent(new TechnicalApprovedEvent(concert, request.getUser()));
         
-        checkAndSetFinalApproval(concert);
+        finalApprovalService.checkAndSetFinalApproval(concert);
         
         log.info("Technical requirements approved for concert: {}", concert.getId());
         return true;
@@ -107,28 +115,6 @@ public class TechnicalApprovalHandler extends AbstractApprovalHandler {
         
         log.info("Technical revision requested for concert: {}", concert.getId());
         return true;
-    }
-
-    private void checkAndSetFinalApproval(Concert concert) {   
-        Concert refreshedConcert = concertRepository.findById(concert.getId())
-            .orElse(concert);
-        
-        if (refreshedConcert.getBudgetStatus() == BudgetStatus.APPROVED && 
-            refreshedConcert.getTechnicalStatus() == TechnicalStatus.APPROVED) {
-            
-            if (refreshedConcert.getStatus() != ConcertStatus.APPROVED) {
-                ConcertStatus oldStatus = refreshedConcert.getStatus();
-                refreshedConcert.setStatus(ConcertStatus.APPROVED);
-                concertRepository.save(refreshedConcert);
-                
-                eventPublisher.publishEvent(
-                    new ConcertStatusChangedEvent(refreshedConcert, oldStatus, ConcertStatus.APPROVED)
-                );
-                
-                log.info("Concert status set to APPROVED (both budget and technical requirements approved), concert: {}", 
-                    refreshedConcert.getId());
-            }
-        }
     }
 
     private TechnicalRequirements getOrCreateTechnicalRequirements(Concert concert) {

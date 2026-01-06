@@ -5,13 +5,16 @@ import com.concertflow.api.approval.chain.ApprovalRequest;
 import com.concertflow.api.concert.entity.*;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.mappers.TechnicalMapper;
-import com.concertflow.api.technical.dto.*;
+import com.concertflow.api.security.annotation.RequireTechnicalManager;
+import com.concertflow.api.technical.dto.ApproveTechnicalRequest;
+import com.concertflow.api.technical.dto.RequestTechnicalRevisionRequest;
+import com.concertflow.api.technical.dto.TechnicalApprovalDashboardResponse;
+import com.concertflow.api.technical.dto.TechnicalDetailResponse;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +33,12 @@ public class TechnicalApprovalService {
     private final TechnicalRequirementsService technicalRequirementsService;
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public Page<TechnicalApprovalDashboardResponse> getPendingTechnicalApprovals(
         Pageable pageable,
         Long technicalManagerId,
         User authenticatedUser
     ) {
-        log.debug("Fetching technical approvals for technical manager ID: {}", technicalManagerId);
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
@@ -57,18 +59,17 @@ public class TechnicalApprovalService {
         });
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public TechnicalDetailResponse getTechnicalDetails(
         Long concertId,
         Long technicalManagerId,
         User authenticatedUser
     ) {
-        log.debug("Fetching technical details for concert: {}, technical manager ID: {}", concertId, technicalManagerId);
 
         accessValidator.validateTechnicalManagerIdMatchesUser(technicalManagerId, authenticatedUser);
 
         Concert concert = findConcertById(concertId);
-        
+
         TechnicalStatus status = concert.getTechnicalStatus();
         if (status == TechnicalStatus.PENDING) {
             throw new IllegalStateException("Technical requirements have not been submitted yet. They are only visible after submission.");
@@ -77,9 +78,9 @@ public class TechnicalApprovalService {
         return technicalMapper.toDetailResponse(concert);
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public void approveTechnical(Long concertId, ApproveTechnicalRequest request, User approver) {
-        log.info("Approving technical requirements for concert: {}, approver: {}", concertId, approver.getEmail());
+        log.info("Approving technical requirements for concert: {}, approver ID: {}", concertId, approver.getId());
 
         Concert concert = findConcertById(concertId);
         accessValidator.validateTechnicalManagerAccess(concert, approver);
@@ -97,7 +98,7 @@ public class TechnicalApprovalService {
         log.info("Technical requirements approved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('TECHNICAL_MANAGER')")
+    @RequireTechnicalManager
     public void requestRevision(Long concertId, RequestTechnicalRevisionRequest request, User requester) {
         log.info("Requesting technical revision for concert: {}", concertId);
 

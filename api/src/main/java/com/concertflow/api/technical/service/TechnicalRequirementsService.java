@@ -2,10 +2,16 @@ package com.concertflow.api.technical.service;
 
 import com.concertflow.api.approval.chain.ApprovalChainService;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.concert.entity.BudgetStatus;
+import com.concertflow.api.concert.entity.Concert;
+import com.concertflow.api.concert.entity.ConcertRepository;
+import com.concertflow.api.concert.entity.TechnicalRequirements;
+import com.concertflow.api.concert.entity.TechnicalRequirementsRepository;
+import com.concertflow.api.concert.entity.TechnicalStatus;
 import com.concertflow.api.exceptions.types.ConcertNotFoundException;
 import com.concertflow.api.exceptions.types.UnauthorizedAccessException;
 import com.concertflow.api.mappers.TechnicalMapper;
+import com.concertflow.api.security.annotation.RequireCoordinator;
 import com.concertflow.api.technical.dto.SaveTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.SubmitTechnicalRequirementsRequest;
 import com.concertflow.api.technical.dto.TechnicalDetailResponse;
@@ -13,7 +19,6 @@ import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +35,11 @@ public class TechnicalRequirementsService {
     @Lazy
     private final ApprovalChainService approvalChainService;
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public void saveTechnicalRequirements(Long concertId, SaveTechnicalRequirementsRequest request, User coordinator) {
-        log.info("Saving technical requirements for concert: {}, coordinator: {}", concertId, coordinator.getEmail());
+        log.info("Saving technical requirements for concert: {}, coordinator ID: {}", concertId, coordinator.getId());
 
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, coordinator);
+        Concert concert = validateAndGetConcert(concertId, coordinator);
         TechnicalRequirements requirements = getOrCreateTechnicalRequirements(concert);
         accessValidator.validateTechnicalForEdit(concert);
         updateTechnicalRequirements(requirements, request);
@@ -44,17 +48,16 @@ public class TechnicalRequirementsService {
         log.info("Technical requirements saved for concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public void submitTechnicalRequirements(
         Long concertId,
         SubmitTechnicalRequirementsRequest request,
         User submitter
     ) {
-        log.info("Submitting technical requirements for approval, concert: {}, submitter: {}",
-            concertId, submitter.getEmail());
+        log.info("Submitting technical requirements for approval, concert: {}, submitter ID: {}",
+            concertId, submitter.getId());
 
-        Concert concert = findConcertById(concertId);
-        validateCoordinatorAccess(concert, submitter);
+        Concert concert = validateAndGetConcert(concertId, submitter);
         validateBudgetApproved(concert);
 
         TechnicalRequirements requirements = getOrCreateTechnicalRequirements(concert);
@@ -72,14 +75,16 @@ public class TechnicalRequirementsService {
         log.info("Technical requirements submitted for approval, concert: {}", concertId);
     }
 
-    @PreAuthorize("hasRole('COORDINATOR')")
+    @RequireCoordinator
     public TechnicalDetailResponse getTechnicalDetailsForCoordinator(Long concertId, User coordinator) {
-        log.debug("Fetching technical details for concert: {}, coordinator: {}", concertId, coordinator.getId());
+        Concert concert = validateAndGetConcert(concertId, coordinator);
+        return technicalMapper.toDetailResponse(concert);
+    }
 
+    private Concert validateAndGetConcert(Long concertId, User coordinator) {
         Concert concert = findConcertById(concertId);
         validateCoordinatorAccess(concert, coordinator);
-
-        return technicalMapper.toDetailResponse(concert);
+        return concert;
     }
 
     private void validateCoordinatorAccess(Concert concert, User coordinator) {

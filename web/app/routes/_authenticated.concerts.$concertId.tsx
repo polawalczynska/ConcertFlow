@@ -1,21 +1,19 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "@remix-run/react";
-import { useConcert } from "~/hooks/useConcerts";
-import { useUser } from "~/hooks/useUser";
-import { useArtists } from "~/hooks/useArtists";
-import { useBudgetManagers } from "~/hooks/useBudgetManagers";
-import { useTechnicalManagers } from "~/hooks/useTechnicalManagers";
+import { useConcert } from "~/features/concerts/hooks";
+import { useUser, useBudgetManagers, useTechnicalManagers } from "~/shared/hooks/domain";
+import { useArtists } from "~/features/artists/hooks";
 import { UserResponseRoleEnum } from "~/api";
-import { AuthGuard } from "~/components/AuthGuard";
-import { ConcertPageHeader } from "./_authenticated.concerts.$concertId/components/ConcertPageHeader";
-import { ConcertPageContent } from "./_authenticated.concerts.$concertId/components/ConcertPageContent";
-import { ConcertPageManagement } from "./_authenticated.concerts.$concertId/components/ConcertPageManagement";
-import { ConcertPageActions } from "./_authenticated.concerts.$concertId/components/ConcertPageActions";
-import { ConcertPageDialogs } from "./_authenticated.concerts.$concertId/components/ConcertPageDialogs";
-import { ConcertPageLoading } from "./_authenticated.concerts.$concertId/components/ConcertPageLoading";
-import { ConcertPageError } from "./_authenticated.concerts.$concertId/components/ConcertPageError";
-import { useConcertForm } from "~/routes/_authenticated.concerts/hooks/useConcertForm";
-import { useConcertActions } from "~/routes/_authenticated.concerts/hooks/useConcertActions";
+import { AuthGuard } from "~/features/auth/components";
+import { ConcertPageHeader } from "~/features/concerts/components/ConcertPageHeader";
+import { ConcertPageContent } from "~/features/concerts/components/ConcertPageContent";
+import { ConcertPageManagement } from "~/features/concerts/components/ConcertPageManagement";
+import { ConcertPageActions } from "~/features/concerts/components/ConcertPageActions";
+import { ConcertPageDialogs } from "~/features/concerts/components/ConcertPageDialogs";
+import { ConcertPageLoading } from "~/features/concerts/components/ConcertPageLoading";
+import { ConcertPageError } from "~/features/concerts/components/ConcertPageError";
+import { useConcertForm } from "~/features/concerts/hooks/useConcertForm";
+import { useConcertActions } from "~/features/concerts/hooks/useConcertActions";
 
 export default function ConcertPage() {
   const params = useParams();

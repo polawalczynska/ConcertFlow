@@ -2,6 +2,7 @@ package com.concertflow.api.dashboard.service.calculator;
 
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertStatus;
+import com.concertflow.api.dashboard.config.AlertConstants;
 import com.concertflow.api.dashboard.config.DashboardConstants;
 import com.concertflow.api.dashboard.dto.ActionRequired;
 import com.concertflow.api.dashboard.dto.AlertType;
@@ -30,8 +31,8 @@ public class AlertsCalculator implements StatCalculator<List<CoordinatorAlert>> 
                 alerts.add(CoordinatorAlert.builder()
                     .id(String.valueOf(concert.getId()))
                     .type(AlertType.ERROR)
-                    .title("Urgent: Budget Approval Required")
-                    .message(concert.getName() + " requires budget approval within 24 hours")
+                    .title(AlertConstants.ALERT_TITLE_URGENT_BUDGET_APPROVAL)
+                    .message(String.format(AlertConstants.ALERT_MESSAGE_BUDGET_APPROVAL_TEMPLATE, concert.getName()))
                     .concertId(String.valueOf(concert.getId()))
                     .actionRequired(ActionRequired.APPROVAL_NEEDED)
                     .createdAt(now)
@@ -53,8 +54,8 @@ public class AlertsCalculator implements StatCalculator<List<CoordinatorAlert>> 
                 alerts.add(CoordinatorAlert.builder()
                     .id("upcoming-" + concert.getId())
                     .type(AlertType.INFO)
-                    .title("Upcoming Concert Reminder")
-                    .message(concert.getName() + " is scheduled in " + daysUntil + " days - final check needed")
+                    .title(AlertConstants.ALERT_TITLE_UPCOMING_CONCERT_REMINDER)
+                    .message(String.format(AlertConstants.ALERT_MESSAGE_UPCOMING_CONCERT_TEMPLATE, concert.getName(), daysUntil))
                     .concertId(String.valueOf(concert.getId()))
                     .actionRequired(ActionRequired.UPCOMING_EVENT)
                     .createdAt(now)

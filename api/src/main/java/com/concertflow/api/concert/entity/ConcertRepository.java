@@ -110,6 +110,16 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     @Query("SELECT c FROM Concert c WHERE c.budgetManager.id = :budgetManagerId")
     Page<Concert> findByBudgetManagerId(@Param("budgetManagerId") Long budgetManagerId, Pageable pageable);
 
+    @Query("SELECT c FROM Concert c WHERE c.budgetManager.id = :budgetManagerId " +
+           "AND c.budgetStatus != com.concertflow.api.concert.entity.BudgetStatus.PENDING")
+    Page<Concert> findByBudgetManagerIdWithSubmittedBudgets(
+        @Param("budgetManagerId") Long budgetManagerId,
+        Pageable pageable
+    );
+
     @Query("SELECT DISTINCT c FROM Concert c LEFT JOIN FETCH c.technicalRequirements WHERE c.technicalManager.id = :technicalManagerId")
     List<Concert> findByTechnicalManagerId(@Param("technicalManagerId") Long technicalManagerId);
+
+    @Query("SELECT COUNT(c) FROM Concert c WHERE c.artist.id = :artistId AND c.date > :currentDate")
+    long countByArtistIdAndDateAfter(@Param("artistId") Long artistId, @Param("currentDate") LocalDateTime currentDate);
 }

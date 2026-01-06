@@ -1,7 +1,6 @@
 package com.concertflow.api.team.service;
 
 import com.concertflow.api.exceptions.types.TeamInvitationNotFoundException;
-import com.concertflow.api.exceptions.types.UserNotFoundException;
 import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.notification.event.TeamInvitationAcceptedEvent;
 import com.concertflow.api.notification.event.TeamInvitationCreatedEvent;
@@ -13,7 +12,7 @@ import com.concertflow.api.team.entity.TeamInvitationRepository;
 import com.concertflow.api.team.mapper.TeamMapper;
 import com.concertflow.api.team.validator.TeamInvitationValidator;
 import com.concertflow.api.user.entity.User;
-import com.concertflow.api.user.entity.UserRepository;
+import com.concertflow.api.user.service.UserFinder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TeamInvitationService {
     private final TeamInvitationRepository teamInvitationRepository;
-    private final UserRepository userRepository;
+    private final UserFinder userFinder;
     private final TeamMapper teamMapper;
     private final TeamInvitationValidator validator;
     private final ApplicationEventPublisher eventPublisher;
@@ -56,7 +55,7 @@ public class TeamInvitationService {
 
         eventPublisher.publishEvent(new TeamInvitationCreatedEvent(invitation));
 
-        log.info("Team invitation created: {} invited by {}", invitedUser.getEmail(), coordinator.getEmail());
+        log.info("Team invitation created: user ID {} invited by coordinator ID {}", invitedUser.getId(), coordinator.getId());
         return teamMapper.toTeamInvitationResponse(invitation);
     }
 
@@ -75,7 +74,7 @@ public class TeamInvitationService {
 
         eventPublisher.publishEvent(new TeamInvitationAcceptedEvent(invitation));
 
-        log.info("Team invitation accepted: {} by {}", invitation.getInvitedUser().getEmail(), user.getEmail());
+        log.info("Team invitation accepted: invitation ID {} by user ID {}", invitation.getId(), user.getId());
         return teamMapper.toTeamInvitationResponse(invitation);
     }
 
@@ -87,7 +86,7 @@ public class TeamInvitationService {
         updateInvitationStatus(invitation, InvitationStatus.REJECTED);
         invitation = teamInvitationRepository.save(invitation);
 
-        log.info("Team invitation rejected: {} by {}", invitation.getInvitedUser().getEmail(), user.getEmail());
+        log.info("Team invitation rejected: invitation ID {} by user ID {}", invitation.getId(), user.getId());
         return teamMapper.toTeamInvitationResponse(invitation);
     }
 
@@ -97,11 +96,10 @@ public class TeamInvitationService {
         validator.validateInvitationIsPending(invitation.getStatus());
         validator.validateCoordinatorOwnership(invitation, coordinator);
 
-        String invitedUserEmail = invitation.getInvitedUser().getEmail();
         notificationRepository.deleteByInvitationId(invitationId);
         teamInvitationRepository.delete(invitation);
 
-        log.info("Team invitation cancelled and deleted: {} by coordinator {}", invitedUserEmail, coordinator.getEmail());
+        log.info("Team invitation cancelled and deleted: invitation ID {} by coordinator ID {}", invitationId, coordinator.getId());
     }
 
     private TeamInvitation findInvitationById(Long invitationId) {
@@ -110,8 +108,7 @@ public class TeamInvitationService {
     }
 
     private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-            .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        return userFinder.findByEmailOrThrow(email);
     }
 
     private TeamInvitation findInvitationByIdAndUser(Long invitationId, Long userId) {

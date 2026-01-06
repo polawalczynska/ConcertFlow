@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
-import { useUser } from "~/hooks/useUser";
+import { useUser } from "~/shared/hooks/domain";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
-import { SettingsHeader } from "./_authenticated.settings/components/SettingsHeader";
-import { PersonalInfoSection } from "./_authenticated.settings/components/PersonalInfoSection";
-import { AccountInfoSection } from "./_authenticated.settings/components/AccountInfoSection";
-import { PasswordSection } from "./_authenticated.settings/components/PasswordSection";
-import { RoleSection } from "./_authenticated.settings/components/RoleSection";
-import { DangerZoneSection } from "./_authenticated.settings/components/DangerZoneSection";
-import { DeleteAccountDialog } from "./_authenticated.settings/components/DeleteAccountDialog";
-import { settingsSchema, type SettingsFormData } from "~/lib/validations/auth";
+import { SettingsHeader } from "~/features/settings/components/SettingsHeader";
+import { PersonalInfoSection } from "~/features/settings/components/PersonalInfoSection";
+import { AccountInfoSection } from "~/features/settings/components/AccountInfoSection";
+import { PasswordSection } from "~/features/settings/components/PasswordSection";
+import { RoleSection } from "~/features/settings/components/RoleSection";
+import { DangerZoneSection } from "~/features/settings/components/DangerZoneSection";
+import { DeleteAccountDialog } from "~/features/settings/components/DeleteAccountDialog";
+import { settingsSchema, type SettingsFormData } from "~/shared/utils/validations/auth";
 import { userApi } from "~/lib/api-client";
-import { extractApiError } from "~/lib/error-utils";
+import { extractApiError } from "~/shared/utils/helpers/error";
 import type { UpdateUserRequest, UserResponse, UserResponseRoleEnum } from "~/api";
-import { clearTokens } from "~/lib/token-storage";
+import { clearTokens } from "~/shared/utils/helpers/token-storage";
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useUser();
@@ -67,8 +67,6 @@ export default function SettingsPage() {
       setNewPassword("");
       setConfirmPassword("");
       setApiError(null);
-      
-      console.log("Settings updated successfully");
     },
     onError: (error) => {
       const apiError = extractApiError(error);
@@ -128,18 +126,16 @@ export default function SettingsPage() {
       await userApi.deleteAccount();
     },
     onSuccess: () => {
-      // Clear tokens and redirect to login with full page reload
+      
       clearTokens();
       queryClient.clear();
-      // Use window.location for a complete sign-out and page reload
+      
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
     },
-    onError: (error) => {
-      console.error("Failed to delete account:", error);
+    onError: () => {
       setIsDeleting(false);
-      // You can add error handling here if needed
     },
   });
 

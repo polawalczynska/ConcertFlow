@@ -3,6 +3,7 @@ package com.concertflow.api.dashboard.service;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
+import com.concertflow.api.dashboard.config.DashboardConstants;
 import com.concertflow.api.dashboard.dto.BudgetManagerStatsResponse;
 import com.concertflow.api.dashboard.service.calculator.BudgetCategoryChartDataCalculator;
 import com.concertflow.api.dashboard.service.calculator.BudgetStatusDistributionCalculator;
@@ -49,7 +50,7 @@ public class BudgetManagerStatsAggregator {
             .filter(concert -> concert.getDate() != null)
             .filter(concert -> {
                 LocalDateTime now = LocalDateTime.now();
-                LocalDateTime sevenDaysFromNow = now.plusDays(7);
+                LocalDateTime sevenDaysFromNow = now.plusDays(DashboardConstants.UPCOMING_DAYS.getValue());
                 return concert.getDate().isAfter(now) && concert.getDate().isBefore(sevenDaysFromNow);
             })
             .count();

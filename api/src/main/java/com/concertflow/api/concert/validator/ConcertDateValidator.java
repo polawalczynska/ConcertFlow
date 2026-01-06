@@ -1,5 +1,6 @@
 package com.concertflow.api.concert.validator;
 
+import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.exceptions.ErrorMessage;
 import com.concertflow.api.exceptions.types.ConcertValidationException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import java.time.temporal.ChronoUnit;
 @Component
 @RequiredArgsConstructor
 public class ConcertDateValidator {
-    private static final long MINIMUM_DAYS_IN_ADVANCE = 14;
 
     public void validateConcertDate(LocalDateTime date) {
         if (date == null) {
@@ -22,7 +22,7 @@ public class ConcertDateValidator {
         LocalDate today = LocalDate.now();
         long daysBetween = ChronoUnit.DAYS.between(today, concertDate);
         
-        if (daysBetween < MINIMUM_DAYS_IN_ADVANCE) {
+        if (daysBetween < ApiConstants.DAYS_IN_TWO_WEEKS) {
             throw new ConcertValidationException(ErrorMessage.INVALID_CONCERT_DATE.message());
         }
     }

@@ -1,7 +1,20 @@
 package com.concertflow.api.mappers;
 
-import com.concertflow.api.budget.dto.*;
-import com.concertflow.api.concert.entity.*;
+import com.concertflow.api.budget.dto.BudgetApprovalDashboardResponse;
+import com.concertflow.api.budget.dto.BudgetApprovalResponse;
+import com.concertflow.api.budget.dto.BudgetDetailResponse;
+import com.concertflow.api.budget.dto.BudgetItemResponse;
+import com.concertflow.api.budget.dto.BudgetStatistics;
+import com.concertflow.api.budget.dto.BudgetValidation;
+import com.concertflow.api.budget.dto.CategoryBreakdown;
+import com.concertflow.api.concert.entity.BudgetApproval;
+import com.concertflow.api.concert.entity.BudgetItem;
+import com.concertflow.api.concert.entity.BudgetItemStatus;
+import com.concertflow.api.budget.config.BudgetApprovalConfig;
+import com.concertflow.api.budget.config.BudgetConstants;
+import com.concertflow.api.budget.service.BudgetCalculator;
+import com.concertflow.api.concert.entity.BudgetStatus;
+import com.concertflow.api.concert.entity.Concert;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,9 +28,9 @@ import java.util.stream.Collectors;
 public class BudgetMapper {
     public BudgetApprovalDashboardResponse toDashboardResponse(Concert concert, List<String> flags) {
         int daysUntilConcert = calculateDaysUntil(concert.getDate());
-        String priority = determinePriority(concert, daysUntilConcert);
+        String priority = BudgetCalculator.determinePriority(daysUntilConcert);
         BigDecimal submittedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
-        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
+        BigDecimal estimatedBudget = BudgetCalculator.calculateEstimatedBudgetFromItems(concert);
         
         BigDecimal approvedBudget = (concert.getBudgetStatus() == BudgetStatus.APPROVED && concert.getBudget() != null)
             ? concert.getBudget()
@@ -38,7 +51,7 @@ public class BudgetMapper {
             .submittedAt(findLatestSubmissionDate(concert))
             .daysUntilConcert(daysUntilConcert)
             .hasComments(hasComments(concert))
-            .approvalLevel(determineApprovalLevel(submittedBudget))
+            .approvalLevel(BudgetCalculator.determineApprovalLevel(submittedBudget))
             .flags(flags != null ? flags : new ArrayList<>())
             .priority(priority)
             .build();
@@ -53,7 +66,7 @@ public class BudgetMapper {
             .map(this::toBudgetApprovalResponse)
             .collect(Collectors.toList());
 
-        BudgetStatistics statistics = calculateStatistics(concert);
+        BudgetStatistics statistics = BudgetCalculator.calculateStatistics(concert);
         BigDecimal requestedBudget;
         if (concert.getBudgetStatus() == BudgetStatus.SUBMITTED ||
             concert.getBudgetStatus() == BudgetStatus.UNDER_REVIEW ||
@@ -64,7 +77,7 @@ public class BudgetMapper {
         } else {
             requestedBudget = concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO;
         }
-        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
+        BigDecimal estimatedBudget = BudgetCalculator.calculateEstimatedBudgetFromItems(concert);
 
         return BudgetDetailResponse.builder()
             .concertId(concert.getId())
@@ -78,7 +91,7 @@ public class BudgetMapper {
             .estimatedBudget(estimatedBudget)
             .requestedBudget(requestedBudget)
             .approvedBudget(concert.getBudgetStatus() == BudgetStatus.APPROVED ? concert.getBudget() : BigDecimal.ZERO)
-            .budgetDifference(calculateBudgetDifference(concert))
+            .budgetDifference(BudgetCalculator.calculateBudgetDifference(concert))
             .budgetItems(budgetItems)
             .approvalHistory(approvalHistory)
             .statistics(statistics)
@@ -122,102 +135,6 @@ public class BudgetMapper {
             .build();
     }
 
-    private BudgetStatistics calculateStatistics(Concert concert) {
-        List<BudgetItem> items = concert.getBudgetItems();
-        if (items == null || items.isEmpty()) {
-            return BudgetStatistics.builder()
-                .totalItems(0)
-                .approvedItems(0)
-                .pendingItems(0)
-                .rejectedItems(0)
-                .totalEstimated(BigDecimal.ZERO)
-                .totalRequested(BigDecimal.ZERO)
-                .totalApproved(BigDecimal.ZERO)
-                .approvalRate(BigDecimal.ZERO)
-                .variance(BigDecimal.ZERO)
-                .categoryBreakdown(new ArrayList<>())
-                .build();
-        }
-
-        int totalItems = items.size();
-        int approvedItems = (int) items.stream()
-            .filter(item -> item.getStatus() == BudgetItemStatus.APPROVED)
-            .count();
-        int pendingItems = (int) items.stream()
-            .filter(item -> item.getStatus() == BudgetItemStatus.PENDING_APPROVAL)
-            .count();
-        int rejectedItems = (int) items.stream()
-            .filter(item -> item.getStatus() == BudgetItemStatus.CANCELLED)
-            .count();
-
-        BigDecimal totalEstimated = items.stream()
-            .map(BudgetItem::getEstimatedAmount)
-            .filter(amount -> amount != null)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalRequested = totalEstimated;
-        BigDecimal totalApproved = items.stream()
-            .map(BudgetItem::getApprovedAmount)
-            .filter(amount -> amount != null)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal approvalRate = totalEstimated.compareTo(BigDecimal.ZERO) > 0
-            ? totalApproved.divide(totalEstimated, 4, java.math.RoundingMode.HALF_UP)
-            .multiply(new BigDecimal("100"))
-            : BigDecimal.ZERO;
-
-        BigDecimal variance = totalApproved.subtract(totalEstimated);
-
-        List<CategoryBreakdown> categoryBreakdown = calculateCategoryBreakdown(items, totalEstimated);
-
-        return BudgetStatistics.builder()
-            .totalItems(totalItems)
-            .approvedItems(approvedItems)
-            .pendingItems(pendingItems)
-            .rejectedItems(rejectedItems)
-            .totalEstimated(totalEstimated)
-            .totalRequested(totalRequested)
-            .totalApproved(totalApproved)
-            .approvalRate(approvalRate)
-            .variance(variance)
-            .categoryBreakdown(categoryBreakdown)
-            .build();
-    }
-
-    private List<CategoryBreakdown> calculateCategoryBreakdown(List<BudgetItem> items, BigDecimal total) {
-        return items.stream()
-            .collect(Collectors.groupingBy(
-                BudgetItem::getCategory,
-                Collectors.collectingAndThen(
-                    Collectors.toList(),
-                    itemList -> {
-                        String category = itemList.isEmpty() ? null : itemList.get(0).getCategory();
-                        int itemCount = itemList.size();
-                        BigDecimal estimatedAmount = itemList.stream()
-                            .map(BudgetItem::getEstimatedAmount)
-                            .filter(amount -> amount != null)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                        BigDecimal approvedAmount = itemList.stream()
-                            .map(BudgetItem::getApprovedAmount)
-                            .filter(amount -> amount != null)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                        BigDecimal percentage = total.compareTo(BigDecimal.ZERO) > 0
-                            ? estimatedAmount.divide(total, 4, java.math.RoundingMode.HALF_UP)
-                            .multiply(new BigDecimal("100"))
-                            : BigDecimal.ZERO;
-                        return CategoryBreakdown.builder()
-                            .category(category)
-                            .itemCount(itemCount)
-                            .estimatedAmount(estimatedAmount)
-                            .approvedAmount(approvedAmount)
-                            .percentageOfTotal(percentage)
-                            .build();
-                    }
-                )
-            ))
-            .values().stream()
-            .collect(Collectors.toList());
-    }
 
     private int calculateDaysUntil(LocalDateTime date) {
         if (date == null) {
@@ -226,14 +143,6 @@ public class BudgetMapper {
         return (int) Duration.between(LocalDateTime.now(), date).toDays();
     }
 
-    private String determinePriority(Concert concert, int daysUntil) {
-        if (daysUntil < 7) {
-            return "HIGH";
-        } else if (daysUntil < 30) {
-            return "MEDIUM";
-        }
-        return "LOW";
-    }
 
     private LocalDateTime findLatestSubmissionDate(Concert concert) {
         if (concert.getBudgetApprovals() == null || concert.getBudgetApprovals().isEmpty()) {
@@ -251,41 +160,6 @@ public class BudgetMapper {
             .anyMatch(approval -> approval.getComments() != null && !approval.getComments().isBlank());
     }
 
-    private Integer determineApprovalLevel(BigDecimal budgetAmount) {
-        if (budgetAmount == null) {
-            return 1;
-        }
-        if (budgetAmount.compareTo(new BigDecimal("50000")) > 0) {
-            return 3;
-        } else if (budgetAmount.compareTo(new BigDecimal("20000")) > 0) {
-            return 2;
-        }
-        return 1;
-    }
-
-
-    private BigDecimal calculateBudgetDifference(Concert concert) {
-        BigDecimal estimatedBudget = calculateEstimatedBudgetFromItems(concert);
-        if (estimatedBudget == null) {
-            return BigDecimal.ZERO;
-        }
-        
-        if (concert.getBudgetStatus() != BudgetStatus.APPROVED || concert.getBudget() == null) {
-            return BigDecimal.ZERO;
-        }
-        
-        return concert.getBudget().subtract(estimatedBudget);
-    }
-
-    private BigDecimal calculateEstimatedBudgetFromItems(Concert concert) {
-        if (concert.getBudgetItems() == null || concert.getBudgetItems().isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        return concert.getBudgetItems().stream()
-            .map(BudgetItem::getEstimatedAmount)
-            .filter(amount -> amount != null)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 
     private boolean requiresAttention(BudgetItem item) {
         return item.getIsMandatory() != null && item.getIsMandatory()

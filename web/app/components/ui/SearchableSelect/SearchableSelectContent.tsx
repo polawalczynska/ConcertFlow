@@ -1,5 +1,5 @@
 import { useEffect, useRef, ReactNode } from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/shared/utils";
 import { Input } from "../Input";
 import { useSearchableSelectContext } from "./SearchableSelectContext";
 

@@ -1,6 +1,6 @@
 package com.concertflow.api.config;
 
-import com.concertflow.api.jwt.JwtAuthenticationFilter;
+import com.concertflow.api.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +35,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/api/v1/auth/**",
                     "/api/api-docs/**",
                     "/swagger-ui/**"
                 ).permitAll()
