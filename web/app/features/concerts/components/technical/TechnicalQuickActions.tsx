@@ -45,8 +45,8 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
     <>
       <Card>
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
               <p className="text-sm font-medium text-text-primary">Ready to submit?</p>
               <p className="text-xs text-text-secondary mt-1">
                 Submit your technical requirements for review by the technical manager
@@ -55,7 +55,7 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
             <Button
               onClick={() => setIsDialogOpen(true)}
               disabled={isSubmitting}
-              className="bg-purple-main hover:bg-purple-main/90"
+              className="bg-purple-main hover:bg-purple-main/90 w-full sm:w-auto"
             >
               <Send className="h-4 w-4 mr-2" />
               {isSubmitting ? "Submitting..." : "Submit for Approval"}
