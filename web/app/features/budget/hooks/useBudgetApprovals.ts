@@ -54,7 +54,7 @@ export function useBudgetApprovals() {
       if (selectedBudgetId) {
         queryClient.invalidateQueries({ 
           predicate: (query) => {
-            return query.queryKey[0] === "budget-details" && 
+            return (query.queryKey[0] === "budget-details" || query.queryKey[0] === "budget-details-manager") && 
                    query.queryKey[1] === selectedBudgetId;
           }
         });
@@ -73,7 +73,7 @@ export function useBudgetApprovals() {
       if (selectedBudgetId) {
         queryClient.invalidateQueries({ 
           predicate: (query) => {
-            return query.queryKey[0] === "budget-details" && 
+            return (query.queryKey[0] === "budget-details" || query.queryKey[0] === "budget-details-manager") && 
                    query.queryKey[1] === selectedBudgetId;
           }
         });

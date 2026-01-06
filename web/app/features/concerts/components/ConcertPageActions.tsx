@@ -89,7 +89,7 @@ export function ConcertPageActions({
         <BudgetActionButtons
           budgetDetails={budgetDetails}
           onApprove={onApproveBudget}
-          onRequestRevision={onRequestBudgetRevision}
+          onRequestRevision={isBudgetRevisionRequested ? undefined : onRequestBudgetRevision}
         />
       )}
       {isTechnicalManager && technicalDetails && canApproveOrRequestTechnicalRevision && isTechnicalManagerAssigned && (

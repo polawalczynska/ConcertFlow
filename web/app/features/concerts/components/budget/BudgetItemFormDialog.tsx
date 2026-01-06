@@ -63,7 +63,7 @@ export function BudgetItemFormDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-5xl">
         <DialogHeader>
           <DialogTitle>{item ? "Edit Budget Item" : "Add Budget Item"}</DialogTitle>
         </DialogHeader>
