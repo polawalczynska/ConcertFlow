@@ -28,6 +28,7 @@ export default function LoginForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation(); 
     setValidationErrors({});
 
     const result = loginSchema.safeParse({
