@@ -42,6 +42,7 @@ export function useConcertForm() {
       description: concert.description || "",
       artistId: concert.artistId || 0,
       budgetManagerId: concert.budgetManagerId ?? undefined,
+      technicalManagerId: concert.technicalManagerId ?? undefined,
     });
     setIsFormOpen(true);
   };

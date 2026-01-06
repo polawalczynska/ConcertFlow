@@ -45,6 +45,7 @@ export function ConcertPageManagement({
           concertId={concertId}
           concertName={concertName}
           technicalStatus={concert?.technicalStatus}
+          technicalManagerId={concert?.technicalManagerId}
         />
       )}
     </>

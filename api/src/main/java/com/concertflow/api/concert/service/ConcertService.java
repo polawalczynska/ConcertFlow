@@ -18,6 +18,7 @@ import com.concertflow.api.concert.validator.ConcertValidator;
 import com.concertflow.api.exceptions.types.InvalidConcertStatusException;
 import com.concertflow.api.concert.workflow.ApprovalWorkflowService;
 import com.concertflow.api.mappers.ConcertMapper;
+import com.concertflow.api.notification.entity.NotificationRepository;
 import com.concertflow.api.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class ConcertService {
     private final UserFinderService userFinder;
     private final TeamMemberValidator teamMemberValidator;
     private final ConcertStateManager concertStateManager;
+    private final NotificationRepository notificationRepository;
 
     public List<ConcertResponse> getAllConcerts(
         ConcertStatus status,
@@ -127,6 +129,9 @@ public class ConcertService {
     public void deleteConcert(Long id, User coordinator) {
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
+        
+        // Delete all notifications related to this concert
+        notificationRepository.deleteByConcertId(id);
         
         concertRepository.delete(concert);
         concertRepository.flush();

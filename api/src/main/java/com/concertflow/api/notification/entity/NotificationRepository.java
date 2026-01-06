@@ -28,5 +28,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM Notification n WHERE n.invitationId = :invitationId")
     void deleteByInvitationId(@Param("invitationId") Long invitationId);
+    
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("DELETE FROM Notification n WHERE n.concertId = :concertId")
+    void deleteByConcertId(@Param("concertId") Long concertId);
 }
 

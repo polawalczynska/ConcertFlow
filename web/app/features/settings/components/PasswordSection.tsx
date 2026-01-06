@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/com
 import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "~/components/ui/Button";
 import { useState } from "react";
 
 interface PasswordSectionProps {

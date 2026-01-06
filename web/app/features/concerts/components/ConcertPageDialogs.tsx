@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ConcertFormDialog } from "~/features/concerts/components/form/ConcertFormDialog";
 import { DeleteConcertDialog } from "~/features/concerts/components/dialogs/DeleteConcertDialog";
@@ -8,17 +7,17 @@ import { RequestTechnicalRevisionDialog } from "~/features/technical/components/
 import { ApproveBudgetDialog } from "~/features/budget/components/approve-dialog/ApproveBudgetDialog";
 import { RequestRevisionDialog } from "~/features/budget/components/approve-dialog/RequestRevisionDialog";
 import { budgetApprovalApi } from "~/lib/api-client";
-import type { ConcertResponse, BudgetItemApproval, RevisionItem } from "~/api";
+import type { ConcertResponse, BudgetItemApproval, RevisionItem, ConcertRequest } from "~/api";
 
 interface ConcertPageDialogsProps {
   concertForm: {
     isFormOpen: boolean;
     selectedConcert: ConcertResponse | null;
-    formData: any;
+    formData: ConcertRequest;
     fieldErrors: Record<string, string>;
     generalError?: string | null;
     isSubmitting: boolean;
-    setFormData: (data: any) => void;
+    setFormData: (data: ConcertRequest) => void;
     handleSubmit: (e: React.FormEvent) => void;
     closeForm: () => void;
   };

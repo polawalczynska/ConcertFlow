@@ -69,7 +69,12 @@ export default function CoordinatorDashboard() {
           {recentConcerts.length > 0 && <RecentConcerts concerts={recentConcerts}/>}
         </div>
         <div className="space-y-6">
-          <QuickActions onCreateConcert={concertForm.openCreateModal} pendingApprovals={pendingApprovals}/>
+          <QuickActions 
+            onCreateConcert={concertForm.openCreateModal} 
+            pendingApprovals={pendingApprovals}
+            alerts={alerts}
+            upcomingEvents={upcomingEvents}
+          />
           {alerts.length > 0 && <AlertsPanel alerts={alerts}/>}
           {upcomingEvents.length > 0 && <UpcomingEvents events={upcomingEvents}/>}
         </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "~/shared/hooks/domain";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { SettingsHeader } from "~/features/settings/components/SettingsHeader";
 import { PersonalInfoSection } from "~/features/settings/components/PersonalInfoSection";

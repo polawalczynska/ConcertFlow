@@ -24,7 +24,15 @@ public class UpcomingEventsCalculator implements StatCalculator<List<UpcomingEve
             .limit(DashboardConstants.UPCOMING_EVENTS_COUNT.getValue())
             .map(concert -> {
                 long daysUntil = java.time.Duration.between(now, concert.getDate()).toDays();
-                String status = daysUntil <= DashboardConstants.UPCOMING_DAYS.getValue() 
+                LocalDateTime oneMonthFromNow = now.plusDays(DashboardConstants.ATTENTION_NEEDED_DAYS.getValue());
+                
+                boolean needsAttention = concert.getStatus() == ConcertStatus.PLANNING
+                    && concert.getDate().isAfter(now)
+                    && concert.getDate().isBefore(oneMonthFromNow);
+                
+                boolean isUpcoming = daysUntil <= DashboardConstants.UPCOMING_DAYS.getValue();
+                
+                String status = (needsAttention || isUpcoming) 
                     ? "Needs Attention" 
                     : "On Track";
                 return UpcomingEvent.builder()

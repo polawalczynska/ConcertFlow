@@ -4,8 +4,6 @@ import { budgetApprovalApi } from "~/lib/api-client";
 import { useUser } from "~/shared/hooks/domain";
 import { BudgetStatusSection } from "./BudgetStatusSection";
 import { BudgetItemsTable } from "./BudgetItemsTable";
-import { BudgetActionButtons } from "./BudgetActionButtons";
-
 interface BudgetViewOnlyProps {
   concertId: number;
   concertName: string;
@@ -14,7 +12,7 @@ interface BudgetViewOnlyProps {
 
 export function BudgetViewOnly({ 
   concertId, 
-  concertName,
+  concertName: _concertName,
   budgetStatus,
 }: BudgetViewOnlyProps) {
   const { data: currentUser } = useUser();

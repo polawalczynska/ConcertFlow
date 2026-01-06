@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { concertApi } from "~/lib/api-client";
+import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import type { CancelConcertRequest, ConcertRequest, GetAllConcertsStatusEnum } from "~/api";
 
 export function useConcerts(
@@ -16,6 +17,7 @@ export function useConcerts(
       const response = await concertApi.getAllConcerts(status, artistId, coordinatorId, search, page, pageSize);
       return response.data;
     },
+    enabled: isAuthenticated(),
   });
 }
 
@@ -26,7 +28,7 @@ export function useConcert(id: number) {
       const response = await concertApi.getConcertById(id);
       return response.data;
     },
-    enabled: !!id,
+    enabled: isAuthenticated() && !!id,
   });
 }
 
