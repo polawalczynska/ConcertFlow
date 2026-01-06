@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: concertflow-db
+    environment:
+      POSTGRES_DB: concertflow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - concertflow-network
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: concertflow-api
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/concertflow
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production-min-256-bits}
+      JWT_ACCESS_EXPIRATION_MS: ${JWT_ACCESS_EXPIRATION_MS:-900000}
+      JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-86400000}
+      JWT_REMEMBER_ME_EXPIRATION_MS: ${JWT_REMEMBER_ME_EXPIRATION_MS:-2592000000}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - concertflow-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: concertflow-web
+    environment:
+      NODE_ENV: production
+      API_BASE_URL: http://api:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - concertflow-network
+    restart: unless-stopped
+
+networks:
+  concertflow-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+
