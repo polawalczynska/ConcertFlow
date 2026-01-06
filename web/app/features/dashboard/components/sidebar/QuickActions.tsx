@@ -1,4 +1,4 @@
-import { Plus, CheckCircle2, Users, FileText, AlertTriangle } from "lucide-react";
+import { Plus, CheckCircle2, Users, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 
@@ -13,7 +13,7 @@ export function QuickActions({ onCreateConcert, pendingApprovals = 0 }: QuickAct
       <CardHeader>
         <CardTitle className="text-lg">Quick Actions</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-6">
         <Button className="w-full" size="lg" onClick={onCreateConcert}>
           <Plus className="mr-2 h-4 w-4" />
           Create New Concert
@@ -30,10 +30,6 @@ export function QuickActions({ onCreateConcert, pendingApprovals = 0 }: QuickAct
             Manage Artists
           </Button>
         </a>
-        <Button variant="outline" className="w-full bg-transparent" disabled>
-          <FileText className="mr-2 h-4 w-4" />
-          Generate Reports
-        </Button>
         {pendingApprovals > 0 && (
           <div className="rounded-lg border-2 border-orange-200 bg-orange-50 p-3">
             <div className="flex items-center justify-between">
