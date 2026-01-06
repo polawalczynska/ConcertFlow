@@ -92,20 +92,13 @@ public class ArtistService {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Gets the coordinator ID for the user.
-     * For coordinators, returns their own ID.
-     * For managers, returns their coordinator's ID (from team invitation).
-     */
     private Long getCoordinatorIdForUser(User user) {
         if (user.getRole() == Role.COORDINATOR) {
             return user.getId();
         }
-        // For managers, find their coordinator
+
         Long coordinatorId = teamMemberService.findCoordinatorIdForTeamMember(user.getId());
         if (coordinatorId == null) {
-            // If manager is not on a team, they can't see any artists
-            // Return a non-existent ID to return empty results
             return -1L;
         }
         return coordinatorId;
