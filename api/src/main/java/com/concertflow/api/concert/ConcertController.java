@@ -6,11 +6,14 @@ import com.concertflow.api.concert.dto.ConcertRequest;
 import com.concertflow.api.concert.dto.ConcertResponse;
 import com.concertflow.api.concert.entity.ConcertStatus;
 import com.concertflow.api.concert.service.ConcertService;
+import com.concertflow.api.security.annotation.RequireCoordinator;
+import com.concertflow.api.user.entity.Role;
 import com.concertflow.api.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,12 +31,17 @@ public class ConcertController {
         @RequestParam(required = false) Long coordinatorId,
         @RequestParam(required = false) String search,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int pageSize
+        @RequestParam(defaultValue = "10") int pageSize,
+        @AuthenticationPrincipal User authenticatedUser
     ) {
         if (pageSize > ApiConstants.MAX_PAGE_SIZE) {
             pageSize = ApiConstants.MAX_PAGE_SIZE;
         }
-        return concertService.getAllConcerts(status, artistId, coordinatorId, search, page, pageSize);
+    
+        Long coordinatorIdToUse = authenticatedUser.getRole() == Role.COORDINATOR 
+            ? authenticatedUser.getId() 
+            : coordinatorId;
+        return concertService.getAllConcerts(status, artistId, coordinatorIdToUse, search, page, pageSize);
     }
 
     @GetMapping("/{id}")

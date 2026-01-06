@@ -52,6 +52,15 @@ export function useBudgetItemForm(item: BudgetItemResponse | null | undefined) {
     notes: notes || undefined,
   });
 
+  const reset = () => {
+    setCategory("");
+    setName("");
+    setDescription("");
+    setEstimatedAmount("");
+    setIsMandatory(false);
+    setNotes("");
+  };
+
   return {
     category,
     setCategory,
@@ -67,6 +76,7 @@ export function useBudgetItemForm(item: BudgetItemResponse | null | undefined) {
     setNotes,
     validate,
     getRequest,
+    reset,
     categories: BUDGET_CATEGORIES,
   };
 }

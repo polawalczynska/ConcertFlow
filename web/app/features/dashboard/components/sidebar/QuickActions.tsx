@@ -14,7 +14,11 @@ interface QuickActionsProps {
 export function QuickActions({ onCreateConcert, pendingApprovals = 0, alerts = [], upcomingEvents = [] }: QuickActionsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const upcomingNeedingAttention = upcomingEvents.filter(event => event.status === "Needs Attention");
-  const alertConcerts = alerts.filter(alert => alert.concertId && !alert.dismissed);
+  const alertConcerts = alerts.filter(alert => 
+    alert.concertId && 
+    !alert.dismissed && 
+    alert.actionRequired === "APPROVAL_NEEDED"
+  );
   const allConcertsNeedingAttention = [
     ...upcomingNeedingAttention.map(e => ({ id: e.id, name: e.name })),
     ...alertConcerts.map(a => ({ id: Number(a.concertId), name: a.title || a.message || `Concert ${a.concertId}` }))

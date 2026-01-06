@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { BrandHeader, AuthCard, AuthFormHeader, AuthLink, LoginForm } from "~/features/auth/components";
 import { useLogin } from "~/features/auth/hooks";
 import { type LoginFormData, extractApiError } from "~/shared/utils";
@@ -6,15 +6,16 @@ import { type LoginFormData, extractApiError } from "~/shared/utils";
 export default function LoginPage() {
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
+  
   const loginMutation = useLogin();
-  const lastErrorIdRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (loginMutation.error) {
-      const errorId = JSON.stringify(loginMutation.error);
-      if (errorId !== lastErrorIdRef.current) {
-        lastErrorIdRef.current = errorId;
-        const apiError = extractApiError(loginMutation.error);
+  
+  const handleSubmit = (data: LoginFormData) => {
+    setErrors({});
+    setGeneralError(null);
+    
+    loginMutation.mutate(data, {
+      onError: (error) => {
+        const apiError = extractApiError(error);
         if (apiError) {
           if (apiError.field) {
             setErrors((prev) => ({
@@ -29,21 +30,12 @@ export default function LoginPage() {
         } else {
           setGeneralError("An unexpected error occurred. Please try again.");
         }
-      }
-    }
-    
-    if (loginMutation.isSuccess) {
-      setErrors({});
-      setGeneralError(null);
-      lastErrorIdRef.current = null;
-    }
-  }, [loginMutation.error, loginMutation.isSuccess]);
-
-  const handleSubmit = (data: LoginFormData) => {
-    setErrors({});
-    setGeneralError(null);
-    lastErrorIdRef.current = null;
-    loginMutation.mutate(data);
+      },
+      onSuccess: () => {
+        setErrors({});
+        setGeneralError(null);
+      },
+    });
   };
 
   const handleFieldChange = (field?: keyof LoginFormData) => {

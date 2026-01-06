@@ -69,6 +69,9 @@ export function RequestTechnicalRevisionDialog({
       await queryClient.invalidateQueries({ queryKey: ["technical-requirements", concertId] });
       await queryClient.invalidateQueries({ queryKey: ["technical-details", concertId, user.id] });
       await queryClient.invalidateQueries({ queryKey: ["technical-details-manager", concertId] });
+      await queryClient.invalidateQueries({ queryKey: ["concert", concertId] });
+      await queryClient.invalidateQueries({ queryKey: ["concerts"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
       onOpenChange(false);
     } catch (error) {
       console.error("Error requesting technical revision:", error);

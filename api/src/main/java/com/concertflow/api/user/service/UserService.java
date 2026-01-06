@@ -1,5 +1,8 @@
 package com.concertflow.api.user.service;
 
+import com.concertflow.api.approval.entity.ApprovalRepository;
+import com.concertflow.api.artist.entity.Artist;
+import com.concertflow.api.artist.entity.ArtistRepository;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
 import com.concertflow.api.exceptions.types.EmailAlreadyExistsException;
@@ -34,6 +37,8 @@ public class UserService {
     private final ConcertRepository concertRepository;
     private final TeamInvitationRepository teamInvitationRepository;
     private final NotificationRepository notificationRepository;
+    private final ArtistRepository artistRepository;
+    private final ApprovalRepository approvalRepository;
 
     public UserResponse getUserResponse(User user) {
         return mapperService.toUserResponse(user);
@@ -94,8 +99,10 @@ public class UserService {
     @Transactional
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void deleteAccount(User user) {
+        Long userId = user.getId();
+        
         if (user.getRole() == Role.COORDINATOR) {
-            List<Concert> concerts = concertRepository.findByCoordinatorId(user.getId());
+            List<Concert> concerts = concertRepository.findByCoordinatorId(userId);
             
             // Delete all notifications related to these concerts
             for (Concert concert : concerts) {
@@ -105,16 +112,23 @@ public class UserService {
             concertRepository.deleteAll(concerts);
             concertRepository.flush();
 
-            List<TeamInvitation> allInvitations = teamInvitationRepository.findByInvitedBy_Id(user.getId());
-            teamInvitationRepository.deleteAll(allInvitations);
+            // Delete all artists created by this coordinator
+            List<Artist> artists = artistRepository.findByCoordinatorId(userId);
+            artistRepository.deleteAll(artists);
+            artistRepository.flush();
+
+            // Delete team invitations where user is the inviter
+            List<TeamInvitation> invitationsByUser = teamInvitationRepository.findByInvitedBy_Id(userId);
+            teamInvitationRepository.deleteAll(invitationsByUser);
             teamInvitationRepository.flush();
         } else {
-            List<Concert> concertsAsBudgetManager = concertRepository.findByBudgetManagerId(user.getId());
+            // For managers, unassign them from concerts
+            List<Concert> concertsAsBudgetManager = concertRepository.findByBudgetManagerId(userId);
             for (Concert concert : concertsAsBudgetManager) {
                 concert.setBudgetManager(null);
             }
             
-            List<Concert> concertsAsTechnicalManager = concertRepository.findByTechnicalManagerId(user.getId());
+            List<Concert> concertsAsTechnicalManager = concertRepository.findByTechnicalManagerId(userId);
             for (Concert concert : concertsAsTechnicalManager) {
                 concert.setTechnicalManager(null);
             }
@@ -124,6 +138,22 @@ public class UserService {
             concertRepository.flush();
         }
         
+        // Delete all notifications for this user
+        notificationRepository.deleteByUserId(userId);
+        notificationRepository.flush();
+        
+        // Delete team invitations where user is the invited user
+        List<TeamInvitation> invitationsForUser = teamInvitationRepository.findByInvitedUser_Id(userId);
+        if (!invitationsForUser.isEmpty()) {
+            teamInvitationRepository.deleteAll(invitationsForUser);
+            teamInvitationRepository.flush();
+        }
+        
+        // Nullify approvals where user is the approver (set approver to null)
+        approvalRepository.nullifyApproverByApproverId(userId);
+        approvalRepository.flush();
+        
+        // Finally, delete the user
         userRepository.delete(user);
         userRepository.flush();
     }

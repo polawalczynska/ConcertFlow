@@ -1,0 +1,13 @@
+build/
+.gradle/
+*.iml
+.idea/
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+.env.properties
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+

@@ -53,6 +53,7 @@ export function BudgetItemFormDialog({
     } else {
       createItem.mutate(request, {
         onSuccess: () => {
+          form.reset();
           onOpenChange(false);
         },
       });
