@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { notificationApi } from "~/lib/api-client";
+import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import { mapNotificationResponseToNotification } from "../utils/notificationMapper";
 import type { Notification } from "../types";
 
@@ -11,6 +12,7 @@ export function useNotificationsQuery() {
       const response = await notificationApi.getNotifications();
       return response.data;
     },
+    enabled: isAuthenticated(),
   });
 }
 
@@ -21,6 +23,7 @@ export function useUnreadNotificationCount() {
       const response = await notificationApi.getUnreadCount();
       return response.data;
     },
+    enabled: isAuthenticated(),
   });
 }
 

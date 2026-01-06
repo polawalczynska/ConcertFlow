@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { artistApi } from "~/lib/api-client";
+import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import type { ArtistRequest } from "~/api";
 
 export function useArtists(search?: string, page = 0, pageSize = 100) {
@@ -9,6 +10,7 @@ export function useArtists(search?: string, page = 0, pageSize = 100) {
       const response = await artistApi.getAllArtists(search, page, pageSize);
       return response.data;
     },
+    enabled: isAuthenticated(),
   });
 }
 
@@ -19,7 +21,7 @@ export function useArtist(id: number) {
       const response = await artistApi.getArtistById(id);
       return response.data;
     },
-    enabled: !!id,
+    enabled: isAuthenticated() && !!id,
   });
 }
 
@@ -76,7 +78,7 @@ export function useSearchArtists(query: string) {
       const response = await artistApi.searchArtists(query);
       return response.data;
     },
-    enabled: query.length > 0,
+    enabled: isAuthenticated() && query.length > 0,
   });
 }
 
