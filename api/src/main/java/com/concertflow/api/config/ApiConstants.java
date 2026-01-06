@@ -18,7 +18,9 @@ public class ApiConstants {
     public static final String[] PUBLIC_ENDPOINTS = {
         API_V1_BASE_PATH + AUTH_ENDPOINT + "/**",
         API_BASE_PATH + "/api-docs/**",
-        "/swagger-ui/**"
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/v3/api-docs/**"
     };
     
     public static final String BEARER_PREFIX = "Bearer ";
