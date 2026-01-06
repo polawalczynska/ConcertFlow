@@ -125,6 +125,19 @@ axiosInstance.interceptors.response.use(
       }
     }
 
+    if (error.response?.status === 403 && !isAuthEndpoint) {
+      const isAuthRelatedEndpoint = originalRequest?.url?.includes("/api/v1/user/me") ||
+                                     originalRequest?.url?.includes("/api/auth/");
+      
+      if (isAuthRelatedEndpoint) {
+        clearTokens();
+        if (typeof window !== "undefined") {
+          window.location.replace("/login");
+        }
+        return Promise.reject(error);
+      }
+    }
+
     isRefreshing = false;
     return Promise.reject(error);
   }

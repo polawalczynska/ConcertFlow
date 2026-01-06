@@ -7,7 +7,7 @@ import LandingPage from "~/routes/landing";
 
 export default function Index() {
   const navigate = useNavigate();
-  const { data: user, isLoading } = useUser();
+  const { data: user, isLoading, error } = useUser();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -21,13 +21,21 @@ export default function Index() {
       return;
     }
 
+    if (!isLoading && error) {
+      return;
+    }
+
     if (!isLoading && user) {
       const redirectPath = getRedirectPathForRole(user.role);
       navigate(redirectPath);
     }
-  }, [navigate, user, isLoading, isClient]);
+  }, [navigate, user, isLoading, isClient, error]);
 
   if (!isClient || !isAuthenticated()) {
+    return <LandingPage />;
+  }
+
+  if (isLoading || error) {
     return <LandingPage />;
   }
 

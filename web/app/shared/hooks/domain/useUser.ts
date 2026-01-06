@@ -3,6 +3,7 @@ import { userApi } from "~/lib/api-client";
 import { FIVE_MINUTES_MS } from "~/shared/constants";
 import { isAuthenticated } from "~/shared/utils/helpers/token-storage";
 import type { UserResponse } from "~/api";
+import { AxiosError } from "axios";
 
 export function useUser() {
   return useQuery({
@@ -12,7 +13,12 @@ export function useUser() {
       return response.data;
     },
     enabled: isAuthenticated(),
-    retry: 1,
+    retry: (failureCount, error) => {
+      if (error instanceof AxiosError && error.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 1;
+    },
     staleTime: FIVE_MINUTES_MS,
   });
 }
