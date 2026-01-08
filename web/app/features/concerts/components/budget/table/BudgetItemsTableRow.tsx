@@ -1,6 +1,7 @@
 import type { BudgetItemResponse, BudgetDetailResponseBudgetStatusEnum } from "~/api";
 import { Badge } from "~/components/ui/Badge";
 import { Trash2, Edit, AlertCircle } from "lucide-react";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface BudgetItemsTableRowProps {
   item: BudgetItemResponse;
@@ -50,7 +51,7 @@ export function BudgetItemsTableRow({ item, onEdit, onDelete, canEdit, budgetSta
 
   return (
     <tr className={`border-b border-border hover:bg-bg-secondary ${hasRevision ? 'bg-yellow-50' : ''}`}>
-      <td className="p-2 text-sm">{item.category}</td>
+      <td className="p-2 text-sm">{item.category ? formatSnakeCaseToReadable(item.category) : ""}</td>
       <td className="p-2 text-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">

@@ -1,5 +1,6 @@
 import { Badge } from "~/components/ui/Badge";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface CategoryHeaderProps {
   category: string;
@@ -20,7 +21,7 @@ export function CategoryHeader({ category, itemCount, isExpanded, onToggle }: Ca
         ) : (
           <ChevronRight className="h-4 w-4" />
         )}
-        <span className="font-semibold text-text-primary">{category}</span>
+        <span className="font-semibold text-text-primary">{formatSnakeCaseToReadable(category)}</span>
         <Badge variant="outline">{itemCount} items</Badge>
       </div>
     </button>
