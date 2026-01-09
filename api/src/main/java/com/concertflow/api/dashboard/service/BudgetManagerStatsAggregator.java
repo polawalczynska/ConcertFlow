@@ -42,8 +42,14 @@ public class BudgetManagerStatsAggregator {
         long revisionRequested = statusCounts.getOrDefault(BudgetStatus.REVISION_REQUESTED, 0L);
 
         BigDecimal totalAmount = allConcerts.stream()
-            .filter(concert -> concert.getApprovedBudget() != null)
-            .map(Concert::getApprovedBudget)
+            .filter(concert -> concert.getBudgetStatus() == BudgetStatus.APPROVED)
+            .map(concert -> {
+                BigDecimal approvedBudget = concert.getApprovedBudget();
+                if (approvedBudget == null || approvedBudget.compareTo(BigDecimal.ZERO) <= 0) {
+                    approvedBudget = concert.getBudget();
+                }
+                return approvedBudget != null ? approvedBudget : BigDecimal.ZERO;
+            })
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         long upcomingDeadlines = allConcerts.stream()
