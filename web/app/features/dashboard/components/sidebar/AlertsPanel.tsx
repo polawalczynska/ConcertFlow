@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Button } from "~/components/ui/Button";
 import { Badge } from "~/components/ui/Badge";
 import { cn } from "~/shared/utils";
+import { formatLocalDateTime } from "~/shared/utils/formatters";
 import type { CoordinatorAlert } from "~/api";
 
 interface AlertsPanelProps {
@@ -83,7 +84,7 @@ export function AlertsPanel({ alerts, onDismiss }: AlertsPanelProps) {
                 <p className="mt-1 text-xs text-muted-foreground">{alert.message ?? ""}</p>
                 {alert.createdAt && (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {new Date(alert.createdAt).toLocaleString()}
+                    {formatLocalDateTime(alert.createdAt)}
                   </p>
                 )}
               </div>
