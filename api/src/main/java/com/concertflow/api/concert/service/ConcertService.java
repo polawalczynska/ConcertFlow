@@ -99,7 +99,7 @@ public class ConcertService {
 
     @CacheEvict(value = "dashboardStats", allEntries = true)
     public void updateConcert(Long id, ConcertRequest request, User coordinator) {
-        concertValidator.validate(request);
+        concertValidator.validateForUpdate(request);
 
         Concert concert = entityFinder.findConcertById(id);
         authorizationService.validateCoordinatorAccess(concert, coordinator);
