@@ -1,7 +1,7 @@
 package com.concertflow.api.security.jwt;
 
 import com.concertflow.api.security.jwt.dto.TokenInfo;
-import com.concertflow.api.security.jwt.factory.TokenGeneratorFactory;
+import com.concertflow.api.security.jwt.registry.TokenGeneratorRegistry;
 import com.concertflow.api.security.jwt.model.TokenType;
 import com.concertflow.api.security.jwt.parser.TokenParser;
 import com.concertflow.api.security.jwt.validator.TokenValidator;
@@ -13,20 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenService {
-    private final TokenGeneratorFactory tokenGeneratorFactory;
+    private final TokenGeneratorRegistry tokenGeneratorRegistry;
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
 
     public String generateAccessToken(User user) {
-        return tokenGeneratorFactory.generateToken(user, TokenType.ACCESS);
+        return tokenGeneratorRegistry.generateToken(user, TokenType.ACCESS);
     }
 
     public String generateRefreshToken(User user) {
-        return tokenGeneratorFactory.generateToken(user, TokenType.REFRESH);
+        return tokenGeneratorRegistry.generateToken(user, TokenType.REFRESH);
     }
 
     public String generateRememberMeToken(User user) {
-        return tokenGeneratorFactory.generateToken(user, TokenType.REMEMBER_ME);
+        return tokenGeneratorRegistry.generateToken(user, TokenType.REMEMBER_ME);
     }
 
     public boolean validateToken(String token) {

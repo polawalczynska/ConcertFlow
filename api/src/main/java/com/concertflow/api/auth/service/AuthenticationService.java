@@ -5,7 +5,7 @@ import com.concertflow.api.auth.dto.LoginRequest;
 import com.concertflow.api.auth.validator.UserValidator;
 import com.concertflow.api.exceptions.types.InvalidCredentialsException;
 import com.concertflow.api.exceptions.types.UserDisabledException;
-import com.concertflow.api.security.jwt.factory.TokenGeneratorFactory;
+import com.concertflow.api.security.jwt.registry.TokenGeneratorRegistry;
 import com.concertflow.api.security.jwt.model.TokenType;
 import com.concertflow.api.user.entity.User;
 import com.concertflow.api.user.service.UserFinder;
@@ -28,7 +28,7 @@ import static com.concertflow.api.exceptions.ErrorMessage.*;
 public class AuthenticationService {
     private final UserFinder userFinder;
     private final AuthenticationManager authenticationManager;
-    private final TokenGeneratorFactory tokenGeneratorFactory;
+    private final TokenGeneratorRegistry tokenGeneratorRegistry;
 
     public AuthResponse login(LoginRequest loginRequest) {
         try {
@@ -42,12 +42,12 @@ public class AuthenticationService {
 
             UserValidator.validateUserIsActive(user);
 
-            String accessToken = tokenGeneratorFactory.generateToken(user, TokenType.ACCESS);
-            String refreshToken = tokenGeneratorFactory.generateToken(user, TokenType.REFRESH);
+            String accessToken = tokenGeneratorRegistry.generateToken(user, TokenType.ACCESS);
+            String refreshToken = tokenGeneratorRegistry.generateToken(user, TokenType.REFRESH);
             String rememberMeToken = null;
 
             if (loginRequest.rememberMe()) {
-                rememberMeToken = tokenGeneratorFactory.generateToken(user, TokenType.REMEMBER_ME);
+                rememberMeToken = tokenGeneratorRegistry.generateToken(user, TokenType.REMEMBER_ME);
             }
 
             return new AuthResponse(accessToken, refreshToken, rememberMeToken, user.getEmail(), user.getRole(), user.getId());

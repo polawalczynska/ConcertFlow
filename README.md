@@ -210,29 +210,47 @@ e.g., building a new concert vs. updating an existing one).
 - Separates construction logic from business logic
 - Reduces constructor parameter lists
 
-### 3. Factory
+### 3. Registry
 
 **Classes**:
 
-- `TokenGeneratorFactory`
-- `ConcertStateFactory`
+- `TokenGeneratorRegistry`
+- `ConcertStateRegistry`
+
+**Justification**: The application needs to locate and retrieve existing objects (token generators, concert states) based
+on runtime conditions or type parameters. The Registry pattern provides a centralized lookup mechanism for objects that
+are already created and managed by the dependency injection container. This is especially useful for JWT tokens where
+different token types (access, refresh, remember-me) require different generators, and for concert states where the
+appropriate state object must be retrieved based on the concert's current status.
+
+**Benefits**:
+
+- Centralizes object lookup logic
+- Reduces coupling between classes
+- Makes it easy to add new types (e.g., new token types or states)
+- Simplifies testing by allowing mock registries
+- Provides a consistent interface for object retrieval
+- Leverages Spring's dependency injection for object management
+
+### 4. Factory
+
+**Classes**:
+
 - `ProblemDetailFactory`
 
-**Justification**: The application needs to create different types of objects (JWT tokens, concert states, error
-responses) based on runtime conditions or type parameters. Factories encapsulate object creation logic and provide a
-single point of control. This is especially useful for JWT tokens where different token types (access, refresh,
-remember-me) require different generators, and for concert states where the appropriate state object must be retrieved
-based on the concert's current status.
+**Justification**: The application needs to create different types of error response objects based on runtime conditions.
+The Factory pattern encapsulates object creation logic and provides a single point of control. This is especially useful
+for creating standardized error responses (`ProblemDetail`) with consistent structure across the application.
 
 **Benefits**:
 
 - Centralizes object creation logic
 - Reduces coupling between classes
-- Makes it easy to add new types (e.g., new token types or states)
+- Makes it easy to add new error response types
 - Simplifies testing by allowing mock factories
 - Provides a consistent interface for object creation
 
-### 4. Observer (Event-Driven)
+### 5. Observer (Event-Driven)
 
 **Classes**:
 
@@ -254,12 +272,12 @@ the notification service listens and creates appropriate notifications.
 - Asynchronous event processing with `@Async`
 - Transaction-aware event handling with `@TransactionalEventListener`
 
-### 5. State
+### 6. State
 
 **Classes**:
 
 - `ConcertState` (interface)
-- `ConcertStateFactory`
+- `ConcertStateRegistry`
 - `ConcertStateManager`
 - `PlanningState`
 - `ApprovedState`
@@ -280,7 +298,7 @@ only APPROVED concerts can be completed.
 - Simplifies conditional logic in business code
 - Clear separation of concerns for each state
 
-### 6. Repository
+### 7. Repository
 
 **Classes**:
 
@@ -299,7 +317,7 @@ repositories) and allows for easy switching of data access implementations.
 - Centralizes data access queries
 - Makes code more maintainable and readable
 
-### 7. Adapter
+### 8. Adapter
 
 **Classes**:
 

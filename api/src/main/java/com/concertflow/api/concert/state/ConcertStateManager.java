@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ConcertStateManager {
     
-    private final ConcertStateFactory stateFactory;
+    private final ConcertStateRegistry stateRegistry;
     private final ConcertRepository concertRepository;
     
     @Transactional
     public boolean approve(Concert concert) {
-        ConcertState currentState = stateFactory.getState(concert.getStatus());
+        ConcertState currentState = stateRegistry.getState(concert.getStatus());
         try {
             ConcertState newState = currentState.approve(concert);
             concertRepository.save(concert);
@@ -33,7 +33,7 @@ public class ConcertStateManager {
     
     @Transactional
     public void cancel(Concert concert, String cancellationReason) {
-        ConcertState currentState = stateFactory.getState(concert.getStatus());
+        ConcertState currentState = stateRegistry.getState(concert.getStatus());
         ConcertState newState = currentState.cancel(concert, cancellationReason);
         concertRepository.save(concert);
         log.info("Concert {} transitioned from {} to {}", 
@@ -42,7 +42,7 @@ public class ConcertStateManager {
     
     @Transactional
     public void complete(Concert concert) {
-        ConcertState currentState = stateFactory.getState(concert.getStatus());
+        ConcertState currentState = stateRegistry.getState(concert.getStatus());
         ConcertState newState = currentState.complete(concert);
         concertRepository.save(concert);
         log.info("Concert {} transitioned from {} to {}", 
@@ -50,12 +50,12 @@ public class ConcertStateManager {
     }
     
     public boolean canEdit(Concert concert) {
-        ConcertState currentState = stateFactory.getState(concert.getStatus());
+        ConcertState currentState = stateRegistry.getState(concert.getStatus());
         return currentState.canEdit(concert);
     }
     
     public boolean canDelete(Concert concert) {
-        ConcertState currentState = stateFactory.getState(concert.getStatus());
+        ConcertState currentState = stateRegistry.getState(concert.getStatus());
         return currentState.canDelete(concert);
     }
     
