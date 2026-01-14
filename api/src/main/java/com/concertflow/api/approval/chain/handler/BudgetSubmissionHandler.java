@@ -1,8 +1,7 @@
 package com.concertflow.api.approval.chain.handler;
 
-import com.concertflow.api.approval.chain.AbstractApprovalHandler;
+import com.concertflow.api.approval.chain.ApprovalHandler;
 import com.concertflow.api.approval.chain.ApprovalRequest;
-import com.concertflow.api.budget.dto.SubmitBudgetForApprovalRequest;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
 import com.concertflow.api.concert.entity.ConcertRepository;
@@ -17,7 +16,7 @@ import java.math.BigDecimal;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class BudgetSubmissionHandler extends AbstractApprovalHandler {
+public class BudgetSubmissionHandler extends ApprovalHandler {
     private final ConcertRepository concertRepository;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -31,7 +30,6 @@ public class BudgetSubmissionHandler extends AbstractApprovalHandler {
         log.info("Processing budget submission for concert: {}", request.getConcert().getId());
         
         Concert concert = request.getConcert();
-        SubmitBudgetForApprovalRequest submitRequest = (SubmitBudgetForApprovalRequest) request.getRequestData();
         
         concert.setSubmittedBudget(concert.getBudget() != null ? concert.getBudget() : BigDecimal.ZERO);
         concert.setBudgetStatus(BudgetStatus.SUBMITTED);

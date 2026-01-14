@@ -1,6 +1,5 @@
 package com.concertflow.api.technical.dto;
 
-import com.concertflow.api.approval.chain.ApprovalRequestData;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -15,5 +14,5 @@ public record SubmitTechnicalRequirementsRequest(
 
     @NotNull(message = "You must accept terms")
     Boolean termsAccepted
-) implements ApprovalRequestData {}
+) {}
 

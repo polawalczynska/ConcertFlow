@@ -1,6 +1,6 @@
 package com.concertflow.api.approval.chain.handler;
 
-import com.concertflow.api.approval.chain.AbstractApprovalHandler;
+import com.concertflow.api.approval.chain.ApprovalHandler;
 import com.concertflow.api.approval.chain.ApprovalRequest;
 import com.concertflow.api.concert.entity.BudgetStatus;
 import com.concertflow.api.concert.entity.Concert;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class TechnicalSubmissionHandler extends AbstractApprovalHandler {
+public class TechnicalSubmissionHandler extends ApprovalHandler {
     private final ConcertRepository concertRepository;
     private final TechnicalRequirementsRepository technicalRequirementsRepository;
     private final ApplicationEventPublisher eventPublisher;

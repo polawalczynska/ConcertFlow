@@ -1,6 +1,5 @@
 package com.concertflow.api.budget.dto;
 
-import com.concertflow.api.approval.chain.ApprovalRequestData;
 import com.concertflow.api.concert.entity.ApprovalDecision;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -22,5 +21,5 @@ public record ApproveBudgetRequest(
     BigDecimal approvedBudget,
 
     List<BudgetItemApproval> itemApprovals
-) implements ApprovalRequestData {}
+) {}
 

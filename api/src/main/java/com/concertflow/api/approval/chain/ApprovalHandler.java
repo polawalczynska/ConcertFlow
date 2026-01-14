@@ -1,8 +1,30 @@
 package com.concertflow.api.approval.chain;
 
-public interface ApprovalHandler {
-    boolean handle(ApprovalRequest request);
-    
-    void setNext(ApprovalHandler next);
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public abstract class ApprovalHandler {
+    protected ApprovalHandler next;
+
+    public void setNext(ApprovalHandler next) {
+        this.next = next;
+    }
+
+    public boolean handle(ApprovalRequest request) {
+        if (canHandle(request)) {
+            return process(request);
+        }
+        
+        if (next != null) {
+            return next.handle(request);
+        }
+        
+        log.warn("No handler found for request: {}", request.getAction());
+        return false;
+    }
+
+    protected abstract boolean canHandle(ApprovalRequest request);
+
+    protected abstract boolean process(ApprovalRequest request);
 }
 

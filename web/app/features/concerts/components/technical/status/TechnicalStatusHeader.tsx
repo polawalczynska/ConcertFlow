@@ -20,12 +20,12 @@ export function TechnicalStatusHeader({ technicalStatus, technicalDetails }: Tec
         </Badge>
       </div>
       {isSubmitted && technicalDetails?.submittedAt && (
-        <div>
-          <p className="text-sm text-text-secondary mb-1">Submitted At</p>
-          <p className="text-sm font-medium text-text-primary">
+          <div>
+            <p className="text-sm text-text-secondary mb-1">Submitted At</p>
+            <p className="text-sm font-medium text-text-primary">
             {formatLocalDateTime(technicalDetails.submittedAt)}
-          </p>
-        </div>
+            </p>
+          </div>
       )}
     </div>
   );
