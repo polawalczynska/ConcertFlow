@@ -3,7 +3,7 @@ package com.concertflow.api.team.mapper;
 import com.concertflow.api.team.dto.TeamInvitationResponse;
 import com.concertflow.api.team.dto.TeamMemberResponse;
 import com.concertflow.api.team.entity.TeamInvitation;
-import com.concertflow.api.user.adapter.RoleAdapterInterface;
+import com.concertflow.api.user.adapter.RoleFormatter;
 import com.concertflow.api.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TeamMapper {
-    private final RoleAdapterInterface roleAdapter;
+    private final RoleFormatter roleAdapter;
 
     public TeamMemberResponse toTeamMemberResponse(User user, Integer assignedConcerts) {
         return TeamMemberResponse.builder()

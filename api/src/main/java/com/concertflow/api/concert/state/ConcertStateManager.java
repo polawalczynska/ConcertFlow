@@ -60,7 +60,7 @@ public class ConcertStateManager {
     }
     
     public boolean canTransitionTo(ConcertStatus currentStatus, ConcertStatus targetStatus) {
-        ConcertState currentState = stateFactory.getState(currentStatus);
+        ConcertState currentState = stateRegistry.getState(currentStatus);
         return currentState.canTransitionTo(targetStatus);
     }
 }

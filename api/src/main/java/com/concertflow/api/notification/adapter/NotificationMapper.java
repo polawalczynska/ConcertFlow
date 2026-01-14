@@ -6,15 +6,12 @@ import com.concertflow.api.notification.entity.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 @Component
 @RequiredArgsConstructor
-public class NotificationAdapter {
-    private final NotificationCategoryAdapter categoryAdapter;
-    private final NotificationIconAdapter iconAdapter;
-    private final NotificationColorAdapter colorAdapter;
+public class NotificationMapper {
+    private final NotificationCategoryFormatter categoryAdapter;
+    private final NotificationIconFormatter iconAdapter;
+    private final NotificationColorFormatter colorAdapter;
     private final TimeFormatter timeFormatter;
 
     public NotificationResponse adapt(Notification notification) {

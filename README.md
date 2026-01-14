@@ -161,182 +161,82 @@ patterns to ensure maintainability, scalability, and separation of concerns.
 
 ### 1. Chain of Responsibility
 
-**Classes**:
+**Where**: `ApprovalHandler` (abstract class), `ApprovalChainService`, `BudgetSubmissionHandler`, `BudgetApprovalHandler`, `TechnicalSubmissionHandler`, `TechnicalApprovalHandler`, `FinalApprovalHandler`
 
-- `ApprovalHandler` (abstract class)
-- `ApprovalChainService`
-- `BudgetSubmissionHandler`
-- `BudgetApprovalHandler`
-- `TechnicalSubmissionHandler`
-- `TechnicalApprovalHandler`
-- `FinalApprovalHandler`
-
-**Justification**: The approval workflow requires processing different types of requests (budget submission, budget
-approval, technical submission, technical approval, final approval) in a specific order. The Chain of Responsibility
-pattern allows each handler to process requests it can handle and pass others to the next handler in the chain. This
-provides flexibility to add or modify approval steps without changing existing code, and ensures each approval action is
-handled by the appropriate component.
-
-**Benefits**:
-
-- Decouples request senders from receivers
-- Allows dynamic chain configuration
-- Easy to add new approval handlers
-- Each handler has a single responsibility
-- Simplifies testing of individual handlers
+**How it's used**: The approval workflow processes different types of requests (budget submission, budget approval, technical submission, technical approval, final approval) in a specific order. Each handler processes requests it can handle and passes others to the next handler in the chain. `ApprovalChainService` configures the chain and delegates requests to the first handler.
 
 ### 2. Builder
 
-**Classes**:
+**Where**: `ConcertBuilder`, `JwtTokenBuilder`, `UserBuilder`, `BudgetRevisionNoteBuilder`, `TechnicalRevisionCommentBuilder`, Lombok `@Builder` annotations on entities (`Concert`, `User`, `Artist`, `Notification`, `BudgetItem`, `TechnicalRequirements`, `TeamInvitation`, `BudgetApproval`, `TechnicalApproval`)
 
-- `ConcertBuilder` - Builds and updates Concert entities from DTOs
-- `JwtTokenBuilder` - Builds JWT tokens with claims and expiration
-- `UserBuilder` - Builds User entities from registration requests with password encoding
-- `BudgetRevisionNoteBuilder` - Builds revision notes and comments for budget items
-- `TechnicalRevisionCommentBuilder` - Builds revision comments for technical requirements
-- Lombok `@Builder` annotations on entities (`Concert`, `User`, `Artist`, `Notification`, `BudgetItem`,
-  `TechnicalRequirements`, `TeamInvitation`, `BudgetApproval`, `TechnicalApproval`)
-
-**Justification**: Complex objects like concerts require many parameters during construction, and some entities need to
-be built with optional fields and default values. The Builder pattern provides a fluent interface for object
-construction, making the code more readable and maintainable. It also allows for different construction strategies (
-e.g., building a new concert vs. updating an existing one).
-
-**Benefits**:
-
-- Improves code readability with fluent API
-- Handles optional parameters elegantly
-- Allows immutable object construction
-- Separates construction logic from business logic
-- Reduces constructor parameter lists
+**How it's used**: Builders provide a fluent interface for constructing complex objects. Custom builders like `ConcertBuilder` and `UserBuilder` handle entity construction from DTOs with optional fields and default values. Lombok's `@Builder` generates builder methods for entities, allowing step-by-step object construction.
 
 ### 3. Registry
 
-**Classes**:
+**Where**: `TokenGeneratorRegistry`, `ConcertStateRegistry`
 
-- `TokenGeneratorRegistry`
-- `ConcertStateRegistry`
-
-**Justification**: The application needs to locate and retrieve existing objects (token generators, concert states) based
-on runtime conditions or type parameters. The Registry pattern provides a centralized lookup mechanism for objects that
-are already created and managed by the dependency injection container. This is especially useful for JWT tokens where
-different token types (access, refresh, remember-me) require different generators, and for concert states where the
-appropriate state object must be retrieved based on the concert's current status.
-
-**Benefits**:
-
-- Centralizes object lookup logic
-- Reduces coupling between classes
-- Makes it easy to add new types (e.g., new token types or states)
-- Simplifies testing by allowing mock registries
-- Provides a consistent interface for object retrieval
-- Leverages Spring's dependency injection for object management
+**How it's used**: Registries provide a centralized lookup mechanism for objects managed by the dependency injection container. `TokenGeneratorRegistry` retrieves the appropriate token generator (access, refresh, remember-me) based on token type. `ConcertStateRegistry` retrieves the appropriate state object (`PlanningState`, `ApprovedState`, etc.) based on the concert's current status.
 
 ### 4. Factory
 
-**Classes**:
+**Where**: `ProblemDetailFactory`
 
-- `ProblemDetailFactory`
-
-**Justification**: The application needs to create different types of error response objects based on runtime conditions.
-The Factory pattern encapsulates object creation logic and provides a single point of control. This is especially useful
-for creating standardized error responses (`ProblemDetail`) with consistent structure across the application.
-
-**Benefits**:
-
-- Centralizes object creation logic
-- Reduces coupling between classes
-- Makes it easy to add new error response types
-- Simplifies testing by allowing mock factories
-- Provides a consistent interface for object creation
+**How it's used**: The factory creates different types of error response objects (`ProblemDetail`) based on runtime conditions. It encapsulates object creation logic and provides a single point of control for creating standardized error responses with consistent structure across the application.
 
 ### 5. Observer (Event-Driven)
 
-**Classes**:
-
+**Where**: 
 - `NotificationService` (observer/listener)
 - `ApplicationEventPublisher` (subject)
-- Event classes: `BudgetSubmittedEvent`, `TechnicalSubmittedEvent`, `TechnicalApprovedEvent`,
-  `TechnicalRevisionRequestedEvent`, `BudgetApprovedEvent`, `ConcertStatusChangedEvent`
+- Event classes: `BudgetSubmittedEvent`, `TechnicalSubmittedEvent`, `TechnicalApprovedEvent`, `TechnicalRevisionRequestedEvent`, `BudgetApprovedEvent`, `ConcertStatusChangedEvent`, `TeamInvitationCreatedEvent`, `TeamInvitationAcceptedEvent`
 
-**Justification**: The system needs to notify users about various events (approval requests, status changes) without
-tightly coupling the business logic to notification logic. The Observer pattern, implemented using Spring's event
-mechanism, allows decoupled communication between components. When an approval action occurs, an event is published, and
-the notification service listens and creates appropriate notifications.
-
-**Benefits**:
-
-- Decouples event producers from consumers
-- Allows multiple listeners for the same event
-- Easy to add new event types and listeners
-- Asynchronous event processing with `@Async`
-- Transaction-aware event handling with `@TransactionalEventListener`
+**How it's used**: When an approval action or status change occurs, an event is published using `ApplicationEventPublisher`. `NotificationService` listens to these events using `@EventListener` and `@TransactionalEventListener` annotations, creating appropriate notifications asynchronously. This decouples business logic from notification logic.
 
 ### 6. State
 
-**Classes**:
+**Where**: `ConcertState` (interface), `ConcertStateRegistry`, `ConcertStateManager`, `PlanningState`, `ApprovedState`, `CompletedState`, `CancelledState`
 
-- `ConcertState` (interface)
-- `ConcertStateRegistry`
-- `ConcertStateManager`
-- `PlanningState`
-- `ApprovedState`
-- `CompletedState`
-- `CancelledState`
+**How it's used**: Concerts have different states (PLANNING, APPROVED, COMPLETED, CANCELLED) with different allowed transitions and behaviors. `ConcertStateManager` retrieves the current state from `ConcertStateRegistry` and delegates operations (approve, cancel, complete, canEdit, canDelete) to the state object. Each state class encapsulates state-specific behavior, making transitions explicit and preventing invalid operations.
 
-**Justification**: Concerts have different states (PLANNING, APPROVED, COMPLETED, CANCELLED) with different allowed
-transitions and behaviors. The State pattern encapsulates state-specific behavior in separate classes, making state
-transitions explicit and preventing invalid operations. For example, only concerts in PLANNING status can be edited, and
-only APPROVED concerts can be completed.
+### 7. Mapper
 
-**Benefits**:
+**Where**: `ConcertMapper`, `ArtistMapper`, `BudgetMapper`, `TechnicalMapper`, `TeamMapper`, `NotificationMapper`
 
-- Encapsulates state-specific behavior
-- Makes state transitions explicit and type-safe
-- Prevents invalid operations based on current state
-- Easy to add new states or modify state behavior
-- Simplifies conditional logic in business code
-- Clear separation of concerns for each state
+**How it's used**: Mapper classes transform data between different representations - from domain entities to DTOs. Services use mappers to convert entities to response DTOs (e.g., `ConcertService` uses `ConcertMapper.toResponse()` to convert `Concert` entity to `ConcertResponse` DTO). This keeps internal domain models independent of external API contracts.
 
-### 7. Repository
+### 8. Lazy Loading
 
-**Classes**:
+**Where**: Entity relations with `fetch = FetchType.LAZY` (e.g., `Notification.user`, `BudgetItem.concert`, `TeamInvitation.invitedUser`, `TechnicalRequirements.concert`), `@OneToMany` collections (default lazy in JPA, e.g., `Concert.budgetItems`, `Concert.budgetApprovals`), `@ManyToOne` relations (default lazy in JPA, e.g., `Concert.coordinator`, `Concert.artist`)
 
-- All `*Repository` interfaces extending `JpaRepository` (e.g., `ConcertRepository`, `UserRepository`,
-  `ArtistRepository`, `NotificationRepository`, `TeamInvitationRepository`)
+**How it's used**: Related entities are loaded on-demand by Hibernate when accessed, instead of being eagerly fetched on every query. Hibernate creates proxy objects that load data from the database only when accessed within an active transaction (managed by `@Transactional` in service layer). This reduces initial query time and memory usage.
 
-**Justification**: Data access logic should be abstracted from business logic. The Repository pattern provides a clean
-interface for data operations, hiding the complexity of JPA/Hibernate. This makes the codebase more testable (can mock
-repositories) and allows for easy switching of data access implementations.
+## Architectural Patterns
 
-**Benefits**:
+In addition to the design patterns above, the project also uses common architectural patterns.
 
-- Separates data access from business logic
-- Provides a consistent data access interface
-- Simplifies testing with mock repositories
-- Centralizes data access queries
-- Makes code more maintainable and readable
+### Repository
 
-### 8. Adapter
+**Where**: All `*Repository` interfaces extending `JpaRepository` (e.g., `ConcertRepository`, `UserRepository`, `ArtistRepository`, `NotificationRepository`, `TeamInvitationRepository`)
 
-**Classes**:
+**How it's used**: Repositories provide a clean interface for data operations, hiding the complexity of JPA/Hibernate. Services use repositories to access data instead of directly using entity managers. This separates data access logic from business logic and makes the codebase more testable (can mock repositories).
 
-- `NotificationAdapter`
-- `NotificationCategoryAdapter`, `NotificationIconAdapter`, `NotificationColorAdapter`
-- `RoleAdapter`
-- `StatusAdapter`
-- Mapper classes: `ConcertMapper`, `ArtistMapper`, `BudgetMapper`, `TechnicalMapper`, `TeamMapper`, `NotificationMapper`
+### Data Transfer Object (DTO)
 
-**Justification**: The application needs to transform data between different representations - from domain entities to
-DTOs. Mappers and Adapters adapt one interface to another, making incompatible interfaces work
-together. This separation ensures that internal domain models remain independent of external API contracts, allowing
-changes to either without affecting the other.
+**Where**: `api/src/main/java/com/concertflow/api/**/dto/*`
 
-**Benefits**:
+**How it’s used**: Controllers accept request DTOs (e.g. `ConcertRequest`) and return response DTOs (e.g. `ConcertResponse`)
+instead of exposing JPA entities directly.
 
-- Decouples domain entities from API contracts
-- Allows independent evolution of entities and DTOs
-- Provides a single point of transformation logic
-- Makes it easy to change data representation without affecting business logic
-- Simplifies testing by allowing mock adapters/mappers
-- Enables reuse of transformation logic across different contexts
+### Service Layer
+
+**Where**: `api/src/main/java/com/concertflow/api/**/service/*` (Spring `@Service`)
+
+**How it’s used**: Business logic is implemented in services (e.g. `ConcertService`, `AuthenticationService`,
+`TeamInvitationService`). Controllers delegate to services; repositories are used from the service layer.
+
+### Application Controller
+
+**Where**: `api/src/main/java/com/concertflow/api/**/*Controller.java` (Spring `@RestController`)
+
+**How it's used**: Controllers coordinate requests/responses and call the service layer. Example: `ConcertController`
+handles HTTP endpoints and delegates to `ConcertService`.

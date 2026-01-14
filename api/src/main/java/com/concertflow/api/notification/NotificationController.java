@@ -4,7 +4,7 @@ import com.concertflow.api.config.ApiConstants;
 import com.concertflow.api.notification.dto.NotificationResponse;
 import com.concertflow.api.notification.entity.Notification;
 import com.concertflow.api.notification.entity.NotificationRepository;
-import com.concertflow.api.notification.mapper.NotificationMapper;
+import com.concertflow.api.notification.adapter.NotificationMapper;
 import com.concertflow.api.notification.service.NotificationService;
 import com.concertflow.api.security.annotation.RequireAuthenticated;
 import com.concertflow.api.user.entity.User;
@@ -28,7 +28,7 @@ public class NotificationController {
     public List<NotificationResponse> getNotifications(@AuthenticationPrincipal User user) {
         List<Notification> notifications = notificationRepository.findByUser_IdOrderByCreatedAtDesc(user.getId());
         return notifications.stream()
-                .map(notificationMapper::toResponse)
+                .map(notificationMapper::adapt)
                 .toList();
     }
 
