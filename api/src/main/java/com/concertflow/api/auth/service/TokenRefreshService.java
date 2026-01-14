@@ -3,7 +3,7 @@ package com.concertflow.api.auth.service;
 import com.concertflow.api.auth.dto.AuthResponse;
 import com.concertflow.api.auth.validator.UserValidator;
 import com.concertflow.api.exceptions.types.TokenRefreshException;
-import com.concertflow.api.security.jwt.factory.TokenGeneratorFactory;
+import com.concertflow.api.security.jwt.registry.TokenGeneratorRegistry;
 import com.concertflow.api.security.jwt.parser.TokenParser;
 import com.concertflow.api.security.jwt.validator.TokenValidator;
 import com.concertflow.api.security.jwt.model.TokenType;
@@ -23,7 +23,7 @@ public class TokenRefreshService {
     private final UserFinder userFinder;
     private final TokenValidator tokenValidator;
     private final TokenParser tokenParser;
-    private final TokenGeneratorFactory tokenGeneratorFactory;
+    private final TokenGeneratorRegistry tokenGeneratorRegistry;
 
     public AuthResponse refreshToken(String refreshToken) {
         TokenType tokenType = tokenParser.getTokenTypeFromToken(refreshToken);
@@ -41,12 +41,12 @@ public class TokenRefreshService {
 
         UserValidator.validateUserIsActive(user);
 
-        String newAccessToken = tokenGeneratorFactory.generateToken(user, TokenType.ACCESS);
-        String newRefreshToken = tokenGeneratorFactory.generateToken(user, TokenType.REFRESH);
+        String newAccessToken = tokenGeneratorRegistry.generateToken(user, TokenType.ACCESS);
+        String newRefreshToken = tokenGeneratorRegistry.generateToken(user, TokenType.REFRESH);
         
         String newRememberMeToken = null;
         if (tokenType == TokenType.REMEMBER_ME) {
-            newRememberMeToken = tokenGeneratorFactory.generateToken(user, TokenType.REMEMBER_ME);
+            newRememberMeToken = tokenGeneratorRegistry.generateToken(user, TokenType.REMEMBER_ME);
         }
         
         return new AuthResponse(newAccessToken, newRefreshToken, newRememberMeToken, user.getEmail(), user.getRole(), user.getId());
