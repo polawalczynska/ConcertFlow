@@ -12,7 +12,7 @@ public class ApprovalRequest {
     private final Concert concert;
     private final User user;
     private final ApprovalAction action;
-    private final ApprovalRequestData requestData;
+    private final Object requestData;
     
     public enum ApprovalAction {
         SUBMIT_BUDGET,

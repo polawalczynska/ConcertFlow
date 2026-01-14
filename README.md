@@ -163,8 +163,7 @@ patterns to ensure maintainability, scalability, and separation of concerns.
 
 **Classes**:
 
-- `ApprovalHandler` (interface)
-- `AbstractApprovalHandler` (abstract class)
+- `ApprovalHandler` (abstract class)
 - `ApprovalChainService`
 - `BudgetSubmissionHandler`
 - `BudgetApprovalHandler`
