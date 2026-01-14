@@ -317,20 +317,20 @@ repositories) and allows for easy switching of data access implementations.
 - Centralizes data access queries
 - Makes code more maintainable and readable
 
-### 8. Adapter
+### 8. Mapper
 
 **Classes**:
 
-- `NotificationAdapter`
-- `NotificationCategoryAdapter`, `NotificationIconAdapter`, `NotificationColorAdapter`
-- `RoleAdapter`
-- `StatusAdapter`
-- Mapper classes: `ConcertMapper`, `ArtistMapper`, `BudgetMapper`, `TechnicalMapper`, `TeamMapper`, `NotificationMapper`
+- `ConcertMapper`
+- `ArtistMapper`
+- `BudgetMapper`
+- `TechnicalMapper`
+- `TeamMapper`
+- `NotificationMapper`
 
 **Justification**: The application needs to transform data between different representations - from domain entities to
-DTOs. Mappers and Adapters adapt one interface to another, making incompatible interfaces work
-together. This separation ensures that internal domain models remain independent of external API contracts, allowing
-changes to either without affecting the other.
+DTOs. Mapper classes encapsulate transformation logic so that internal domain models remain independent of external API
+contracts, allowing changes to either without affecting the other.
 
 **Benefits**:
 
@@ -338,5 +338,5 @@ changes to either without affecting the other.
 - Allows independent evolution of entities and DTOs
 - Provides a single point of transformation logic
 - Makes it easy to change data representation without affecting business logic
-- Simplifies testing by allowing mock adapters/mappers
+- Simplifies testing by allowing mock mappers
 - Enables reuse of transformation logic across different contexts
