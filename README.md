@@ -189,10 +189,13 @@ handled by the appropriate component.
 
 **Classes**:
 
-- `ConcertBuilder`
-- `JwtTokenBuilder`
+- `ConcertBuilder` - Builds and updates Concert entities from DTOs
+- `JwtTokenBuilder` - Builds JWT tokens with claims and expiration
+- `UserBuilder` - Builds User entities from registration requests with password encoding
+- `BudgetRevisionNoteBuilder` - Builds revision notes and comments for budget items
+- `TechnicalRevisionCommentBuilder` - Builds revision comments for technical requirements
 - Lombok `@Builder` annotations on entities (`Concert`, `User`, `Artist`, `Notification`, `BudgetItem`,
-  `TechnicalRequirements`, `TeamInvitation`)
+  `TechnicalRequirements`, `TeamInvitation`, `BudgetApproval`, `TechnicalApproval`)
 
 **Justification**: Complex objects like concerts require many parameters during construction, and some entities need to
 be built with optional fields and default values. The Builder pattern provides a fluent interface for object
