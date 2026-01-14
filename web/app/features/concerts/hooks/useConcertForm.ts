@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { ConcertRequest, ConcertResponse } from "~/api";
 import { useCreateConcert, useUpdateConcert } from "~/features/concerts/hooks";
-import { concertSchema, extractApiError } from "~/shared/utils";
+import { concertSchema, concertSchemaForEdit, extractApiError } from "~/shared/utils";
 import { formatDateForInput } from "../utils/dateUtils";
 
 const initialFormData: ConcertRequest = {
@@ -110,7 +110,8 @@ export function useConcertForm() {
     setFieldErrors({});
     setGeneralError(null);
 
-    const result = concertSchema.safeParse(formData);
+    const schema = selectedConcert ? concertSchemaForEdit : concertSchema;
+    const result = schema.safeParse(formData);
     if (!result.success) {
       const errors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {

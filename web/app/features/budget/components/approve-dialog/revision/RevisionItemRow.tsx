@@ -2,6 +2,7 @@ import { Checkbox } from "~/components/ui/Checkbox";
 import { Label } from "~/components/ui/Label";
 import type { BudgetItemResponse } from "~/api";
 import { RevisionItemDetails } from "./RevisionItemDetails";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface RevisionItemRowProps {
   item: BudgetItemResponse;
@@ -45,7 +46,7 @@ export function RevisionItemRow({
             {item.name}
             {item.category && (
               <span className="text-text-secondary font-normal ml-2">
-                ({item.category})
+                ({formatSnakeCaseToReadable(item.category)})
               </span>
             )}
           </Label>

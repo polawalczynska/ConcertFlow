@@ -14,5 +14,9 @@ public class ConcertValidator {
         budgetValidator.validateBudget(request.budget());
         dateValidator.validateConcertDate(request.date());
     }
+
+    public void validateForUpdate(ConcertRequest request) {
+        budgetValidator.validateBudget(request.budget());
+    }
 }
 

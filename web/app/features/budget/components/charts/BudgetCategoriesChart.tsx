@@ -1,5 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/Card";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface BudgetCategoryData {
   category: string;
@@ -16,6 +17,10 @@ const COLORS = ["#8B5CF6", "#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899"
 export function BudgetCategoriesChart({ data }: BudgetCategoriesChartProps) {
   const formatCurrency = (value: number) => {
     return `$${value.toLocaleString()}`;
+  };
+
+  const formatCategory = (category: string) => {
+    return formatSnakeCaseToReadable(category);
   };
 
   return (
@@ -40,6 +45,7 @@ export function BudgetCategoriesChart({ data }: BudgetCategoriesChartProps) {
               stroke="#9CA3AF" 
               fontSize={12}
               width={120}
+              tickFormatter={formatCategory}
             />
             <Tooltip
               contentStyle={{
@@ -52,6 +58,7 @@ export function BudgetCategoriesChart({ data }: BudgetCategoriesChartProps) {
                 if (value === undefined) return "";
                 return formatCurrency(value);
               }}
+              labelFormatter={(label: string) => formatCategory(label)}
             />
             <Bar dataKey="amount" radius={[0, 4, 4, 0]}>
               {data.map((entry, index) => (

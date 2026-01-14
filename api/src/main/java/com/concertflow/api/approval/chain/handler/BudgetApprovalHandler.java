@@ -68,6 +68,7 @@ public class BudgetApprovalHandler extends AbstractApprovalHandler {
         concert.setBudgetApprovedAt(LocalDateTime.now());
         concert.setBudgetApprovedById(request.getUser().getId());
         concert.setBudget(approveRequest.approvedBudget());
+        concert.setApprovedBudget(approveRequest.approvedBudget());
 
         BudgetApproval approval = approvalRecordService.createApprovalRecord(
             concert,

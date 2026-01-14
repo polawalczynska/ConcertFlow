@@ -49,8 +49,27 @@ export function formatLocalDateTime(
   dateTimeString: string,
   options?: Intl.DateTimeFormatOptions
 ): string {
-  const date = parseLocalDateTime(dateTimeString);
-  if (!date) {
+  if (!dateTimeString) {
+    return "";
+  }
+  
+  let date: Date | null = null;
+  
+  try {
+    if (dateTimeString.includes('Z') || dateTimeString.match(/[+-]\d{2}:\d{2}$/)) {
+      date = new Date(dateTimeString);
+    } else {
+      date = new Date(dateTimeString + 'Z');
+    }
+    
+    if (isNaN(date.getTime())) {
+      date = parseLocalDateTime(dateTimeString);
+    }
+  } catch {
+    date = parseLocalDateTime(dateTimeString);
+  }
+  
+  if (!date || isNaN(date.getTime())) {
     return dateTimeString;
   }
   

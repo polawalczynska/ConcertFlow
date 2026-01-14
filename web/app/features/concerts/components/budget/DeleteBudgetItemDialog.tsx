@@ -8,6 +8,7 @@ import {
 import { Button } from "~/components/ui/Button";
 import type { BudgetItemResponse } from "~/api";
 import { AlertTriangle } from "lucide-react";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface DeleteBudgetItemDialogProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ export function DeleteBudgetItemDialog({
           <div className="bg-bg-secondary p-3 rounded-md">
             <p className="font-medium text-text-primary">{item.name}</p>
             {item.category && (
-              <p className="text-sm text-text-secondary mt-1">Category: {item.category}</p>
+              <p className="text-sm text-text-secondary mt-1">Category: {formatSnakeCaseToReadable(item.category)}</p>
             )}
             {item.estimatedAmount && (
               <p className="text-sm text-text-secondary mt-1">

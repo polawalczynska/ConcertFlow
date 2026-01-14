@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/Card";
 import { Label } from "~/components/ui/Label";
 import type { TechnicalDetailResponse } from "~/api";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface GeneralRequirementsViewProps {
   technicalDetails: TechnicalDetailResponse;
@@ -38,7 +39,7 @@ export function GeneralRequirementsView({ technicalDetails }: GeneralRequirement
                   key={index}
                   className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800"
                 >
-                  {flag}
+                  {formatSnakeCaseToReadable(flag)}
                 </span>
               ))}
             </div>

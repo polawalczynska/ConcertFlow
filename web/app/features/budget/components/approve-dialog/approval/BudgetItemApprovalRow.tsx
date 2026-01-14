@@ -1,6 +1,7 @@
 import { Label } from "~/components/ui/Label";
 import { Input } from "~/components/ui/Input";
 import type { BudgetItemResponse } from "~/api";
+import { formatSnakeCaseToReadable } from "~/shared/utils/formatters";
 
 interface BudgetItemApprovalRowProps {
   item: BudgetItemResponse;
@@ -20,7 +21,7 @@ export function BudgetItemApprovalRow({
       <div className="col-span-2">
         <p className="font-medium text-sm text-text-primary">{item.name}</p>
         {item.category && (
-          <p className="text-xs text-text-secondary">{item.category}</p>
+          <p className="text-xs text-text-secondary">{formatSnakeCaseToReadable(item.category)}</p>
         )}
         {item.estimatedAmount && (
           <p className="text-xs text-text-secondary mt-1">
