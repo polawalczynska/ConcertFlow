@@ -6,8 +6,7 @@ import com.concertflow.api.concert.entity.TechnicalStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatusFormatter implements StatusFormatterInterface {
-    @Override
+public class StatusFormatter {
     public String adapt(ConcertStatus status) {
         if (status == null) {
             return "Unknown";
@@ -21,7 +20,6 @@ public class StatusFormatter implements StatusFormatterInterface {
         };
     }
 
-    @Override
     public String adapt(BudgetStatus status) {
         if (status == null) {
             return "Unknown";
@@ -38,7 +36,6 @@ public class StatusFormatter implements StatusFormatterInterface {
         };
     }
 
-    @Override
     public String adapt(TechnicalStatus status) {
         if (status == null) {
             return "Unknown";

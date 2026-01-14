@@ -4,7 +4,7 @@ import com.concertflow.api.notification.entity.NotificationType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificationIconFormatter implements NotificationFormatterInterface {
+public class NotificationIconFormatter {
     public String adapt(NotificationType type) {
         return switch (type) {
             case TEAM_INVITATION, TEAM_MEMBER_JOINED -> "Users";

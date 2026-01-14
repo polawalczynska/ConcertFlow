@@ -4,8 +4,7 @@ import com.concertflow.api.user.entity.Role;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoleFormatter implements RoleFormatterInterface {
-    @Override
+public class RoleFormatter {
     public String adapt(Role role) {
         if (role == null) {
             return "User";
@@ -18,7 +17,6 @@ public class RoleFormatter implements RoleFormatterInterface {
         };
     }
 
-    @Override
     public String adaptSnakeCase(String roleName) {
         if (roleName == null || roleName.isEmpty()) {
             return "User";

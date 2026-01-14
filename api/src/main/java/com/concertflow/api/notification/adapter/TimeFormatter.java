@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Component
-public class TimeFormatter implements NotificationFormatterInterface {
+public class TimeFormatter {
     public String formatRelative(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "Recently";

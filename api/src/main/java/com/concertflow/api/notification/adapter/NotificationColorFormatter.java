@@ -4,7 +4,7 @@ import com.concertflow.api.notification.entity.NotificationType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificationColorFormatter implements NotificationFormatterInterface {
+public class NotificationColorFormatter {
     public String adapt(NotificationType type) {
         return switch (type) {
             case TEAM_INVITATION, TEAM_MEMBER_JOINED -> "text-blue-600";
