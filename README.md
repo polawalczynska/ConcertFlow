@@ -210,6 +210,24 @@ patterns to ensure maintainability, scalability, and separation of concerns.
 
 **How it's used**: Related entities are loaded on-demand by Hibernate when accessed, instead of being eagerly fetched on every query. Hibernate creates proxy objects that load data from the database only when accessed within an active transaction (managed by `@Transactional` in service layer). This reduces initial query time and memory usage.
 
+### 9. Domain Model
+
+**Where**: JPA entities in `api/src/main/java/com/concertflow/api/**/entity/*` (e.g., `Concert`, `User`, `Artist`, `TechnicalRequirements`, `BudgetItem`, `Approval`, `TeamInvitation`, `Notification`, `BudgetApproval`, `TechnicalApproval`)
+
+**How it's used**: Entities represent business concepts and their relationships. They encapsulate domain data and relationships (using JPA annotations like `@ManyToOne`, `@OneToMany`, `@OneToOne`). Entities have lifecycle hooks (`@PrePersist`, `@PreUpdate`) and are managed by JPA/Hibernate. Services operate on these domain objects to implement business logic.
+
+### 10. Identity Field
+
+**Where**: All JPA entities with `@Id` and `@GeneratedValue(strategy = GenerationType.IDENTITY)` annotations (e.g., `Concert.id`, `User.id`, `Artist.id`, `BudgetItem.id`, `Notification.id`, `TeamInvitation.id`, `Approval.id`)
+
+**How it's used**: Each entity has a primary key field (`id`) of type `Long` that uniquely identifies the object in the database. The `@Id` annotation marks the field as the primary key, and `@GeneratedValue(strategy = GenerationType.IDENTITY)` configures the database to auto-generate the ID value when a new entity is persisted. This allows objects to be identified and retrieved by their ID.
+
+### 11. Foreign Key Mapping
+
+**Where**: Entity relations with `@ManyToOne`, `@OneToMany`, `@OneToOne` and `@JoinColumn` annotations (e.g., `Concert.coordinator` with `@JoinColumn(name = "coordinator_id")`, `Concert.artist` with `@JoinColumn(name = "artist_id")`, `BudgetItem.concert` with `@JoinColumn(name = "concert_id")`, `TeamInvitation.invitedUser` with `@JoinColumn(name = "invited_user_id")`, `Notification.user` with `@JoinColumn(name = "user_id")`)
+
+**How it's used**: Relationships between entities are mapped using foreign keys in the database. The `@JoinColumn` annotation specifies the name of the foreign key column in the database table. `@ManyToOne` creates a foreign key in the owning entity's table, `@OneToMany` with `mappedBy` creates a bidirectional relationship, and `@OneToOne` creates a one-to-one relationship. Hibernate/JPA manages the foreign key constraints and loads related entities based on these mappings.
+
 ## Architectural Patterns
 
 In addition to the design patterns above, the project also uses common architectural patterns.
@@ -224,14 +242,14 @@ In addition to the design patterns above, the project also uses common architect
 
 **Where**: `api/src/main/java/com/concertflow/api/**/dto/*`
 
-**How it’s used**: Controllers accept request DTOs (e.g. `ConcertRequest`) and return response DTOs (e.g. `ConcertResponse`)
+**How it's used**: Controllers accept request DTOs (e.g. `ConcertRequest`) and return response DTOs (e.g. `ConcertResponse`)
 instead of exposing JPA entities directly.
 
 ### Service Layer
 
 **Where**: `api/src/main/java/com/concertflow/api/**/service/*` (Spring `@Service`)
 
-**How it’s used**: Business logic is implemented in services (e.g. `ConcertService`, `AuthenticationService`,
+**How it's used**: Business logic is implemented in services (e.g. `ConcertService`, `AuthenticationService`,
 `TeamInvitationService`). Controllers delegate to services; repositories are used from the service layer.
 
 ### Application Controller
