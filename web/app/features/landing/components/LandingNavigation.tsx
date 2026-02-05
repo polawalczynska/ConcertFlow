@@ -1,28 +1,31 @@
 import { Link } from "@remix-run/react";
+import { Music2 } from "lucide-react";
 
 export function LandingNavigation() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <nav className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex flex-col items-start">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent leading-tight">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md shadow-purple-500/20 group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-all">
+                <Music2 className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-main to-purple-dark bg-clip-text text-transparent">
                 ConcertFlow
-              </h1>
-              <div className="h-0.5 w-12 rounded-full bg-gradient-to-r from-purple-main to-purple-dark mt-0.5"></div>
+              </span>
             </Link>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link
               to="/login"
-              className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+              className="text-slate-600 hover:text-slate-900 px-4 py-2 rounded-lg hover:bg-slate-100 transition-all duration-200 font-medium"
             >
               Sign In
             </Link>
             <Link
               to="/signup"
-              className="bg-purple-main text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all hover:scale-105"
+              className="bg-gradient-to-r from-purple-main to-purple-dark text-white px-5 py-2 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-200 hover:scale-105 font-medium"
             >
               Get Started
             </Link>
@@ -32,4 +35,3 @@ export function LandingNavigation() {
     </nav>
   );
 }
-
