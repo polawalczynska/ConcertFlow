@@ -7,7 +7,7 @@ import { Footer } from "~/features/landing/components/Footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-white overflow-hidden">
       <LandingNavigation />
       <HeroSection />
       <ValuePropositionSection />
