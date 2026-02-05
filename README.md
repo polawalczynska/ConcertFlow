@@ -73,83 +73,14 @@ completion or cancellation.
 6. **Final Approval**: Once both are approved, concert status changes to approved
 7. **Completion**: After the concert date, status is automatically updated to completed
 
-## Installation & Configuration
+## Quick Start
 
-### Prerequisites
-
-- Docker and Docker Compose installed
-- Make utility (optional, for using Makefile commands)
-
-### Quick Start with Docker
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ConcertFlow
-   ```
-
-2. **Start all services**
-   ```bash
-   make up
-   # or manually:
-   docker compose up -d
-   ```
-
-3. **Access the application**
-    - Web application: http://localhost:3000
-    - API: http://localhost:8080
-    - API Documentation (Swagger): http://localhost:8080/swagger-ui.html
-
-### Configuration
-
-#### Environment Variables
-
-The application can be configured using environment variables or a `.env.properties` file in the `ConcertFlow`
-directory.
-
-**Database Configuration**
-
-- `DB_URL`: PostgreSQL connection URL (default: `jdbc:postgresql://localhost:5432/concertflow`)
-- `DB_USERNAME`: Database username (default: `postgres`)
-- `DB_PASSWORD`: Database password (default: `postgres`)
-
-**JWT Configuration**
-
-- `JWT_SECRET`: Secret key for JWT token signing (required, minimum 256 bits)
-- `JWT_ACCESS_EXPIRATION_MS`: Access token expiration in milliseconds (default: 900000 = 15 minutes)
-- `JWT_REFRESH_EXPIRATION_MS`: Refresh token expiration in milliseconds (default: 86400000 = 24 hours)
-- `JWT_REMEMBER_ME_EXPIRATION_MS`: Remember me token expiration in milliseconds (default: 2592000000 = 30 days)
-
-**API Configuration**
-
-- `API_BASE_URL`: Base URL for the API (used by web application, default: `http://api:8080`)
-
-#### Docker Compose Configuration
-
-The `docker-compose.yml` file configures three services:
-
-1. **PostgreSQL Database** (port 5434 on host)
-2. **Spring Boot API** (port 8080)
-3. **Remix Web Application** (port 3000)
-
-To modify ports or other settings, edit `docker-compose.yml`.
-
-### Development Mode
-
-For development with hot-reload:
+Requires Docker and Docker Compose.
 
 ```bash
-make dev
-# or manually:
-docker compose -f docker-compose.dev.yml up -d
+git clone <repository-url>
+cd ConcertFlow
+make up
 ```
 
-### Available Commands
-
-- `make up` - Start all services
-- `make down` - Stop all services
-- `make build` - Build all containers
-- `make logs` - View logs from all services
-- `make restart` - Restart all services
-- `make clean` - Stop and remove all containers, volumes, and images
-- `make dev` - Start in development mode
+Access the application at http://localhost:3000
