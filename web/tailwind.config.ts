@@ -82,6 +82,7 @@ export default {
         'slide-out': 'slideOut 0.3s ease-out forwards',
         'scale-in': 'scaleIn 0.8s ease-out forwards',
         'bounce-subtle': 'bounceSubtle 2s ease-in-out infinite',
+        'gradient': 'gradient 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -107,6 +108,10 @@ export default {
         bounceSubtle: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
+        },
+        gradient: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
         },
       },
       transitionDuration: {
