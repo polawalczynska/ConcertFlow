@@ -24,11 +24,18 @@ export function ValuePropositionSection() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center text-slate-900 mb-12">
-          Built for Every Role in Concert Production
-        </h2>
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+      <div className="max-w-7xl mx-auto relative">
+        <div className="text-center mb-16">
+          <p className="text-purple-600 font-semibold text-sm uppercase tracking-wider mb-3">For Every Team Member</p>
+          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+            Built for Every Role in Concert Production
+          </h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Tailored experiences for coordinators, technical managers, and budget teams
+          </p>
+        </div>
         <div className="grid md:grid-cols-3 gap-8">
           <RoleCard
             icon={Calendar}
@@ -36,9 +43,9 @@ export function ValuePropositionSection() {
             subtitle="Centralized Concert Management"
             features={coordinatorFeatures}
             iconColor="text-purple-600"
-            bgGradient="bg-gradient-to-br from-purple-50 to-blue-50"
-            borderColor="border-purple-100"
-            iconGradient="bg-gradient-to-r from-purple-500 to-blue-500"
+            bgGradient="bg-gradient-to-br from-purple-50/80 to-blue-50/80"
+            borderColor="border-purple-200/60"
+            iconGradient="bg-gradient-to-br from-purple-500 to-blue-600"
           />
           <RoleCard
             icon={Wrench}
@@ -46,9 +53,9 @@ export function ValuePropositionSection() {
             subtitle="Precision Technical Planning"
             features={technicalManagerFeatures}
             iconColor="text-orange-600"
-            bgGradient="bg-gradient-to-br from-orange-50 to-amber-50"
-            borderColor="border-orange-100"
-            iconGradient="bg-gradient-to-r from-orange-500 to-amber-500"
+            bgGradient="bg-gradient-to-br from-orange-50/80 to-amber-50/80"
+            borderColor="border-orange-200/60"
+            iconGradient="bg-gradient-to-br from-orange-500 to-amber-600"
           />
           <RoleCard
             icon={DollarSign}
@@ -56,9 +63,9 @@ export function ValuePropositionSection() {
             subtitle="Smart Financial Control"
             features={budgetManagerFeatures}
             iconColor="text-green-600"
-            bgGradient="bg-gradient-to-br from-green-50 to-emerald-50"
-            borderColor="border-green-100"
-            iconGradient="bg-gradient-to-r from-green-500 to-emerald-500"
+            bgGradient="bg-gradient-to-br from-green-50/80 to-emerald-50/80"
+            borderColor="border-green-200/60"
+            iconGradient="bg-gradient-to-br from-green-500 to-emerald-600"
           />
         </div>
       </div>
