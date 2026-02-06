@@ -8,7 +8,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8 border-b border-slate-800">
           {/* Logo section */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-500 rounded-xl flex items-center justify-center">
               <Music className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -19,12 +19,12 @@ export function Footer() {
 
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-8 text-sm">
-            <a href="#" className="hover:text-purple-400 transition-colors">Features</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">Pricing</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">About</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">Contact</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-purple-400 transition-colors">Terms</a>
+            <a href="#" className="hover:text-red-400 transition-colors">Features</a>
+            <a href="#" className="hover:text-red-400 transition-colors">Pricing</a>
+            <a href="#" className="hover:text-red-400 transition-colors">About</a>
+            <a href="#" className="hover:text-red-400 transition-colors">Contact</a>
+            <a href="#" className="hover:text-red-400 transition-colors">Privacy</a>
+            <a href="#" className="hover:text-red-400 transition-colors">Terms</a>
           </div>
         </div>
 

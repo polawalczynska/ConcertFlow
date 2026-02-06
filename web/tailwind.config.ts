@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         purple: {
-          main: '#8B5CF6',
-          dark: '#7C3AED',
-          light: '#A78BFA',
-          DEFAULT: '#8B5CF6',
+          main: '#EF4444',
+          dark: '#DC2626',
+          light: '#F87171',
+          DEFAULT: '#EF4444',
         },
         bg: {
           main: '#FFFFFF',

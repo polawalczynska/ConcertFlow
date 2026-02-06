@@ -27,7 +27,7 @@ export function ValuePropositionSection() {
     <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-red-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
       </div>
 
@@ -40,7 +40,7 @@ export function ValuePropositionSection() {
           </div>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
             Built for{" "}
-            <span className="bg-gradient-to-r from-purple-600 via-orange-500 to-green-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-600 via-orange-500 to-green-500 bg-clip-text text-transparent">
               Every Role
             </span>{" "}
             in Production
@@ -57,10 +57,10 @@ export function ValuePropositionSection() {
             title="For Coordinators"
             subtitle="Centralized Concert Management"
             features={coordinatorFeatures}
-            iconColor="text-purple-600"
-            bgGradient="bg-gradient-to-br from-purple-50/80 to-blue-50/80"
-            borderColor="border-purple-200/60"
-            iconGradient="bg-gradient-to-br from-purple-500 to-blue-600"
+            iconColor="text-red-600"
+            bgGradient="bg-gradient-to-br from-red-50/80 to-rose-50/80"
+            borderColor="border-red-200/60"
+            iconGradient="bg-gradient-to-br from-red-500 to-rose-600"
           />
           <RoleCard
             icon={Wrench}
