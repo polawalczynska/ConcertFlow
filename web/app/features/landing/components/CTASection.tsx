@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function CTASection() {
   return (
@@ -10,10 +10,6 @@ export function CTASection() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
       </div>
       <div className="max-w-4xl mx-auto text-center relative">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-purple-100 text-sm font-medium mb-8 border border-white/20 backdrop-blur-sm">
-          <Zap className="w-4 h-4" />
-          <span>Start your free trial today</span>
-        </div>
         <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
           Ready to Transform Your
           <br />
@@ -27,7 +23,7 @@ export function CTASection() {
             to="/signup"
             className="group bg-white text-purple-700 px-8 py-4 rounded-xl text-lg font-semibold shadow-xl shadow-purple-900/30 hover:shadow-2xl hover:shadow-purple-900/40 transition-all hover:scale-105 flex items-center justify-center gap-2"
           >
-            Get Started Free
+            Get Started
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
