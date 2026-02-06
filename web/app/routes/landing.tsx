@@ -7,12 +7,14 @@ import { Footer } from "~/features/landing/components/Footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50/50 to-white antialiased">
       <LandingNavigation />
-      <HeroSection />
-      <ValuePropositionSection />
-      <FeaturesSection />
-      <CTASection />
+      <main>
+        <HeroSection />
+        <ValuePropositionSection />
+        <FeaturesSection />
+        <CTASection />
+      </main>
       <Footer />
     </div>
   );

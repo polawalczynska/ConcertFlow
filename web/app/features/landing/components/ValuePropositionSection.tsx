@@ -1,4 +1,4 @@
-import { Calendar, Wrench, DollarSign } from "lucide-react";
+import { Calendar, Wrench, DollarSign, Users } from "lucide-react";
 import { RoleCard } from "~/features/landing/components/RoleCard";
 
 export function ValuePropositionSection() {
@@ -24,21 +24,43 @@ export function ValuePropositionSection() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+      </div>
+
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center text-slate-900 mb-12">
-          Built for Every Role in Concert Production
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-medium mb-4">
+            <Users className="w-4 h-4" />
+            Role-Based Experience
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+            Built for{" "}
+            <span className="bg-gradient-to-r from-purple-600 via-orange-500 to-green-500 bg-clip-text text-transparent">
+              Every Role
+            </span>{" "}
+            in Production
+          </h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Whether you're coordinating events, managing budgets, or handling technical requirements,
+            ConcertFlow adapts to your needs
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           <RoleCard
             icon={Calendar}
             title="For Coordinators"
             subtitle="Centralized Concert Management"
             features={coordinatorFeatures}
             iconColor="text-purple-600"
-            bgGradient="bg-gradient-to-br from-purple-50 to-blue-50"
-            borderColor="border-purple-100"
-            iconGradient="bg-gradient-to-r from-purple-500 to-blue-500"
+            bgGradient="bg-gradient-to-br from-purple-50/80 to-blue-50/80"
+            borderColor="border-purple-200/60"
+            iconGradient="bg-gradient-to-br from-purple-500 to-blue-600"
           />
           <RoleCard
             icon={Wrench}
@@ -46,9 +68,9 @@ export function ValuePropositionSection() {
             subtitle="Precision Technical Planning"
             features={technicalManagerFeatures}
             iconColor="text-orange-600"
-            bgGradient="bg-gradient-to-br from-orange-50 to-amber-50"
-            borderColor="border-orange-100"
-            iconGradient="bg-gradient-to-r from-orange-500 to-amber-500"
+            bgGradient="bg-gradient-to-br from-orange-50/80 to-amber-50/80"
+            borderColor="border-orange-200/60"
+            iconGradient="bg-gradient-to-br from-orange-500 to-amber-600"
           />
           <RoleCard
             icon={DollarSign}
@@ -56,9 +78,9 @@ export function ValuePropositionSection() {
             subtitle="Smart Financial Control"
             features={budgetManagerFeatures}
             iconColor="text-green-600"
-            bgGradient="bg-gradient-to-br from-green-50 to-emerald-50"
-            borderColor="border-green-100"
-            iconGradient="bg-gradient-to-r from-green-500 to-emerald-500"
+            bgGradient="bg-gradient-to-br from-green-50/80 to-emerald-50/80"
+            borderColor="border-green-200/60"
+            iconGradient="bg-gradient-to-br from-green-500 to-emerald-600"
           />
         </div>
       </div>
