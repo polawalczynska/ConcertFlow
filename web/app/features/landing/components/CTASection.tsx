@@ -3,13 +3,13 @@ import { ArrowRight } from "lucide-react";
 
 export function CTASection() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-main via-purple-light to-purple-dark">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-tr from-purple-dark via-purple-main to-purple-light">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl font-bold text-white mb-8">
-          Start Your Journey with ConcertFlow Today
+          Ready to Transform Your Event Operations?
         </h2>
         <p className="text-xl text-purple-100 mb-10">
-          Thousands of event professionals rely on ConcertFlow for seamless concert management
+          Leading venues and production companies trust ConcertFlow for their most important shows
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

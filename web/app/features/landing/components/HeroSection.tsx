@@ -7,15 +7,15 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6">
-            Spectacular Events.
+            Epic Live Experiences.
             <br />
-            <span className="bg-gradient-to-r from-purple-dark via-purple-main to-purple-light bg-clip-text text-transparent">
-              Professional Management.
+            <span className="bg-gradient-to-bl from-purple-light via-purple-dark to-purple-main bg-clip-text text-transparent">
+              Effortless Coordination.
             </span>
           </h1>
           <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
-            End-to-end platform for concert planning, team coordination, and flawless execution.
-            Streamline your workflow from budget approval to technical requirements.
+            The complete solution for live event production, artist management, and venue coordination.
+            From initial planning to post-show wrap-up, we've got you covered.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
@@ -33,7 +33,7 @@ export function HeroSection() {
             </Link>
           </div>
           <p className="text-sm text-slate-500 mt-6">
-            Trusted by event coordinators, budget managers, and technical teams worldwide
+            Join thousands of production teams, venue managers, and artists already using ConcertFlow
           </p>
         </div>
       </div>
