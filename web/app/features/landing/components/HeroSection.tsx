@@ -7,10 +7,10 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6">
-            Perfect Concerts.
+            Spectacular Events.
             <br />
-            <span className="bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent">
-              Seamless Workflow.
+            <span className="bg-gradient-to-r from-purple-dark via-purple-main to-purple-light bg-clip-text text-transparent">
+              Professional Management.
             </span>
           </h1>
           <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">

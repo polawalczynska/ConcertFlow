@@ -5,11 +5,11 @@ export function CTASection() {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-main via-purple-light to-purple-dark">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-          Ready to Transform Your Concert Production?
+        <h2 className="text-4xl sm:text-5xl font-bold text-white mb-8">
+          Start Your Journey with ConcertFlow Today
         </h2>
-        <p className="text-xl text-purple-100 mb-8">
-          Join coordinators, budget managers, and technical teams who trust ConcertFlow
+        <p className="text-xl text-purple-100 mb-10">
+          Thousands of event professionals rely on ConcertFlow for seamless concert management
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
