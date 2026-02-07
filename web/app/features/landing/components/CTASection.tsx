@@ -9,7 +9,7 @@ export function CTASection() {
           Start Planning Your Next Big Event Today
         </h2>
         <p className="text-xl text-purple-100 mb-8">
-          Thousands of event professionals rely on ConcertFlow for seamless coordination
+          Used by production teams, venue managers, and artists worldwide for seamless coordination
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -30,4 +30,3 @@ export function CTASection() {
     </section>
   );
 }
-
