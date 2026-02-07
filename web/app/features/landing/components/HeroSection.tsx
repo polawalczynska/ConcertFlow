@@ -7,15 +7,15 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6">
-            Perfect Concerts.
+            Unforgettable Shows.
             <br />
-            <span className="bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent">
-              Seamless Workflow.
+            <span className="bg-gradient-to-tr from-purple-dark via-purple-main to-purple-light bg-clip-text text-transparent">
+              Stress-Free Planning.
             </span>
           </h1>
           <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
-            End-to-end platform for concert planning, team coordination, and flawless execution.
-            Streamline your workflow from budget approval to technical requirements.
+            Your all-in-one platform for organizing world-class concerts and events.
+            Manage budgets, coordinate teams, and deliver unforgettable experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
@@ -33,7 +33,7 @@ export function HeroSection() {
             </Link>
           </div>
           <p className="text-sm text-slate-500 mt-6">
-            Trusted by event coordinators, budget managers, and technical teams worldwide
+            Powering live events for over 500 venues and production companies
           </p>
         </div>
       </div>
