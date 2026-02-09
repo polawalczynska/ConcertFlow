@@ -95,7 +95,7 @@ export function SubmitBudgetDialog({
           <Button
             onClick={handleSubmit}
             disabled={!termsAccepted || isLoading}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-pink-main hover:bg-pink-main/90"
           >
             {isLoading ? "Submitting..." : "Submit Budget"}
           </Button>

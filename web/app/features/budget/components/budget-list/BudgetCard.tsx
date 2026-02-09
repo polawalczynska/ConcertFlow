@@ -17,7 +17,7 @@ export function BudgetCard({ budget, isSelected, onClick }: BudgetCardProps) {
   return (
     <Card
       className={`cursor-pointer border-2 transition-all hover:shadow-md ${
-        isSelected ? "border-purple-main" : "border-transparent"
+        isSelected ? "border-pink-main" : "border-transparent"
       } ${isUrgent ? "border-l-4 border-l-red-500" : ""}`}
       onClick={onClick}
     >

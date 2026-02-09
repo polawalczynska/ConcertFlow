@@ -27,7 +27,7 @@ export function TeamHeader({ onInviteMember }: TeamHeaderProps) {
         {isCoordinator && (
           <Button 
             onClick={onInviteMember} 
-            className="bg-purple-main hover:bg-purple-dark w-full sm:w-auto"
+            className="bg-pink-main hover:bg-pink-dark w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" />
             Add Team Member

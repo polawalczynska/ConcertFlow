@@ -66,7 +66,7 @@ export function BudgetQuickActions({ concertId, budgetDetails }: BudgetQuickActi
             <Button
               onClick={() => setIsDialogOpen(true)}
               disabled={submitBudget.isPending}
-              className="bg-purple-main hover:bg-purple-main/90 w-full sm:w-auto"
+              className="bg-pink-main hover:bg-pink-main/90 w-full sm:w-auto"
             >
               <Send className="h-4 w-4 mr-2" />
               {submitBudget.isPending ? "Submitting..." : "Submit for Approval"}

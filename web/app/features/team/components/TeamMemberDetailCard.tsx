@@ -22,7 +22,7 @@ export function TeamMemberDetailCard({ member, onDelete }: TeamMemberDetailCardP
       <CardContent className="p-8">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-purple-100 text-3xl font-semibold text-purple-600">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-pink-100 text-3xl font-semibold text-pink-600">
               {initial}
             </div>
             <div>
