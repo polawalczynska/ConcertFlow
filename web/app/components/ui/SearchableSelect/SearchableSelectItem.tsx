@@ -37,8 +37,8 @@ export function SearchableSelectItem({
     <div
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-md px-3 py-2.5 text-sm outline-none transition-all duration-150",
-        "hover:bg-purple-main/10",
-        isSelected && "bg-purple-main/10 text-purple-main font-medium",
+        "hover:bg-blue-main/10",
+        isSelected && "bg-blue-main/10 text-blue-main font-medium",
         className
       )}
       onClick={() => {
@@ -48,9 +48,9 @@ export function SearchableSelectItem({
       }}
     >
       {isSelected && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-purple-main rounded-r-full" />
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-blue-main rounded-r-full" />
       )}
-      <span className={cn(isSelected && "text-purple-main")}>{children}</span>
+      <span className={cn(isSelected && "text-blue-main")}>{children}</span>
     </div>
   );
 }

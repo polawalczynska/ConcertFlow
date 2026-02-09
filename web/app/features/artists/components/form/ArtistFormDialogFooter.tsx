@@ -20,7 +20,7 @@ export function ArtistFormDialogFooter({
       <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
         Cancel
       </Button>
-      <Button type="submit" className="bg-purple-main hover:bg-purple-dark" disabled={isSubmitting}>
+      <Button type="submit" className="bg-blue-main hover:bg-blue-dark" disabled={isSubmitting}>
         {isSubmitting ? "Saving..." : selectedArtist ? "Update Artist" : "Create Artist"}
       </Button>
     </DialogFooter>

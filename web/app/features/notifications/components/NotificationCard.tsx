@@ -38,7 +38,7 @@ export function NotificationCard({
       className={`cursor-pointer transition-all hover:shadow-md ${
         notification.read
           ? "bg-bg-card border-border-light"
-          : "bg-purple-50 border-purple-200"
+          : "bg-blue-50 border-blue-200"
       }`}
       onClick={handleClick}
     >
@@ -52,7 +52,7 @@ export function NotificationCard({
           <div className="flex items-start justify-between gap-4">
             <h3 className="font-semibold text-text-primary">{notification.title}</h3>
             {!notification.read && (
-              <div className="h-2 w-2 rounded-full bg-purple-main flex-shrink-0 mt-1.5" />
+              <div className="h-2 w-2 rounded-full bg-blue-main flex-shrink-0 mt-1.5" />
             )}
           </div>
           <p className="text-sm text-text-secondary">{notification.description}</p>

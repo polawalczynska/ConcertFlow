@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        purple: {
-          main: '#8B5CF6',
-          dark: '#7C3AED',
-          light: '#A78BFA',
-          DEFAULT: '#8B5CF6',
+        blue: {
+          main: '#3B82F6',
+          dark: '#2563EB',
+          light: '#60A5FA',
+          DEFAULT: '#3B82F6',
         },
         bg: {
           main: '#FFFFFF',

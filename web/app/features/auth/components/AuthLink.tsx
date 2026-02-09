@@ -10,7 +10,7 @@ export default function AuthLink({ question, linkText, to }: AuthLinkProps) {
   return (
     <p className="mt-6 text-center text-sm text-text-secondary">
       {question}{" "}
-      <Link to={to} className="font-medium text-purple-main hover:underline">
+      <Link to={to} className="font-medium text-blue-main hover:underline">
         {linkText}
       </Link>
     </p>

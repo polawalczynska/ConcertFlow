@@ -14,7 +14,7 @@ export function ConcertsHeader({ onAddConcert }: ConcertsHeaderProps) {
           Create, view, and manage your concert events
         </p>
       </div>
-            <Button onClick={onAddConcert} className="bg-purple-main hover:bg-purple-dark whitespace-nowrap">
+            <Button onClick={onAddConcert} className="bg-blue-main hover:bg-blue-dark whitespace-nowrap">
               <Plus className="mr-2 h-4 w-4 flex-shrink-0" />
               <span className="hidden sm:inline">New Concert</span>
               <span className="sm:hidden">New</span>

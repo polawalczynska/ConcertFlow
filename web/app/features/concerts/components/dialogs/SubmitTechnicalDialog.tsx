@@ -84,7 +84,7 @@ export function SubmitTechnicalDialog({
           <Button
             onClick={handleSubmit}
             disabled={!termsAccepted || isLoading}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-blue-main hover:bg-blue-main/90"
           >
             {isLoading ? "Submitting..." : "Submit for Approval"}
           </Button>

@@ -15,7 +15,7 @@ export function FeaturesSection() {
                 key={feature.title}
                 className="bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-all"
               >
-                <div className="w-12 h-12 bg-purple-main rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-blue-main rounded-lg flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2">

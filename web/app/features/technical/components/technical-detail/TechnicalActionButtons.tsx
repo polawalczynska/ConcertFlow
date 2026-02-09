@@ -24,7 +24,7 @@ export function TechnicalActionButtons({
   if (isRevisionRequested) {
     return (
       <div className="mt-6 space-y-3">
-        <Button onClick={onApprove} className="w-full bg-purple-main hover:bg-purple-main/90">
+        <Button onClick={onApprove} className="w-full bg-blue-main hover:bg-blue-main/90">
           <CheckCircle2 className="mr-2 h-4 w-4" />
           Approve Technically
         </Button>
@@ -41,7 +41,7 @@ export function TechnicalActionButtons({
   if (isSubmitted) {
     return (
       <div className="mt-6 flex gap-3">
-        <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">
+        <Button onClick={onApprove} className="flex-1 bg-blue-main hover:bg-blue-main/90">
           <CheckCircle2 className="mr-2 h-4 w-4" />
           Approve Technically
         </Button>

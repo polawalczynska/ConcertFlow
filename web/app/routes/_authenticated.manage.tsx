@@ -61,7 +61,7 @@ export default function ConcertsManagePage() {
           </p>
           <button
             onClick={() => window.location.href = "/login"}
-            className="px-4 py-2 bg-purple-main text-white rounded-lg hover:bg-purple-main/90"
+            className="px-4 py-2 bg-blue-main text-white rounded-lg hover:bg-blue-main/90"
           >
             Go to Login
           </button>
@@ -97,7 +97,7 @@ export default function ConcertsManagePage() {
         />
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-main border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-main border-t-transparent" />
           </div>
         ) : concerts.length === 0 ? (
           <ConcertsEmptyState

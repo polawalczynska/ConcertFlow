@@ -111,7 +111,7 @@ export function RequestRevisionDialog({
           <Button
             onClick={handleSubmit}
             disabled={!canSubmit || isLoading}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-blue-main hover:bg-blue-main/90"
           >
             {isLoading ? "Requesting..." : "Request Revision"}
           </Button>

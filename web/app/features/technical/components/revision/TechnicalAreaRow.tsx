@@ -46,7 +46,7 @@ export function TechnicalAreaRow({
         </div>
       </div>
       {isSelected && (
-        <div className="ml-7 space-y-3 border-l-2 border-purple-main pl-4">
+        <div className="ml-7 space-y-3 border-l-2 border-blue-main pl-4">
           <div>
             <Label htmlFor={`reason-${area.id}`} className="text-sm">
               Change Reason <span className="text-red-500">*</span>

@@ -242,7 +242,7 @@ export default function SettingsPage() {
         <div className="flex justify-end">
           <Button 
             onClick={handleSave} 
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-blue-main hover:bg-blue-main/90"
             disabled={updateUserMutation.isPending}
           >
             {updateUserMutation.isPending ? "Saving..." : "Save Changes"}

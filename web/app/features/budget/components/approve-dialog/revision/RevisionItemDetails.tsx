@@ -24,7 +24,7 @@ export function RevisionItemDetails({
   onNotesChange,
 }: RevisionItemDetailsProps) {
   return (
-    <div className="ml-8 space-y-3 border-l-2 border-purple-200 pl-4">
+    <div className="ml-8 space-y-3 border-l-2 border-blue-200 pl-4">
       <div>
         <Label htmlFor={`reason-${itemId}`} className="text-xs">
           Change Reason <span className="text-red-500">*</span>

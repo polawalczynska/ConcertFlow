@@ -17,7 +17,7 @@ export const SearchableSelectTrigger = forwardRef<
       className={cn(
         "flex h-10 w-full items-center justify-between rounded-lg border border-border-light bg-bg-main px-3 py-2 text-sm text-text-primary",
         "hover:bg-bg-secondary transition-all duration-200",
-        open && "bg-bg-secondary border-purple-main",
+        open && "bg-bg-secondary border-blue-main",
         className
       )}
       onClick={() => setOpen(!open)}

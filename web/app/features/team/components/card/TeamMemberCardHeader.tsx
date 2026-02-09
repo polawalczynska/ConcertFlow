@@ -10,7 +10,7 @@ export function TeamMemberCardHeader({ member }: TeamMemberCardHeaderProps) {
   return (
     <div className="mb-4 flex items-start justify-between">
       <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-lg font-semibold text-purple-600">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-lg font-semibold text-blue-600">
           {initial}
         </div>
         <div>
