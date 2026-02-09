@@ -18,7 +18,7 @@ export function ArtistCardHeader({ artist, onEdit, onDelete }: ArtistCardHeaderP
       <div>
         <h3 className="text-lg font-semibold text-text-primary">{artist.name}</h3>
         {artist.genre && (
-          <div className="mt-1 flex items-center gap-1 text-sm text-purple-main">
+          <div className="mt-1 flex items-center gap-1 text-sm text-pink-main">
             <Music className="h-3 w-3" />
             <span>{artist.genre}</span>
           </div>
@@ -30,7 +30,7 @@ export function ArtistCardHeader({ artist, onEdit, onDelete }: ArtistCardHeaderP
             size="sm"
             variant="ghost"
             onClick={() => onEdit(artist)}
-            className="h-8 w-8 p-0 text-text-secondary hover:text-purple-main"
+            className="h-8 w-8 p-0 text-text-secondary hover:text-pink-main"
           >
             <Edit className="h-4 w-4" />
           </Button>

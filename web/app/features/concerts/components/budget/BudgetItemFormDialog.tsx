@@ -134,7 +134,7 @@ export function BudgetItemFormDialog({
           <Button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-pink-main hover:bg-pink-main/90"
           >
             {isLoading ? "Saving..." : item ? "Update" : "Create"}
           </Button>

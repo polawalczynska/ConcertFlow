@@ -10,17 +10,17 @@ export function TeamMemberCardInfo({ member }: TeamMemberCardInfoProps) {
   return (
     <div className="space-y-2 text-sm text-text-secondary">
       <div className="flex items-center gap-2">
-        <Mail className="h-4 w-4 text-purple-600 flex-shrink-0" />
+        <Mail className="h-4 w-4 text-pink-600 flex-shrink-0" />
         <span className="truncate">{member.email || "N/A"}</span>
       </div>
       {member.phone && (
         <div className="flex items-center gap-2">
-          <Phone className="h-4 w-4 text-purple-600 flex-shrink-0" />
+          <Phone className="h-4 w-4 text-pink-600 flex-shrink-0" />
           <span>{member.phone}</span>
         </div>
       )}
       <div className="flex items-center gap-2">
-        <Calendar className="h-4 w-4 text-purple-600 flex-shrink-0" />
+        <Calendar className="h-4 w-4 text-pink-600 flex-shrink-0" />
         <span>
           {assignedConcerts} {assignedConcerts === 1 ? "concert" : "concerts"} assigned
         </span>

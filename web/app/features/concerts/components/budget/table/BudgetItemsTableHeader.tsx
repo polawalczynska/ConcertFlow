@@ -11,7 +11,7 @@ export function BudgetItemsTableHeader({ onAddClick, canEdit }: BudgetItemsTable
     <CardHeader className="flex flex-row items-center justify-between">
       <CardTitle className="text-lg">Budget Line Items</CardTitle>
       {canEdit && (
-        <Button onClick={onAddClick} size="sm" className="bg-purple-main hover:bg-purple-main/90">
+        <Button onClick={onAddClick} size="sm" className="bg-pink-main hover:bg-pink-main/90">
           Add Item
         </Button>
       )}

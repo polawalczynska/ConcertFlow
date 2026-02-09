@@ -11,7 +11,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50";
     
     const variants = {
-      default: "bg-purple-main text-white hover:bg-purple-dark",
+      default: "bg-pink-main text-white hover:bg-pink-dark",
       outline: "border border-border-light bg-bg-main text-text-primary hover:bg-bg-secondary",
       ghost: "text-text-primary hover:bg-bg-secondary",
       destructive: "bg-red-600 text-white hover:bg-red-700",

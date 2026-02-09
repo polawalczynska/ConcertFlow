@@ -10,7 +10,7 @@ export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
     const baseStyles = "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors";
     
     const variants = {
-      default: "bg-purple-main text-white border-purple-dark",
+      default: "bg-pink-main text-white border-pink-dark",
       outline: "border-border-light bg-bg-main text-text-primary",
     };
 

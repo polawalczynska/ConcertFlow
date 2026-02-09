@@ -52,7 +52,7 @@ export default function ConcertsPage() {
           </p>
           <button
             onClick={() => window.location.href = "/login"}
-            className="px-4 py-2 bg-purple-main text-white rounded-lg hover:bg-purple-main/90"
+            className="px-4 py-2 bg-pink-main text-white rounded-lg hover:bg-pink-main/90"
           >
             Go to Login
           </button>
