@@ -68,10 +68,10 @@ export function CalendarGrid({ currentMonth, selectedDate, onDateSelect, onMonth
             isDisabled
               ? "text-text-muted cursor-not-allowed"
               : isSelected
-                ? "bg-purple-main text-white"
+                ? "bg-pink-main text-white"
                 : isTodayDate
-                  ? "bg-purple-main/10 text-purple-main border border-purple-main"
-                  : "text-text-primary hover:bg-purple-main/5 hover:text-purple-main"
+                  ? "bg-pink-main/10 text-pink-main border border-pink-main"
+                  : "text-text-primary hover:bg-pink-main/5 hover:text-pink-main"
           }`}
         >
           {day}

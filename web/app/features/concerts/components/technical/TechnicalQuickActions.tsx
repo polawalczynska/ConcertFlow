@@ -53,7 +53,7 @@ export function TechnicalQuickActions({ concertId }: TechnicalQuickActionsProps)
             <Button
               onClick={() => setIsDialogOpen(true)}
               disabled={isSubmitting}
-              className="bg-purple-main hover:bg-purple-main/90 w-full sm:w-auto"
+              className="bg-pink-main hover:bg-pink-main/90 w-full sm:w-auto"
             >
               <Send className="h-4 w-4 mr-2" />
               {isSubmitting ? "Submitting..." : "Submit for Approval"}

@@ -162,7 +162,7 @@ export function TechnicalRequirementsForm({
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-pink-main hover:bg-pink-main/90"
           >
             <Save className="mr-2 h-4 w-4" />
             {isSaving ? "Saving..." : "Save Requirements"}

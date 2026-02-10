@@ -28,7 +28,7 @@ export function MobileMenuItems({ menuItems, onItemClick }: MobileMenuItemsProps
               className={cn(
                 "flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-colors",
                 active
-                  ? "bg-purple-main text-white"
+                  ? "bg-pink-main text-white"
                   : "text-text-secondary hover:bg-bg-secondary hover:text-text-primary"
               )}
             >

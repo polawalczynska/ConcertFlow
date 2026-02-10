@@ -75,7 +75,7 @@ export function ApproveBudgetDialog({
           </Button>
           <Button
             onClick={handleApprove}
-            className="bg-purple-main hover:bg-purple-main/90"
+            className="bg-pink-main hover:bg-pink-main/90"
             disabled={!canApprove || isLoading}
           >
             {isLoading ? "Approving..." : "Approve Budget"}

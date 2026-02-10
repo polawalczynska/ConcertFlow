@@ -58,10 +58,10 @@ export function TechnicalSummaryCards({ approval }: TechnicalSummaryCardsProps) 
           </p>
         </CardContent>
       </Card>
-      <Card className="border-0 bg-purple-50 shadow-sm">
+      <Card className="border-0 bg-pink-50 shadow-sm">
         <CardContent className="p-4">
-          <p className="text-xs text-purple-700">Days Until Concert</p>
-          <p className="mt-1 text-2xl font-bold text-purple-700">
+          <p className="text-xs text-pink-700">Days Until Concert</p>
+          <p className="mt-1 text-2xl font-bold text-pink-700">
             {approval.daysUntil}
           </p>
         </CardContent>

@@ -16,7 +16,7 @@ export function TechnicalApprovalCard({ approval, isSelected, onClick }: Technic
     <Card
       className={cn(
         "cursor-pointer transition-all hover:shadow-md",
-        isSelected ? "ring-2 ring-purple-main" : ""
+        isSelected ? "ring-2 ring-pink-main" : ""
       )}
       onClick={onClick}
     >
