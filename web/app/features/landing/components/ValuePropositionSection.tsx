@@ -1,5 +1,6 @@
-import { Calendar, Wrench, DollarSign } from "lucide-react";
+import { Calendar, Wrench, DollarSign, ArrowRight } from "lucide-react";
 import { RoleCard } from "~/features/landing/components/RoleCard";
+import { Link } from "@remix-run/react";
 
 export function ValuePropositionSection() {
   const coordinatorFeatures = [
@@ -24,11 +25,26 @@ export function ValuePropositionSection() {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center text-slate-900 mb-12">
-          Built for Every Role in Concert Production
-        </h2>
+        <div className="text-center mb-16">
+          <span className="inline-block text-purple-600 font-semibold text-sm uppercase tracking-wider mb-4">
+            Role-Based Solutions
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">
+            Built for Every Role in{" "}
+            <span className="bg-gradient-to-r from-purple-main to-purple-dark bg-clip-text text-transparent">
+              Concert Production
+            </span>
+          </h2>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            Specialized tools and workflows designed for each team member's unique needs.
+          </p>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8">
           <RoleCard
             icon={Calendar}
@@ -60,6 +76,20 @@ export function ValuePropositionSection() {
             borderColor="border-green-100"
             iconGradient="bg-gradient-to-r from-green-500 to-emerald-500"
           />
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <p className="text-slate-600 mb-6">
+            Find the perfect workflow for your role and start collaborating with your team today.
+          </p>
+          <Link
+            to="/signup"
+            className="group inline-flex items-center gap-2 text-purple-600 font-semibold hover:text-purple-700 transition-colors"
+          >
+            Explore all features
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>
