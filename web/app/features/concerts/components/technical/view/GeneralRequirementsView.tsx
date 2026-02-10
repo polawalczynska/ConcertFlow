@@ -37,7 +37,7 @@ export function GeneralRequirementsView({ technicalDetails }: GeneralRequirement
               {technicalDetails.technicalFlags.map((flag, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800"
+                  className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800"
                 >
                   {formatSnakeCaseToReadable(flag)}
                 </span>

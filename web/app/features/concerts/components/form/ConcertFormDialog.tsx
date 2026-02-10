@@ -79,7 +79,7 @@ export function ConcertFormDialog({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-purple-main hover:bg-purple-dark"
+              className="bg-blue-main hover:bg-blue-dark"
             >
               {isSubmitting
                 ? "Saving..."

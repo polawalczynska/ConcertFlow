@@ -9,7 +9,7 @@ export function HeroSection() {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6">
             Perfect Concerts.
             <br />
-            <span className="bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-main via-blue-light to-blue-dark bg-clip-text text-transparent">
               Seamless Workflow.
             </span>
           </h1>
@@ -20,7 +20,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               to="/signup"
-              className="group bg-purple-main text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2"
+              className="group bg-blue-main text-white px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-xl transition-all hover:scale-105 flex items-center gap-2"
             >
               Get Started
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

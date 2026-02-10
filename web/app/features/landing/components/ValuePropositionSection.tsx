@@ -35,10 +35,10 @@ export function ValuePropositionSection() {
             title="For Coordinators"
             subtitle="Centralized Concert Management"
             features={coordinatorFeatures}
-            iconColor="text-purple-600"
-            bgGradient="bg-gradient-to-br from-purple-50 to-blue-50"
-            borderColor="border-purple-100"
-            iconGradient="bg-gradient-to-r from-purple-500 to-blue-500"
+            iconColor="text-blue-600"
+            bgGradient="bg-gradient-to-br from-blue-50 to-blue-50"
+            borderColor="border-blue-100"
+            iconGradient="bg-gradient-to-r from-blue-500 to-blue-500"
           />
           <RoleCard
             icon={Wrench}

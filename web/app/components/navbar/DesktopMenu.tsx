@@ -25,7 +25,7 @@ export function DesktopMenu({ menuItems }: DesktopMenuProps) {
             className={cn(
               "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               active
-                ? "bg-purple-main text-white"
+                ? "bg-blue-main text-white"
                 : "text-text-secondary hover:bg-bg-secondary hover:text-text-primary"
             )}
           >

@@ -19,7 +19,7 @@ export function ArtistsEmptyState({hasSearchQuery, onAddArtist}: ArtistsEmptySta
         {hasSearchQuery ? "Try adjusting your search" : "Get started by adding your first artist"}
       </p>
       {!hasSearchQuery && isCoordinator && (
-        <Button onClick={onAddArtist} className="bg-purple-main hover:bg-purple-dark">
+        <Button onClick={onAddArtist} className="bg-blue-main hover:bg-blue-dark">
           <Plus className="mr-2 h-4 w-4"/>
           Add Artist
         </Button>

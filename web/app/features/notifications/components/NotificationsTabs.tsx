@@ -27,7 +27,7 @@ export function NotificationsTabs({
         <TabsTrigger value="all">
           All
           {unreadCount > 0 && (
-            <Badge className="ml-2 h-5 min-w-5 rounded-full px-1.5 bg-purple-main text-white">
+            <Badge className="ml-2 h-5 min-w-5 rounded-full px-1.5 bg-blue-main text-white">
               {unreadCount}
             </Badge>
           )}

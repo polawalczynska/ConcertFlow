@@ -24,7 +24,7 @@ export function ArtistsHeader({ onAddArtist }: ArtistsHeaderProps) {
         <p className="mt-1 text-sm text-text-secondary">{subtitle}</p>
       </div>
       {isCoordinator && (
-        <Button onClick={onAddArtist} className="bg-purple-main hover:bg-purple-dark">
+        <Button onClick={onAddArtist} className="bg-blue-main hover:bg-blue-dark">
           <Plus className="mr-2 h-4 w-4" />
           Add Artist
         </Button>

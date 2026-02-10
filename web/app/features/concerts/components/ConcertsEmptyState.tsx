@@ -19,7 +19,7 @@ export function ConcertsEmptyState({hasSearchQuery, onAddConcert}: ConcertsEmpty
           : "Get started by creating your first concert"}
       </p>
       {!hasSearchQuery && (
-        <Button onClick={onAddConcert} className="bg-purple-main hover:bg-purple-dark">
+        <Button onClick={onAddConcert} className="bg-blue-main hover:bg-blue-dark">
           <Plus className="mr-2 h-4 w-4"/>
           New Concert
         </Button>

@@ -22,7 +22,7 @@ export default function CheckboxInput({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="h-4 w-4 appearance-none rounded border border-border-light bg-bg-main focus:outline-none focus:ring-0 checked:border-purple-main"
+          className="h-4 w-4 appearance-none rounded border border-border-light bg-bg-main focus:outline-none focus:ring-0 checked:border-blue-main"
         />
         {checked && (
           <svg

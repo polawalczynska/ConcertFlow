@@ -25,7 +25,7 @@ export function ErrorActions({
       )}
       {showHomeButton && (
         <Link to="/">
-          <Button className="flex items-center gap-2 bg-purple-main hover:bg-purple-main/90">
+          <Button className="flex items-center gap-2 bg-blue-main hover:bg-blue-main/90">
             <Home className="h-4 w-4" />
             Go Home
           </Button>
