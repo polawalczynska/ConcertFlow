@@ -22,7 +22,7 @@ export function RoleCard({
   iconGradient,
 }: RoleCardProps) {
   return (
-    <div className={`group ${bgGradient} p-8 rounded-2xl border-2 ${borderColor} hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 hover:-translate-y-2`}>
+    <div className={`group ${bgGradient} p-8 rounded-2xl border-2 ${borderColor} hover:shadow-2xl hover:shadow-pink-500/10 transition-all duration-300 hover:-translate-y-2`}>
       <div className={`w-16 h-16 ${iconGradient} rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
         <Icon className="w-8 h-8 text-white" />
       </div>

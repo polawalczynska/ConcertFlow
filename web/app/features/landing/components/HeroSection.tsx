@@ -6,23 +6,23 @@ export function HeroSection() {
     <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-40 right-20 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-200/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-40 right-20 w-96 h-96 bg-pink-300/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         <div className="absolute bottom-20 left-1/3 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       {/* Floating icons */}
       <div className="absolute inset-0 -z-5 overflow-hidden pointer-events-none">
-        <Music className="absolute top-32 left-[15%] w-8 h-8 text-purple-300/40 animate-bounce-subtle" />
-        <Calendar className="absolute top-48 right-[20%] w-10 h-10 text-purple-400/30 animate-bounce-subtle" style={{ animationDelay: '0.5s' }} />
-        <Users className="absolute bottom-32 left-[25%] w-9 h-9 text-purple-300/35 animate-bounce-subtle" style={{ animationDelay: '1s' }} />
+        <Music className="absolute top-32 left-[15%] w-8 h-8 text-pink-300/40 animate-bounce-subtle" />
+        <Calendar className="absolute top-48 right-[20%] w-10 h-10 text-pink-400/30 animate-bounce-subtle" style={{ animationDelay: '0.5s' }} />
+        <Users className="absolute bottom-32 left-[25%] w-9 h-9 text-pink-300/35 animate-bounce-subtle" style={{ animationDelay: '1s' }} />
         <Sparkles className="absolute top-60 left-[10%] w-6 h-6 text-amber-400/40 animate-bounce-subtle" style={{ animationDelay: '1.5s' }} />
       </div>
 
       <div className="max-w-7xl mx-auto">
         <div className="text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-700 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in">
             <Sparkles className="w-4 h-4" />
             <span>The #1 Concert Management Platform</span>
           </div>
@@ -30,7 +30,7 @@ export function HeroSection() {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             Perfect Concerts.
             <br />
-            <span className="bg-gradient-to-r from-purple-main via-purple-light to-purple-dark bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-pink-main via-pink-light to-pink-dark bg-clip-text text-transparent animate-gradient">
               Seamless Workflow.
             </span>
           </h1>
@@ -43,14 +43,14 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Link
               to="/signup"
-              className="group bg-gradient-to-r from-purple-main to-purple-dark text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 transition-all hover:scale-105 flex items-center gap-2"
+              className="group bg-gradient-to-r from-pink-main to-pink-dark text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/30 transition-all hover:scale-105 flex items-center gap-2"
             >
               Start Free Trial
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               to="/login"
-              className="group border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-purple-300 hover:bg-purple-50/50 transition-all flex items-center gap-2"
+              className="group border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-pink-300 hover:bg-pink-50/50 transition-all flex items-center gap-2"
             >
               Sign In
               <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
@@ -61,7 +61,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-slate-500 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 border-2 border-white" />

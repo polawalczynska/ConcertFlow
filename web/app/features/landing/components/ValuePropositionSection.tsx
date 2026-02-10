@@ -31,12 +31,12 @@ export function ValuePropositionSection() {
 
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block text-purple-600 font-semibold text-sm uppercase tracking-wider mb-4">
+          <span className="inline-block text-pink-600 font-semibold text-sm uppercase tracking-wider mb-4">
             Role-Based Solutions
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">
             Built for Every Role in{" "}
-            <span className="bg-gradient-to-r from-purple-main to-purple-dark bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-pink-main to-pink-dark bg-clip-text text-transparent">
               Concert Production
             </span>
           </h2>
@@ -51,10 +51,10 @@ export function ValuePropositionSection() {
             title="For Coordinators"
             subtitle="Centralized Concert Management"
             features={coordinatorFeatures}
-            iconColor="text-purple-600"
-            bgGradient="bg-gradient-to-br from-purple-50 to-blue-50"
-            borderColor="border-purple-100"
-            iconGradient="bg-gradient-to-r from-purple-500 to-blue-500"
+            iconColor="text-pink-600"
+            bgGradient="bg-gradient-to-br from-pink-50 to-blue-50"
+            borderColor="border-pink-100"
+            iconGradient="bg-gradient-to-r from-pink-500 to-blue-500"
           />
           <RoleCard
             icon={Wrench}
@@ -85,7 +85,7 @@ export function ValuePropositionSection() {
           </p>
           <Link
             to="/signup"
-            className="group inline-flex items-center gap-2 text-purple-600 font-semibold hover:text-purple-700 transition-colors"
+            className="group inline-flex items-center gap-2 text-pink-600 font-semibold hover:text-pink-700 transition-colors"
           >
             Explore all features
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
