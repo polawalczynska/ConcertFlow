@@ -22,7 +22,7 @@ export function InviteDialogFooter({
       {showInviteButton && (
         <Button 
           type="submit" 
-          className="bg-purple-main hover:bg-purple-dark" 
+          className="bg-pink-main hover:bg-pink-dark" 
           disabled={isDisabled}
         >
           {isInviting ? "Sending..." : "Send Invitation"}

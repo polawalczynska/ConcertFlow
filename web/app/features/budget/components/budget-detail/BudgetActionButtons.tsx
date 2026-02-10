@@ -26,7 +26,7 @@ export function BudgetActionButtons({
   if (isRevisionRequested) {
     return (
       <div className="space-y-3">
-        <Button onClick={onApprove} className="w-full bg-purple-main hover:bg-purple-main/90">
+        <Button onClick={onApprove} className="w-full bg-pink-main hover:bg-pink-main/90">
           <Check className="mr-2 h-4 w-4" />
           Approve Budget
         </Button>
@@ -43,7 +43,7 @@ export function BudgetActionButtons({
   if (canTakeAction) {
     return (
       <div className="flex gap-3">
-        <Button onClick={onApprove} className="flex-1 bg-purple-main hover:bg-purple-main/90">
+        <Button onClick={onApprove} className="flex-1 bg-pink-main hover:bg-pink-main/90">
           <Check className="mr-2 h-4 w-4" />
           Approve Budget
         </Button>

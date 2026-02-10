@@ -77,7 +77,7 @@ export const SelectTrigger = forwardRef<
       className={cn(
         "flex h-10 w-full items-center justify-between rounded-lg border border-border-light bg-bg-main px-3 py-2 text-sm text-text-primary",
         "hover:bg-bg-secondary transition-all duration-200",
-        open && "bg-bg-secondary border-purple-main",
+        open && "bg-bg-secondary border-pink-main",
         className
       )}
       onClick={() => setOpen(!open)}
@@ -174,8 +174,8 @@ export function SelectItem({
     <div
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-md px-3 py-2.5 text-sm outline-none transition-all duration-150",
-        "hover:bg-purple-main/10",
-        isSelected && "bg-purple-main/10 text-purple-main font-medium",
+        "hover:bg-pink-main/10",
+        isSelected && "bg-pink-main/10 text-pink-main font-medium",
         isHovered && !isSelected && "bg-bg-secondary",
         className
       )}
@@ -187,9 +187,9 @@ export function SelectItem({
       onMouseLeave={() => setHoveredValue(null)}
     >
       {isSelected && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-purple-main rounded-r-full"/>
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-pink-main rounded-r-full"/>
       )}
-      <span className={cn(isSelected && "text-purple-main")}>{children}</span>
+      <span className={cn(isSelected && "text-pink-main")}>{children}</span>
     </div>
   );
 }

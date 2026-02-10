@@ -17,7 +17,7 @@ export function UserAlreadyOnTeam({ user }: UserAlreadyOnTeamProps) {
             <p className="font-medium text-text-primary">
               {user.firstName} {user.lastName}
             </p>
-            <Badge className="bg-purple-100 text-purple-800 border-purple-200">
+            <Badge className="bg-pink-100 text-pink-800 border-pink-200">
               {formatRole(user.role)}
             </Badge>
           </div>
